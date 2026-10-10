@@ -33,10 +33,23 @@ class FpsCounter:
 class Application:
     TITLE = "Splat Editor"
 
-    def __init__():
-        pass 
+    def __init__(self, width=1500, height =900):
+        self.window = Window(self.TITLE, width, height):
+        self.gui = Gui(self.window)
+        self.editor = Editor()
+        self.viewport = Viewport()
+        self.layout = Layout()
+        self.fps = FpsCounter()
+        self.actions = self._create_actions()
 
-    def _create_action():
+        self.menu_bar = MainMenuBar(self.action)
+        self.side_panel = SidePanel(self)
+        self.status_bar = StatusBar(self)
+        self.shortcuts_window = ShortcutsWindow(self.action)
+        self.overlay = ViewportOverlay(self)
+        self.input = InputController(self)
+
+    def _create_action(self):
         pass 
 
     def open_file():
