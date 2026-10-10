@@ -19,8 +19,8 @@ from __future__ import annotations
 
 import numpy as np
 
-from splatpy.core.math3d import quat_mul, quat_normalize, quat_to_mat3, transform_points
-from splatpy.core.tool_base import MOUSE_LEFT, InputEvent, RenderContext, Tool
+from splat_editor.core.math3d import quat_mul, quat_normalize, quat_to_mat3, transform_points
+from splat_editor.core.tool_base import MOUSE_LEFT, InputEvent, RenderContext, Tool
 
 from .gizmo import Gizmo, GizmoDelta
 
@@ -225,7 +225,7 @@ class TransformTool(Tool):
         if d['selection']:
             splat.selection_preview = None
             if changed:
-                from splatpy.edit.ops import SplatsTransformOp
+                from splat_editor.edit.ops import SplatsTransformOp
                 W0 = d['W0']
                 m_local = np.linalg.inv(W0) @ delta.matrix @ W0
                 indices = np.nonzero(splat.selected_mask())[0]
@@ -235,7 +235,7 @@ class TransformTool(Tool):
                 self._pivot_override = (key, new_pivot)
         else:
             if changed:
-                from splatpy.edit.ops import EntityTransformOp
+                from splat_editor.edit.ops import EntityTransformOp
                 new_trs = (splat.position.copy(), splat.rotation.copy(), splat.scale.copy())
                 self.scene.history.add(EntityTransformOp(splat, d['old_trs'], new_trs), execute=False)
             else:

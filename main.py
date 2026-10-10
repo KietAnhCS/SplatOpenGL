@@ -25,11 +25,11 @@ def main(argv=None) -> int:
     args = p.parse_args(argv)
 
     if args.smoke_test:
-        from splatpy.app.smoke import run_smoke_test
+        from splat_editor.app.smoke import run_smoke_test
         return run_smoke_test(args.files, demo=args.demo or 20000, frames=args.frames)
 
-    from splatpy.app.app import App
-    from splatpy.app.demo import make_demo_splat
+    from splat_editor.app.app import App
+    from splat_editor.app.demo import make_demo_splat
     try:
         w, h = (int(v) for v in args.size.lower().split('x'))
     except ValueError:

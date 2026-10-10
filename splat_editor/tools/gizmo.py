@@ -32,7 +32,7 @@ from dataclasses import dataclass, field
 
 import numpy as np
 
-from splatpy.core.math3d import mat3_to_quat, mat4_translate, quat_from_axis_angle, quat_to_mat3
+from splat_editor.core.math3d import mat3_to_quat, mat4_translate, quat_from_axis_angle, quat_to_mat3
 
 MODES = ('translate', 'rotate', 'scale')
 

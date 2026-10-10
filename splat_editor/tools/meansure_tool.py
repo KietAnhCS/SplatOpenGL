@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import numpy as np
 
-from splatpy.core.tool_base import MOUSE_LEFT, InputEvent, RenderContext, Tool
+from splat_editor.core.tool_base import MOUSE_LEFT, InputEvent, RenderContext, Tool
 
 KEY_ESCAPE = 256
 CLICK_TOLERANCE = 4.0
