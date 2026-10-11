@@ -50,49 +50,87 @@ class Application:
         self.input = InputController(self)
 
     def _create_action(self):
-        pass 
+        editor , viewport = self.editor, self.viewport 
+        has_layer = lambda : editor.scene.active_layer is not None 
+        has_selection = lambda: editor.scene.selected_count() > 0 
+        brush = editor.brush 
+        actions = ActionRegistry()
+        add = actions.add 
+
+        
+
+        return action
 
     def open_file():
-        pass 
+        if self.editor.open_file(path):
+            self.frame_scene()
 
-    def add_files():
-        pass 
+    def add_files(self, paths):
+        for path in paths 
+            first = self.editor.scene.is_empty 
+            if self.editor.add_file(path) is not None and first:
+                self.frame_scene()
 
-    def open_dialog():
-        pass 
+    def open_dialog(self):
+        path = FileDialog.open_file()
+        self.input.reset()
+        if path:
+            self.open_file(path)
 
-    def add_dialog():
-        pass 
+    def add_dialog(self):
+        paths = FileDialog.open_files()
+        self.input.reset()
+        if path:
+            self.add_file(path)
 
     def save_dialog():
-        pass 
+        path = FileDialog.save_file(self.editor.suggested_save_name())
+        self.input.reset()
+        if path:
+            self.editor.save_file(path) 
 
     def frame_scene():
-        pass 
+        splats = layer.world_splat() if layer is not None else self.editor.splats 
+        self.viewport.frame(splats)
 
     def toggle_grid():
-        pass 
+        self.viewport.show_grid = not self.viewport.show_grid
 
     def set_flip():
-        pass
+        self.editor.scene.flip = flip 
+        self.editor.notify_geometry_changed()
+        self.frame_scene()
 
     def exit_brush(self):
-        pass 
+        self.editor.brush.active = False
+        self.editor.brush.end_stroke() 
 
     def shortcuts_window_toggle(self):
-        pass 
+        self.shortcuts_window.toggle()
 
-    def point():
-        pass
+    def point(self, x, y):
+        rect = self.layout.viewport 
+        if not rect.is_empty:
+            self.editor.paint()
 
-    def drag_speed():
-        pass 
+    def drag_speed(self):
+        return max(self.viewport.camera.distance * 0.005, 1e-4)
 
-    def _draw_gui():
-        pass 
+    def _draw_gui(self):
+        menu_height = self.menu_bar.draw()
+        width, height = self.window.size 
+        self.layout.update()
+        self.side_panel.draw()
+        self.status_bar.draw()
+        self.shortcuts_window.draw()
+        self.overlay.draw()
 
     def run(self):
-        pass 
+        last_time = time.perf_counter()
+        while not self.window.should_close:
+            pass 
+        self.gui.shutdown()
+        self.window.destroy()
 
 
 def main(argv=None):
