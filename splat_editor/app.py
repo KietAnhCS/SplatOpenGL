@@ -128,7 +128,8 @@ class Application:
     def run(self):
         last_time = time.perf_counter()
         while not self.window.should_close:
-            pass 
+            self.viewport.sync(self.editor)
+            self.viewport.render(self.layout.viewport, self.window.size, self.window.framebuffer_size)
         self.gui.shutdown()
         self.window.destroy()
 

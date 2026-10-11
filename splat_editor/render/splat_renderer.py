@@ -13,6 +13,7 @@ class SplatRenderer:
 
     @staticmethod
     def pack(splats):
+        """Splats -> mảng (N,16) float32 = 4 texel RGBA / gaussian."""
         pass 
 
     def set_splats(self, splats):
