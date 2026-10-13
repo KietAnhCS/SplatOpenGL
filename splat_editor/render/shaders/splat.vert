@@ -1,69 +1,47 @@
-#version 330 core
-layout(location = 0) in vec2 aCorner;       // góc hình vuông: (-1,-1) .. (1,1)
-layout(location = 1) in uint aSplatIndex;   // chỉ số gaussian (đã sắp xếp xa -> gần)
+#version 330 core 
 
-uniform samplerBuffer uData;   // 4 texel / gaussian
-uniform samplerBuffer uSelect; // 1 texel / gaussian: 1 = đang chọn
+//vertext attribute 
+layout(location = 0) int vec2 aCorner;
+layout(location = 1) in uint aSplatIndex;
+
+uniform sampleBuffer uData;
 uniform mat4 uModelView;
-uniform mat4 uProjection;
-uniform vec2 uViewport;        // kích thước khung hình (pixel)
-uniform float uFocal;          // tiêu cự (pixel)
-uniform vec3 uSelectColor;     // màu pha cho gaussian đang chọn
+uniform vec2 uViewport;
+uniform float uFocal;
+uniform int uShDegree;
+uniform vec3 uCamPos;
 
 out vec4 vColor;
-out vec2 vCorner;
+out vec2 vCorner; 
+
+vec3 shCoeff(int splat, int k) {
+    return texelFetch(uSh, splat * uShCount + k).rgb;
+}
+
+// phần màu do SH bậc 1..3 đóng góp theo hướng nhìn d (cùng công thức với 3DGS gốc, xem core/sh.py)
+vec3 shColor(int splat, vec3 d) {
+    float x = d.x, y = d.y, z = d.z;
+    vec3 c = -0.4886025119029199 * y * shCoeff(splat, 0)
+           +  0.4886025119029199 * z * shCoeff(splat, 1)
+           -  0.4886025119029199 * x * shCoeff(splat, 2);
+    if (uShDegree < 2) return c;
+    float xx = x * x, yy = y * y, zz = z * z;
+    c +=  1.0925484305920792 * x * y * shCoeff(splat, 3)
+       -  1.0925484305920792 * y * z * shCoeff(splat, 4)
+       + 0.31539156525252005 * (2.0 * zz - xx - yy) * shCoeff(splat, 5)
+       -  1.0925484305920792 * x * z * shCoeff(splat, 6)
+       +  0.5462742152960396 * (xx - yy) * shCoeff(splat, 7);
+    if (uShDegree < 3) return c;
+    c += -0.5900435899266435 * y * (3.0 * xx - yy) * shCoeff(splat, 8)
+       +   2.890611442640554 * x * y * z * shCoeff(splat, 9)
+       -  0.4570457994644658 * y * (4.0 * zz - xx - yy) * shCoeff(splat, 10)
+       +  0.3731763325901154 * z * (2.0 * zz - 3.0 * xx - 3.0 * yy) * shCoeff(splat, 11)
+       -  0.4570457994644658 * x * (4.0 * zz - xx - yy) * shCoeff(splat, 12)
+       +   1.445305721320277 * z * (xx - yy) * shCoeff(splat, 13)
+       -  0.5900435899266435 * x * (xx - 3.0 * yy) * shCoeff(splat, 14);
+    return c;
+}
 
 void main() {
-    int base = int(aSplatIndex) * 4;
-    vec4 t0 = texelFetch(uData, base + 0);   // tâm xyz, alpha
-    vec4 t1 = texelFetch(uData, base + 1);   // màu rgb
-    vec4 t2 = texelFetch(uData, base + 2);   // Sigma00 Sigma01 Sigma02
-    vec4 t3 = texelFetch(uData, base + 3);   // Sigma11 Sigma12 Sigma22
-
-    vec4 viewPos = uModelView * vec4(t0.xyz, 1.0);
-    vec4 clipPos = uProjection * viewPos;
-    vec3 ndc = clipPos.xyz / clipPos.w;
-    // loại gaussian ở sau camera hoặc ngoài màn hình
-    if (clipPos.w <= 0.0 || abs(ndc.x) > 1.3 || abs(ndc.y) > 1.3) {
-        gl_Position = vec4(0.0, 0.0, 2.0, 1.0);
-        return;
-    }
-
-    // ma trận hiệp phương sai 3D (đối xứng)
-    mat3 sigma = mat3(t2.x, t2.y, t2.z,
-                      t2.y, t3.x, t3.y,
-                      t2.z, t3.y, t3.z);
-
-    // Jacobian của phép chiếu phối cảnh tại tâm gaussian (GLSL: mat3 theo cột)
-    float x = viewPos.x, y = viewPos.y, z = viewPos.z;
-    mat3 J = mat3(uFocal / -z, 0.0, 0.0,
-                  0.0, uFocal / -z, 0.0,
-                  uFocal * x / (z * z), uFocal * y / (z * z), 0.0);
-    mat3 W = mat3(uModelView);
-    mat3 T = J * W;
-    mat3 cov = T * sigma * transpose(T);
-
-    // ellipse 2D (pixel); cộng 0.3 để gaussian không nhỏ hơn 1 pixel
-    float a = cov[0][0] + 0.3;
-    float b = cov[0][1];
-    float c = cov[1][1] + 0.3;
-
-    // trị riêng / vector riêng của ma trận 2x2 [[a b] [b c]]
-    float mid = 0.5 * (a + c);
-    float radius = length(vec2(0.5 * (a - c), b));
-    float lambda1 = mid + radius;
-    float lambda2 = max(mid - radius, 0.1);
-    vec2 axis1 = (abs(b) < 1e-6) ? (a >= c ? vec2(1.0, 0.0) : vec2(0.0, 1.0))
-                                 : normalize(vec2(b, lambda1 - a));
-    vec2 axis2 = vec2(-axis1.y, axis1.x);
-
-    // hình vuông phủ 3 độ lệch chuẩn (3 sigma), tối đa 1024 pixel
-    vec2 major = min(3.0 * sqrt(lambda1), 1024.0) * axis1;
-    vec2 minor = min(3.0 * sqrt(lambda2), 1024.0) * axis2;
-    vec2 offsetPixels = aCorner.x * major + aCorner.y * minor;
-
-    gl_Position = vec4(ndc.xy + offsetPixels * 2.0 / uViewport, 0.0, 1.0);
-    float selected = texelFetch(uSelect, int(aSplatIndex)).r;
-    vColor = vec4(mix(t1.rgb, uSelectColor, 0.7 * selected), t0.w);
-    vCorner = aCorner * 3.0;   // toạ độ tính theo đơn vị sigma
+    
 }
