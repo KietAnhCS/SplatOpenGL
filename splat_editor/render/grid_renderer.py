@@ -6,6 +6,12 @@ theo khoảng cách camera (1, 10, 100 ...), chuyển mượt giữa các mức.
 Trục X tô đỏ, trục Z tô xanh dương.
 """
 
+"""
+# Sau khi đã có ngữ cảnh GL
+grid = GridRenderer()
+grid.draw(view, projection, camera_distance=cam.distance)   # gọi trong vòng lặp vẽ, trước khi vẽ gaussian
+"""
+
 import math
 
 from OpenGL import GL
