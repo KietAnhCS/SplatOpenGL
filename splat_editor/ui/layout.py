@@ -11,6 +11,14 @@
     +--------------------------------------+
 """
 
+"""
+layout = Layout()
+layout.update(width, height, menu_height, status_height)   # gọi mỗi khung hình
+layout.side_panel                       # Rect bảng bên trái
+layout.viewport                         # Rect vùng 3D
+layout.status_bar                       # Rect thanh trạng thái
+"""
+
 from ..core.rect import Rect 
 
 class Layout:

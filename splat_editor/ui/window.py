@@ -1,8 +1,5 @@
 """Cửa sổ GLFW có ngữ cảnh OpenGL 3.3 core."""
 
-import glfw
-
-
 """
 win = Window("Splat Editor", 1280, 720)
 while not win.should_close:
@@ -12,8 +9,10 @@ while not win.should_close:
     # ... vẽ bằng OpenGL ...
     win.swap_buffers()
 win.destroy()
-
 """
+
+import glfw
+
 
 class Window:
     def __init__(self, title, width, height):

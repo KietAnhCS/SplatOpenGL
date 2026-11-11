@@ -1,4 +1,13 @@
 """Hình chữ nhật trên màn hình (toạ độ cửa sổ, gốc ở góc trên bên trái)."""
+
+"""
+rect = Rect(left=330, top=20, width=1170, height=860)   # toạ độ cửa sổ, gốc trên-trái
+rect.aspect                             # width / height (dùng cho ma trận chiếu)
+rect.center                             # (x, y) tâm hình chữ nhật
+rect.contains(400, 300)                 # True nếu điểm nằm trong
+rect.is_empty                           # True nếu rộng hoặc cao <= 0
+"""
+
 from typing import NamedTuple 
 
 class Rect(NamedTuple):
