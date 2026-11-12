@@ -8,25 +8,26 @@ rect.contains(400, 300)                 # True nếu điểm nằm trong
 rect.is_empty                           # True nếu rộng hoặc cao <= 0
 """
 
-from typing import NamedTuple 
+from typing import NamedTuple
+
 
 class Rect(NamedTuple):
-    left: float 
-    top: float 
-    width: float 
-    height: float 
+    left: float
+    top: float
+    width: float
+    height: float
 
-    @property 
+    @property
     def is_empty(self):
-        return self.width <= 0 or self.height <= 0 
+        return self.width <= 0 or self.height <= 0
 
-    @property 
+    @property
     def aspect(self):
-        return self.width / self.height if self.height > 0 else 1.0 
+        return self.width / self.height if self.height > 0 else 1.0
 
-    @property 
+    @property
     def center(self):
-        return self.left + self.width / 2 , self.top + self.height / 2
+        return self.left + self.width / 2, self.top + self.height / 2
 
     def contains(self, x, y):
         return self.left <= x < self.left + self.width and self.top <= y < self.top + self.height
