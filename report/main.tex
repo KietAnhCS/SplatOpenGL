@@ -1,0 +1,640 @@
+\documentclass[9pt,twocolumn,a4paper]{extarticle}
+
+\usepackage{amsmath}
+\usepackage{fontspec}
+\usepackage{unicode-math}
+\setmainfont{CharisSIL-Regular.ttf}[BoldFont=CharisSIL-Bold.ttf,ItalicFont=CharisSIL-Italic.ttf,BoldItalicFont=CharisSIL-BoldItalic.ttf]
+\setmathfont{STIXTwoMath-Regular.otf}
+\setmonofont{consola.ttf}[BoldFont=consolab.ttf,ItalicFont=consolai.ttf,Scale=0.9]
+\usepackage[top=1.5cm,bottom=2.3cm,left=1.35cm,right=1.35cm,columnsep=0.75cm,footskip=0.9cm,headsep=0.45cm]{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{xtab}
+\usepackage{listings}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning}
+\tikzset{
+  pbox/.style={draw=linkblue,thick,rounded corners=2pt,fill=linkblue!8,align=center,
+               minimum height=9mm,text width=21mm,font=\footnotesize},
+  pmine/.style={pbox,fill=linkblue!25,very thick},
+  parr/.style={-{Stealth[length=2mm]},thick},
+  plab/.style={font=\scriptsize,midway,fill=white,inner sep=1pt}}
+\usepackage{fancyhdr}
+\usepackage{setspace}
+\usepackage{microtype}
+
+\definecolor{linkblue}{RGB}{0,106,150}
+\definecolor{bannergray}{RGB}{229,229,229}
+\usepackage[colorlinks=true,linkcolor=linkblue,citecolor=linkblue,urlcolor=linkblue]{hyperref}
+
+\titleformat{\section}{\normalsize\bfseries}{\thesection.}{0.55em}{}
+\titleformat{\subsection}{\small\itshape}{\thesubsection.}{0.55em}{}
+\titlespacing*{\section}{0pt}{10pt}{4pt}
+\titlespacing*{\subsection}{0pt}{7pt}{3pt}
+\setlength{\parskip}{0pt}
+\setlength{\parindent}{1.1em}
+\setlength{\arraycolsep}{2pt}
+\setlength{\abovedisplayskip}{4pt}
+\setlength{\belowdisplayskip}{4pt}
+\renewcommand{\figurename}{Fig.}
+\renewcommand{\tablename}{Table}
+\renewcommand{\refname}{References}
+\captionsetup{font={footnotesize},labelfont=bf,labelsep=period,justification=justified,singlelinecheck=false,skip=3pt}
+\captionsetup[table]{position=top}
+\emergencystretch=3em
+\setlength{\textfloatsep}{9pt plus 2pt minus 2pt}
+\setlength{\floatsep}{7pt plus 2pt minus 2pt}
+\setlength{\intextsep}{7pt plus 2pt minus 2pt}
+\linespread{1.04}
+\raggedbottom
+
+\lstset{basicstyle=\ttfamily\fontsize{6.4}{7.4}\selectfont,breaklines=true,frame=single,
+  rulecolor=\color{gray!55},backgroundcolor=\color{gray!5},xleftmargin=2pt,xrightmargin=2pt,
+  framesep=2pt,aboveskip=1pt,belowskip=3pt,columns=fullflexible,keepspaces=true}
+
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\Sig}{\symbf{\Sigma}}
+\newcommand{\loc}[1]{\par\raggedright\noindent{\scriptsize\textit{#1}}\par\vspace{-1pt}}
+\newcommand{\src}[1]{\par\raggedright\noindent{\footnotesize\textit{Source code:} \texttt{#1}}\par}
+\newcommand{\spaced}[1]{\textls[160]{#1}}
+
+\newcommand{\runauthor}{\textit{L.\,A.\ Kiet}}
+\newcommand{\runtitle}{\textit{Splat Editor: a 3D Gaussian Splatting viewer and editor}}
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhead[L]{\footnotesize\runauthor}
+\fancyhead[R]{\footnotesize\runtitle}
+\fancyfoot[C]{\footnotesize\thepage}
+\fancypagestyle{first}{%
+  \fancyhf{}\renewcommand{\headrulewidth}{0pt}%
+}
+
+\makeatletter
+\renewcommand\@biblabel[1]{\textcolor{linkblue}{[#1]}}
+\makeatother
+
+\begin{document}
+\thispagestyle{first}
+
+\twocolumn[{%
+\begin{@twocolumnfalse}
+\vspace{-0.3cm}
+\begin{center}\small\color{linkblue}Computer Graphics, Course Project Report (2026)\end{center}
+\vspace{-0.1cm}
+\noindent\rule{\textwidth}{0.5pt}\\[-2pt]
+\noindent\colorbox{bannergray}{\parbox{\dimexpr\textwidth-2\fboxsep}{\centering\vspace{3pt}
+  {\small Course: Computer Graphics \;$\cdot$\; International University, VNU-HCMC}\\[7pt]
+  {\Large Course Project Report: Splat Editor}\vspace{4pt}}}\\[-1pt]
+\noindent\rule{\textwidth}{2.2pt}
+
+\vspace{0.55cm}
+{\fontsize{16.5}{20}\selectfont Splat Editor: a viewer and editor for 3D Gaussian\\Splatting scenes in Python and OpenGL~3.3\par}
+\vspace{0.4cm}
+{\large Lê Anh Kiệt\textsuperscript{\,a}\par}
+\vspace{0.2cm}
+{\scriptsize\textsuperscript{a}\,\textit{International University, Vietnam National University Ho Chi Minh City, Vietnam} \quad Student ID: ITCSIU24047\par}
+\vspace{0.3cm}
+\noindent\rule{\textwidth}{0.4pt}
+\vspace{0.25cm}
+
+\noindent\begin{minipage}[t]{0.255\textwidth}
+{\footnotesize\spaced{P R O J E C T \ \ I N F O}\par}
+\vspace{2pt}\noindent\rule{\linewidth}{0.4pt}\par\vspace{3pt}
+{\scriptsize Student: Lê Anh Kiệt\\[3pt]
+\textit{Keywords:}\\
+3D Gaussian Splatting\\
+OpenGL, GLSL\\
+Camera and projection\\
+Lighting and shadows\\
+Physics simulation\\
+ImGui interface\par}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.715\textwidth}
+{\footnotesize\spaced{A B S T R A C T}\par}
+\vspace{2pt}\noindent\rule{\linewidth}{0.4pt}\par\vspace{3pt}
+{\scriptsize\setlength{\parindent}{0pt}\linespread{1.08}\selectfont
+This project builds Splat Editor, a program to view and edit 3D Gaussian Splatting (3DGS) scenes in Python and OpenGL~3.3. The program implements the 3DGS rendering pipeline itself: it reads the PLY file, projects ellipsoids to ellipses, sorts by depth and blends with alpha. On top of this, the project uses the six technique groups of the course: transformations, camera, texture, lighting, animation and interaction. The user can select, delete, undo and save the file.\par}
+\end{minipage}
+
+\vspace{0.25cm}
+\noindent\rule{\textwidth}{0.4pt}
+\vspace{0.35cm}
+\end{@twocolumnfalse}
+}]
+
+%====================================================================
+\section{Introduction and gaussian theory}
+\label{chap:theory}
+%====================================================================
+
+\subsection{Introduction}
+3D Gaussian Splatting (3DGS) shows a 3D scene with millions of soft ellipsoids, called gaussians \cite{kerbl2023gaussian}. The scene is trained from photos taken around an object (Fig.~\ref{fig:pipeline}). The resulting \code{.ply} file always has floating gaussians. So we need a program to view and clean the file. SuperSplat \cite{supersplat} does this in the browser. I wrote a similar editor in Python and OpenGL~3.3.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+  node distance=5mm and 7mm,
+  box/.style={draw=linkblue,thick,rounded corners=2pt,fill=linkblue!8,align=center,
+              minimum height=9mm,text width=19mm,font=\footnotesize},
+  mine/.style={box,fill=linkblue!25,very thick},
+  arr/.style={-{Stealth[length=2mm]},thick}]
+  \node[box] (photos) {Photos around\\the object};
+  \node[box,right=of photos] (colmap) {COLMAP\\(point cloud)};
+  \node[box,right=of colmap] (train) {Train the\\3DGS model};
+  \node[box,below=of train] (ply) {\code{.ply}\\file};
+  \node[mine,left=of ply] (editor) {Splat Editor\\(this project)};
+  \draw[arr] (photos) -- (colmap);
+  \draw[arr] (colmap) -- (train);
+  \draw[arr] (train) -- (ply);
+  \draw[arr] (ply) -- (editor);
+\end{tikzpicture}
+\caption{The workflow from photos to Splat Editor. COLMAP \cite{schonberger2016colmap} finds the camera positions.}
+\label{fig:pipeline}
+\end{figure}
+
+The project has two parts. Part one is the 3DGS rendering pipeline, from the file to the shader. Part two is the six technique groups of the course (Table~\ref{tab:map}).
+
+\begin{table}[H]
+\centering
+\caption{Technique groups and sections.}
+\label{tab:map}
+\footnotesize
+\begin{tabular}{@{}lll@{}}
+\toprule
+Group & Main content & Section \\
+\midrule
+T1 & layers, matrix $\mathbf{M}$, character skeleton & \ref{chap:t1} \\
+T2 & view/projection matrices, EWA, blending, cameras & \ref{chap:t2} \\
+T3 & skin texture, texture buffers, gaussian kernel & \ref{chap:t3} \\
+T4 & SH colour, Phong, shadow map & \ref{chap:t4} \\
+T5 & day--night, collision, character animation & \ref{chap:t5} \\
+T6 & selection brush, delete/undo, ImGui, HUD & \ref{chap:t6} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Input data}
+\label{sec:input}
+The input is a \code{.ply} file made by 3DGS training (Fig.~\ref{fig:train}). Training starts from the COLMAP point cloud and puts one gaussian at each point. Then it repeats three steps. It renders the gaussians. It compares the image with the real photo. It updates the parameters of every gaussian. It also removes useless gaussians and splits gaussians that are too large.
+
+\begin{figure*}[!t]
+\centering
+\includegraphics[width=0.9\textwidth]{figures/1 (6).png}
+\caption{How 3DGS training makes the input file \cite{kerbl2023gaussian}. The gaussians start at the structure-from-motion points. They are projected, rendered and compared with the ground-truth photo. The result of this loop is the \code{.ply} file.}
+\label{fig:train}
+\end{figure*}
+
+The file has two parts: a text header and a binary body. The header lists the properties. The body has one record per gaussian. Every value is a 32-bit float. Table~\ref{tab:ply} lists the properties. With SH of degree 3, one record has 62 values, or 248 bytes. Fig.~\ref{fig:csv} shows the first rows of a file, exported as CSV.
+
+\begin{table}[H]
+\centering
+\caption{Properties of one gaussian in the PLY file.}
+\label{tab:ply}
+\footnotesize
+\begin{tabular}{@{}p{2.3cm}p{0.9cm}p{4.4cm}@{}}
+\toprule
+Property & Count & Meaning \\
+\midrule
+\code{x, y, z} & 3 & centre $\symbf{\mu}$ \\
+\code{nx, ny, nz} & 3 & normal, always 0, not used \\
+\code{f\_dc\_0..2} & 3 & base colour (SH degree 0) \\
+\code{f\_rest\_*} & 45 & SH coefficients of degrees 1--3 \\
+\code{opacity} & 1 & raw opacity \\
+\code{scale\_0..2} & 3 & logarithm of the size \\
+\code{rot\_0..3} & 4 & rotation quaternion \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\columnwidth]{figures/csv_head.png}\\[2pt]
+\includegraphics[width=\columnwidth]{figures/csv_tail.png}
+\caption{The first six gaussians of a PLY file, shown as CSV. Top: position, normal and base colour. Bottom: opacity, scale and rotation. The \code{f\_rest} columns in between are hidden.}
+\label{fig:csv}
+\end{figure}
+
+The program maps a binary file straight into memory. So a file with millions of gaussians opens almost at once. Fig.~\ref{fig:viewer} shows a small capture of a person. The blurry blobs around the body are the floating gaussians that the editor must remove. The main test scene is a street with about 5 million gaussians (Fig.~\ref{fig:scene}).
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.6\columnwidth]{figures/viewer.png}
+\caption{A PLY file of a captured person. Floating gaussians are visible around the body and near the ground.}
+\label{fig:viewer}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\columnwidth]{figures/t4-day.png}\\[3pt]
+\includegraphics[width=\columnwidth]{figures/t4-night.png}
+\caption{A scene of about 5 million gaussians in Splat Editor, by day (top) and by night (bottom).}
+\label{fig:scene}
+\end{figure}
+
+\subsection{Gaussians and the PLY file}
+\label{sec:decode}
+Each gaussian has a position $\symbf{\mu}$, a colour $\mathbf{c}$, an opacity $\alpha$, a size $\mathbf{s}$ and a rotation $\symbf{q}$ (quaternion). Its density falls off smoothly from the centre. We can picture it as an ellipsoid (Fig.~\ref{fig:g2e}). The PLY file stores raw values. The program decodes them on load:
+\begin{itemize}\itemsep0pt
+  \item Size: $s_i=\exp(\code{scale\_i})$.
+  \item Opacity: $\alpha=1/(1+e^{-\code{opacity}})$.
+  \item Colour: $\mathrm{RGB}=0.5+C_0\,\code{f\_dc}$, with $C_0\approx0.2821$.
+  \item Rotation: the quaternion \code{rot\_0..3} is normalised to length 1.
+\end{itemize}
+On save, the program does the reverse.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\columnwidth]{figures/1 (4).png}
+\caption{A 3D gaussian is a soft blob. Its surface at one standard deviation is an ellipsoid.}
+\label{fig:g2e}
+\end{figure}
+
+The shape of a gaussian is stored in its covariance matrix $\Sig$. It is built from the scale matrix $\mathbf{S}=\mathrm{diag}(\mathbf{s})$ and the rotation matrix $\mathbf{R}(\symbf{q})$:
+\begin{equation}
+\Sig=\mathbf{R}\,\mathbf{S}\mathbf{S}^{\top}\mathbf{R}^{\top}.
+\label{eq:cov3d}
+\end{equation}
+Fig.~\ref{fig:rs} gives the two matrices. Fig.~\ref{fig:ellipsoid} draws the result for the first gaussian of Fig.~\ref{fig:csv}. The three sizes $s_0,s_1,s_2$ are the semi-axes of the ellipsoid. The quaternion turns these axes in space. Section~\ref{sec:ewa} projects this ellipsoid to the screen.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.75\columnwidth]{figures/1 (5).png}
+\caption{The rotation matrix $\mathbf{R}$ from the quaternion $(q_w,q_x,q_y,q_z)$ and the scale matrix $\mathbf{S}$.}
+\label{fig:rs}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\columnwidth]{figures/example_ellipsoid.png}
+\caption{One gaussian from the file. Left: the $1\sigma$ ellipsoid with its three axes and its centre $\symbf{\mu}$. Right: the same ellipsoid with its view-dependent colour.}
+\label{fig:ellipsoid}
+\end{figure}
+
+
+%====================================================================
+\section{T1: Transformations and hierarchical models}
+\label{chap:t1}
+%====================================================================
+\textbf{Layers.} Each \code{.ply} file is a layer. A layer has a translation vector $\mathbf{t}$, three Euler angles and a scale factor $s$. They form the matrix $\mathbf{M}$. This matrix takes a gaussian from file space to world space:
+\begin{equation}
+\mathbf{p}_w=s\mathbf{A}\mathbf{p}_f+\mathbf{t},\qquad
+\Sig_w=s^{2}\mathbf{A}\,\Sig_f\,\mathbf{A}^{\top}.
+\label{eq:world}
+\end{equation}
+Here $\mathbf{A}=\mathbf{R}_z\mathbf{R}_y\mathbf{R}_x\mathbf{F}$. $\mathbf{F}=\mathrm{diag}(-1,-1,1)$ is an optional flip for COLMAP files, whose $Y$ axis points down. The gaussian data does not change. Only $\mathbf{M}$ changes. So moving, rotating or scaling a layer is instant. On save, the program writes the transform into every gaussian. It also rotates the SH coefficients so the view-dependent colour stays correct.
+
+\textbf{Rotation about a point.} A layer can rotate about a point $\mathbf{c}$ with a matrix $\symbf{\Delta}$:
+\begin{equation}
+\mathbf{R}'=\symbf{\Delta}\mathbf{R},\qquad \mathbf{t}'=\symbf{\Delta}(\mathbf{t}-\mathbf{c})+\mathbf{c}.
+\end{equation}
+
+\subsection{The character skeleton}
+\label{sec:skeleton}
+The character appears when you press \code{F5}. It has six boxes: head, body, two arms and two legs. Each box has its own matrix. This matrix is the product of the joint matrices from the root down (Fig.~\ref{fig:skeleton}). Each joint rotates about a point $\mathbf{p}$:
+\begin{equation}
+\mathbf{M}_{\text{child}}=\mathbf{M}_{\text{parent}}\,\mathbf{T}(\mathbf{p})\,\mathbf{R}\,\mathbf{T}(-\mathbf{p}).
+\end{equation}
+The legs are children of the root. The arms and head are children of the body, so they lean with the body. The joint angles come from the animation (Section~\ref{chap:t5}).
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[node distance=5mm and 5mm]
+  \node[pbox] (root) {Root\\$\mathbf{M}_{\text{root}}$};
+  \node[pbox,right=12mm of root] (body) {Body\\(hip joint)};
+  \node[pbox,below=of root] (leg) {Left/right leg\\(hip joint)};
+  \node[pbox,right=of body] (arm) {Left/right arm\\(shoulder joint)};
+  \node[pbox,below=of arm] (head) {Head\\(neck joint)};
+  \draw[parr] (root) -- (body);
+  \draw[parr] (root) -- (leg);
+  \draw[parr] (body) -- (arm);
+  \draw[parr] (body) -- (head);
+\end{tikzpicture}
+\caption{The character hierarchy. Each arrow is one matrix multiplication.}
+\label{fig:skeleton}
+\end{figure}
+
+\begin{figure*}[!t]
+\centering
+\begin{minipage}{0.495\textwidth}\centering\includegraphics[width=\linewidth]{figures/t4-zombie-day.png}\\{\footnotesize (a) Day, 15:59.}\end{minipage}\hfill
+\begin{minipage}{0.495\textwidth}\centering\includegraphics[width=\linewidth]{figures/t4-dawn.png}\\{\footnotesize (b) Dawn, 06:15.}\end{minipage}\\[5pt]
+\begin{minipage}{0.495\textwidth}\centering\includegraphics[width=\linewidth]{figures/t4-lamp-zombie.png}\\{\footnotesize (c) Ambient $0.08$ and a lamp.}\end{minipage}\hfill
+\begin{minipage}{0.495\textwidth}\centering\includegraphics[width=\linewidth]{figures/t4-dusk.png}\\{\footnotesize (d) Dusk, 17:40.}\end{minipage}
+\caption{A scene with the sun, one point light and the character at different times of day.}
+\label{fig:t4}
+\end{figure*}
+
+%====================================================================
+\section{T2: Camera and projection}
+\label{chap:t2}
+%====================================================================
+A gaussian goes through four steps to become pixels on the screen \cite{zwicker2002ewa}. Each step is one box in Fig.~\ref{fig:ewa}, read from left to right.
+\begin{itemize}\itemsep0pt
+\item \textbf{Step 1, viewing transformation.} Move the gaussian from object space to camera space.
+\item \textbf{Step 2, projective mapping.} Turn the 3D ellipsoid into a 2D ellipse.
+\item \textbf{Step 3, shading and integration.} Compute the opacity of each pixel and blend the gaussians together.
+\item \textbf{Step 4, viewport transformation.} Place the result in the viewport of the window.
+\end{itemize}
+The four subsections below follow this order. The last subsection is about the cameras, because the camera gives the input of step 1.
+\begin{figure}[H]
+\centering
+\includegraphics[width=\columnwidth]{figures/1 (3).png}
+\caption{The splatting pipeline of EWA \cite{zwicker2002ewa}. The viewing transformation is $\mathbf{W}$ and the projective mapping is approximated by $\mathbf{J}$.}
+\label{fig:ewa}
+\end{figure}
+
+\subsection{Step 1: Viewing transformation}
+\label{sec:cam}
+This step changes the coordinate system. After it, the camera is at the origin and looks along the $-z$ axis. The \code{look\_at} function builds three camera axes from the eye position $\mathbf{e}$ and the target: right $\mathbf{r}$, up $\mathbf{u}$ and forward $\mathbf{f}$. The view matrix is
+\begin{equation}
+\mathbf{V}=\begin{pmatrix}
+\mathbf{r}^{\top}&-\mathbf{r}\!\cdot\!\mathbf{e}\\
+\mathbf{u}^{\top}&-\mathbf{u}\!\cdot\!\mathbf{e}\\
+-\mathbf{f}^{\top}&\mathbf{f}\!\cdot\!\mathbf{e}\\
+\mathbf{0}^{\top}&1\end{pmatrix}.
+\label{eq:view}
+\end{equation}
+The centre of the gaussian is multiplied by $\mathbf{V}$. The result is the centre in camera space $(v_x,v_y,v_z)$. The shape of the gaussian is only rotated. Let $\mathbf{W}$ be the rotation part of $\mathbf{V}$, that is its top-left $3\times3$ block: $\mathbf{W}=\begin{pmatrix}\mathbf{r}&\mathbf{u}&-\mathbf{f}\end{pmatrix}^{\top}$. The ellipsoid \eqref{eq:cov3d} in camera space is $\mathbf{W}\,\Sig\,\mathbf{W}^{\top}$.
+
+\subsection{Step 2: Projective mapping}
+\label{sec:ewa}
+This step takes camera space to the image plane.
+
+\textbf{Projecting a point.} The perspective matrix uses the vertical field of view $\varphi$ ($k=1/\tan(\varphi/2)$), the aspect ratio $a$, the near plane $n$ and the far plane $f$:
+\begin{equation}
+\mathbf{P}=\begin{pmatrix}
+\frac{k}{a}&0&0&0\\0&k&0&0\\
+0&0&\frac{f+n}{n-f}&\frac{2fn}{n-f}\\0&0&-1&0\end{pmatrix}.
+\label{eq:proj}
+\end{equation}
+The point is multiplied by $\mathbf{P}$ and divided by $c_w$. The result is the normalised coordinates $(n_x,n_y)$ in the range $[-1,1]$. The division by $c_w$ makes far objects look smaller. The centre of the gaussian is projected this way.
+
+\textbf{Projecting a gaussian.} A gaussian is not a point. Its ellipsoid must become an ellipse on screen. The division by $c_w$ is not linear, so we cannot multiply $\mathbf{P}$ with the ellipsoid. EWA replaces the projection by its derivative (the Jacobian) at the centre of the gaussian:
+\begin{equation}
+\mathbf{J}=\begin{pmatrix}
+\frac{f_{px}}{-v_z}&0&\frac{f_{px}\,v_x}{v_z^{2}}\\[1mm]
+0&\frac{f_{px}}{-v_z}&\frac{f_{px}\,v_y}{v_z^{2}}\\[1mm]
+0&0&0
+\end{pmatrix}.
+\label{eq:jac}
+\end{equation}
+Here $f_{px}=kH/2$ is the focal length in pixels, with $k$ from \eqref{eq:proj} and $H$ the viewport height. Joining step 1 and step 2, the 2D covariance is
+\begin{equation}
+\Sig'=\mathbf{J}\,\mathbf{W}\,\Sig\,\mathbf{W}^{\top}\mathbf{J}^{\top}.
+\label{eq:ewa}
+\end{equation}
+Here $\Sig$ is the 3D covariance \eqref{eq:cov3d}. $\mathbf{W}$ is the rotation part of the view matrix from step 1. $\mathbf{J}$ is the Jacobian \eqref{eq:jac}. Let the top-left $2\times2$ block of $\Sig'$ be $\begin{pmatrix}a&b\\b&c\end{pmatrix}$. Its eigenvalues are
+\begin{equation}
+\lambda_{1,2}=\frac{a+c}{2}\pm\sqrt{\Big(\frac{a-c}{2}\Big)^{2}+b^{2}}.
+\label{eq:eig}
+\end{equation}
+The two semi-axes of the ellipse are proportional to $\sqrt{\lambda_1}$ and $\sqrt{\lambda_2}$. The shader draws each gaussian as a quad covering at most 3 standard deviations. It drops gaussians whose centre is behind the camera or more than $1.3$ times outside the screen.
+
+\subsection{Step 3: Shading and alpha blending}
+\label{sec:blend}
+This step gives each pixel a colour. For each pixel of the quad, the fragment shader finds the distance $r$ to the centre of the ellipse, measured in standard deviations. The opacity has a bell shape:
+\begin{equation}
+a=\alpha\,e^{-r^2/2}.
+\label{eq:gauss}
+\end{equation}
+The gaussians are drawn from far to near and blended:
+\begin{equation}
+\mathbf{C}_i=\mathbf{c}_i a_i+(1-a_i)\,\mathbf{C}_{i-1}.
+\label{eq:over}
+\end{equation}
+Here $\mathbf{C}_{i-1}$ is the colour accumulated before splat $i$. The result depends on the order, so we must sort by depth. The program converts depth to 16 bits and sorts it with NumPy in a background thread. Until the sort is done, it draws with the order of the previous sort. The depth test is turned off, because a transparent gaussian must not hide the gaussians behind it.
+
+\subsection{Step 4: Viewport transformation}
+\label{sec:viewport}
+The last step converts the normalised coordinates $(n_x,n_y)$ of step 2 to pixels. The viewport has size $W\times H$ and corner $(x_0,y_0)$:
+\begin{equation}
+x_{px}=x_0+\tfrac{n_x+1}{2}W,\qquad y_{px}=y_0+\tfrac{1-n_y}{2}H.
+\label{eq:pixel}
+\end{equation}
+OpenGL does this step itself when drawing. The program also uses this formula to know which pixel a gaussian is on, for example in brush selection (Section~\ref{chap:t6}).
+
+\subsection{Three cameras}
+\textbf{Orbit camera.} The camera always looks at a point $\mathbf{t}$. Its position uses a yaw angle $\theta$, a pitch angle $\phi$ and a distance $d$:
+\begin{equation}
+\mathbf{e}=\mathbf{t}+d\,(\cos\phi\sin\theta,\ \sin\phi,\ \cos\phi\cos\theta).
+\label{eq:eye}
+\end{equation}
+The pitch is limited to about $\pm89^{\circ}$ so the camera does not flip.
+
+\textbf{Fly camera.} The velocity does not change at once. It moves gradually to the wanted velocity $\mathbf{v}^{*}$, so the camera has inertia:
+\begin{equation}
+\mathbf{v}\leftarrow\mathbf{v}+(\mathbf{v}^{*}-\mathbf{v})\min(10\Delta t,1),\qquad
+\mathbf{e}\leftarrow\mathbf{e}+\mathbf{v}\,\Delta t.
+\label{eq:fly}
+\end{equation}
+
+\textbf{Third-person view.} In walk mode, the camera pulls back behind the character. The program casts a ray from the character's eye to the camera position in the voxel map. If the ray hits a wall, the camera pulls in at once so it does not go through the wall. When the path is clear, it moves back out gradually.
+
+
+%====================================================================
+\section{T3: Texture mapping}
+\label{chap:t3}
+%====================================================================
+The program uses textures in three ways.
+
+\textbf{(1) The character skin.} The skin is a $64\times64$ image in the Minecraft cross layout. My own \code{load\_png} function reads it. The \code{GL\_NEAREST} filter keeps the pixels sharp. Each box face has its own 4 vertices. The UV of a vertex is its pixel position divided by 64. Each box is drawn twice: a base layer and an overlay layer. The fragment shader discards the transparent pixels of the overlay.
+
+\textbf{(2) Data as textures.} The millions of gaussians live in \emph{texture buffers}. The shader reads them with \code{texelFetch}. There are four buffers: gaussian data, selected/deleted state, SH coefficients and layer matrices. When the state or a layer matrix changes, the program rewrites only one small buffer. It does not upload the whole scene again.
+
+\textbf{(3) Procedural gaussian kernel.} The opacity $a=\alpha e^{-r^2/2}$ \eqref{eq:gauss} is computed directly in the fragment shader. No image is needed. The shadow map (Section~\ref{chap:t4}) is also a texture.
+
+%====================================================================
+\section{T4: Lighting and shadows}
+\label{chap:t4}
+%====================================================================
+\subsection{View-dependent colour}
+\label{sec:sh}
+The colour of a gaussian changes with the view direction $\mathbf{d}$. 3DGS stores this with spherical harmonics (SH) coefficients \cite{kerbl2023gaussian}:
+\begin{equation}
+\mathbf{c}(\mathbf{d})=\operatorname{clip}\!\Big(\mathbf{c}_0+\sum_{k=1}^{K}Y_k(\mathbf{d})\,\mathbf{h}_k,\,0,\,1\Big).
+\label{eq:sh}
+\end{equation}
+Here $\mathbf{c}_0$ is the base colour, $\mathbf{h}_k$ are the coefficients in the file and $Y_k$ are the basis functions. The coefficients are in file space. So the shader rotates the view direction into that space: $\mathbf{d}=\operatorname{norm}\!\big(\mathbf{A}^{\top}(\mathbf{p}_w-\mathbf{e})\big)$. It does not have to rotate the coefficients every frame. Fig.~\ref{fig:sh} shows the idea for degrees 0 to 2. Each basis function is a pattern on the sphere. The weighted sum gives one colour for each view direction.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\columnwidth]{figures/1 (1).png}
+\caption{Spherical harmonics up to degree 2. The nine basis functions are weighted by the coefficients $c_1..c_9$ and added. The colour is read at the view direction $(\theta,\varphi)$.}
+\label{fig:sh}
+\end{figure}
+
+\subsection{Phong lighting and shadows}
+Lighting is computed once per gaussian. The normal $\mathbf{n}$ is the shortest axis of the ellipsoid, flipped towards the camera. The final colour uses the Phong model \cite{phong1975}. It has three parts (Fig.~\ref{fig:phong}). Let $\mathbf{c}$ be the colour of the gaussian.
+
+\textbf{Ambient.} The ambient light $\mathbf{L}_a$ reaches every gaussian equally:
+\begin{equation}
+\mathbf{I}_a=\mathbf{c}\,\mathbf{L}_a.
+\label{eq:phong-a}
+\end{equation}
+
+\textbf{Diffuse.} A surface that faces the light is brighter. For light $j$, $\mathbf{L}_j$ is its colour and $\mathbf{l}_j$ is the direction to the light:
+\begin{equation}
+\begin{aligned}
+\mathbf{I}_d&=\mathbf{c}\sum_j \mathbf{L}_j\,w(\mathbf{n},\mathbf{l}_j)\,S_j,\\
+w(\mathbf{n},\mathbf{l})&=\operatorname{clip}\!\Big(\frac{\mathbf{n}\!\cdot\!\mathbf{l}+0.35}{1.35},0,1\Big).
+\end{aligned}
+\label{eq:phong-d}
+\end{equation}
+The term $w$ is a softened $\mathbf{n}\!\cdot\!\mathbf{l}$, because the estimated normal is noisy.
+
+\textbf{Specular.} A highlight appears where the reflected ray $\mathbf{r}_j$ is close to the direction $\mathbf{v}$ to the camera:
+\begin{equation}
+\mathbf{I}_s=k_s\sum_{j}\mathbf{L}_j\,(\mathbf{r}_j\!\cdot\!\mathbf{v})_{+}^{m}\,S_j.
+\label{eq:phong-s}
+\end{equation}
+Here $k_s$ is the specular strength and $m$ is the shininess. This part does not use the colour $\mathbf{c}$. It is zero when $\mathbf{n}\!\cdot\!\mathbf{l}_j\le0$.
+
+\textbf{Sum.} The final colour is the sum of the three parts:
+\begin{equation}
+\mathbf{c}_{out}=\mathbf{I}_a+\mathbf{I}_d+\mathbf{I}_s.
+\label{eq:phong-wrap}
+\end{equation}
+$S_j$ is the shadow factor of the sun, or the distance falloff of a point light. The scene has one sun and up to 8 point lights. Point lights cast no shadows.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\columnwidth]{figures/1 (2).png}
+\caption{The Phong model \cite{phong1975}: ambient, diffuse and specular parts, and their sum.}
+\label{fig:phong}
+\end{figure}
+
+
+\textbf{The sun.} The sun direction is computed from the hour $h$ of the day. The sun rises at 6, is highest at 12 and sets at 18. The sky colour and the ambient light change gradually between day and night. They are slightly orange at dusk (Fig.~\ref{fig:t4}).
+
+\textbf{Shadows.} The program draws the centres of the solid gaussians as points into a $2048^2$ depth map seen from the sun \cite{williams1978}. Each gaussian is projected into this map to compare depths. If something is closer to the sun, the gaussian is in shadow. The program averages $3\times3$ samples to soften the shadow edge (PCF \cite{reeves1987}):
+\begin{equation}
+S=\frac19\sum_{i,j=-1}^{1}\big[\,z_s-b\le D_s(u_s+i\tau,\,v_s+j\tau)\,\big].
+\label{eq:pcf}
+\end{equation}
+Here $(u_s,v_s,z_s)$ are the coordinates of the gaussian in the map, $D_s$ is the stored depth, $\tau$ is the texel step and $b$ is the bias. The bias stops a gaussian from shadowing itself.
+
+%====================================================================
+\section{T5: Animation and simulation}
+\label{chap:t5}
+%====================================================================
+Every motion is multiplied by the frame time $\Delta t$. So the speed depends little on the machine.
+
+\textbf{Day--night cycle.} This is a state machine with 4 states: NIGHT $\to$ DAWN $\to$ DAY $\to$ DUSK. The clock runs by itself. Lights set to ``on at night'' turn on at dusk and off at dawn.
+
+\textbf{Collision with voxels.} A gaussian has no clear surface, so direct collision is hard. The program divides space into voxels of edge $v$. A voxel with enough gaussians is solid. Each solid voxel is stored as one 64-bit integer:
+\begin{equation}
+\mathbf{c} = \left\lfloor \frac{\mathbf{p}-\mathbf{o}}{v} \right\rfloor,
+\qquad
+\text{key} = (c_x \ll 42)\,|\,(c_z \ll 21)\,|\,c_y.
+\label{eq:voxel}
+\end{equation}
+The keys are sorted. Because $c_y$ is in the low bits, the cells of one column sit next to each other. Finding the ground under the feet takes one \code{np.searchsorted} call.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[node distance=9mm and 6mm]
+  \node[pbox] (key) {Keys\\W A S D, Space};
+  \node[pbox,right=of key] (move) {Horizontal step\\(wall sliding)};
+  \node[pbox,right=of move] (grav) {Gravity\\$v_y\leftarrow v_y-g\Delta t$};
+  \node[pbox,below=of grav] (gr) {Ground\\(voxels)};
+  \node[pmine,left=of gr] (eye) {Eye position\\(smoothed)};
+  \draw[parr] (key) -- (move);
+  \draw[parr] (move) -- (grav);
+  \draw[parr] (grav) -- (gr);
+  \draw[parr] (gr) -- (eye);
+\end{tikzpicture}
+\caption{One frame of walk mode.}
+\label{fig:t5}
+\end{figure}
+
+\textbf{The player.} Fig.~\ref{fig:t5} summarises one frame. The player is a cylinder. At a wall, the player slides along it. The player can climb a low step and can jump. When not on the ground, the program integrates with Euler steps:
+\begin{equation}
+v_y \leftarrow v_y - g\,\Delta t,
+\qquad
+y \leftarrow y + v_y\,\Delta t.
+\label{eq:euler}
+\end{equation}
+All sizes and speeds scale with the player height $H$. The reason is that a 3DGS scene has no fixed unit.
+
+\textbf{Character animation.} When walking, the arms and legs swing with the $\sin$ of the distance walked. Other poses (sit, bow, wave) change smoothly with the same filter as \eqref{eq:fly}. This filter avoids sudden jumps.
+
+%====================================================================
+\section{T6: Interaction and GUI}
+\label{chap:t6}
+%====================================================================
+\textbf{Event handling.} Mouse and keyboard events go to ImGui first. If ImGui does not use them, they go to the camera, the selection brush and the shortcuts.
+
+\textbf{Brush selection.} Press \code{B} to turn on the brush. Paint on the screen to select gaussians. They turn yellow. The centre of each gaussian is projected to a pixel $\mathbf{p}$ (Section~\ref{sec:cam}). A stroke from $\mathbf{a}$ to $\mathbf{b}$ is a capsule of radius $r$. A gaussian is selected if
+\begin{equation}
+\lVert\mathbf{p}-\mathbf{a}-\tau(\mathbf{b}-\mathbf{a})\rVert\le r,\quad \tau=\operatorname{clip}\tfrac{(\mathbf{p}-\mathbf{a})\cdot(\mathbf{b}-\mathbf{a})}{\lVert\mathbf{b}-\mathbf{a}\rVert^2}\in[0,1].
+\label{eq:capsule}
+\end{equation}
+That is, the distance from $\mathbf{p}$ to the segment $\mathbf{ab}$ is at most $r$. The brush tests only the gaussian centre and does not test depth. So it selects through the scene, like SuperSplat \cite{supersplat}. For speed, the brush rejects a whole block of 1024 gaussians when the bounding box of the block is outside the stroke.
+
+\textbf{Soft delete and undo.} Each gaussian has one state byte on the GPU with two bits: \emph{selected} and \emph{deleted}. The \code{Delete} command only sets the ``deleted'' bit. The shader skips these gaussians. The original data does not change. Each delete is one command in \code{History} (Command pattern \cite{gamma1994design}, at most 20 steps). \code{Ctrl+Z} restores the last command.
+
+\textbf{Interface.} The ImGui panel on the left controls layers, transforms, selection, camera mode and lighting. The HUD shows the crosshair, the clock, the position and the brush circle. Table~\ref{tab:keys} lists the main keys.
+\begin{table}[H]
+\centering
+\caption{Main controls.}
+\label{tab:keys}
+\footnotesize
+\begin{tabular}{@{}p{3.1cm}p{4.6cm}@{}}
+\toprule
+Key / mouse & Function \\
+\midrule
+Left / middle drag & Orbit / pan \\
+Right drag + \code{WASD} & Look around, fly (\code{Ctrl} = fast) \\
+\code{M}, \code{F5}, \code{C}, \code{V} & Fly/walk; third person; sit; wave \\
+\code{F}, \code{G} & Frame the scene; show/hide grid \\
+\code{B}, \code{[}, \code{]} & Brush; brush size \\
+\code{Delete}, \code{Ctrl+Z} & Delete / undo \\
+\code{Ctrl+O/I/S} & Open / add layer / save \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+%====================================================================
+\section{Conclusion}
+\label{chap:end}
+%====================================================================
+Splat Editor can read, display, edit and save 3DGS files. The program uses all six technique groups of the course. Table~\ref{tab:src} shows where each part is in the source code.
+
+\begin{table}[H]
+\centering
+\caption{Main source files (in \code{splat\_editor/}).}
+\label{tab:src}
+\footnotesize
+\begin{tabular}{@{}p{2.2cm}>{\raggedright\arraybackslash}p{5.5cm}@{}}
+\toprule
+Part & File \\
+\midrule
+PLY read/write & \mbox{\code{io/ply.py}}, \mbox{\code{io/codec.py}} \\
+Gaussian rendering & \mbox{\code{render/splat\_renderer.py}}, \mbox{\code{render/sorter.py}}, \mbox{\code{render/shaders/splat\_prep.vert}} \\
+T1 & \mbox{\code{core/layer.py}}, \mbox{\code{core/transform.py}}, \mbox{\code{core/avatar\_pose.py}} \\
+T2 & \mbox{\code{core/math3d.py}}, \mbox{\code{render/camera.py}} \\
+T3 & \mbox{\code{render/avatar\_renderer.py}} \\
+T4 & \mbox{\code{core/sh.py}}, \mbox{\code{core/lighting.py}}, \mbox{\code{render/shaders/shadow.vert}} \\
+T5 & \mbox{\code{core/physics.py}}, \mbox{\code{core/avatar\_pose.py}} \\
+T6 & \mbox{\code{editor/brush.py}}, \mbox{\code{core/history.py}}, \mbox{\code{ui/}} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{thebibliography}{99}\footnotesize\itemsep0pt\parskip0pt
+\bibitem{schonberger2016colmap} J.~L.~Sch{\"o}nberger, J.-M.~Frahm, Structure-from-motion revisited, in: CVPR, 2016, pp.~4104--4113.
+\bibitem{kerbl2023gaussian} B.~Kerbl, G.~Kopanas, T.~Leimk{\"u}hler, G.~Drettakis, 3D Gaussian splatting for real-time radiance field rendering, ACM Trans. Graph. 42(4) (2023) 139.
+\bibitem{supersplat} PlayCanvas, SuperSplat: an open-source 3D Gaussian Splat editor, \url{https://github.com/playcanvas/supersplat}.
+\bibitem{zwicker2002ewa} M.~Zwicker, H.~Pfister, J.~van Baar, M.~Gross, EWA splatting, IEEE Trans. Vis. Comput. Graph. 8(3) (2002) 223--238.
+\bibitem{phong1975} B.~T.~Phong, Illumination for computer generated pictures, Commun. ACM 18(6) (1975) 311--317.
+\bibitem{williams1978} L.~Williams, Casting curved shadows on curved surfaces, in: SIGGRAPH, 1978, pp.~270--274.
+\bibitem{reeves1987} W.~T.~Reeves, D.~H.~Salesin, R.~L.~Cook, Rendering antialiased shadows with depth maps, in: SIGGRAPH, 1987, pp.~283--291.
+\bibitem{gamma1994design} E.~Gamma, R.~Helm, R.~Johnson, J.~Vlissides, Design Patterns: Elements of Reusable Object-Oriented Software, Addison-Wesley, 1994.
+\end{thebibliography}
+
+\end{document}

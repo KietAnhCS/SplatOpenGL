@@ -1,0 +1,638 @@
+\documentclass[9pt,twocolumn,a4paper]{extarticle}
+
+\usepackage{amsmath}
+\usepackage{fontspec}
+\usepackage{unicode-math}
+\setmainfont{CharisSIL-Regular.ttf}[BoldFont=CharisSIL-Bold.ttf,ItalicFont=CharisSIL-Italic.ttf,BoldItalicFont=CharisSIL-BoldItalic.ttf]
+\setmathfont{STIXTwoMath-Regular.otf}
+\setmonofont{consola.ttf}[BoldFont=consolab.ttf,ItalicFont=consolai.ttf,Scale=0.9]
+\usepackage[top=1.5cm,bottom=2.3cm,left=1.35cm,right=1.35cm,columnsep=0.75cm,footskip=0.9cm,headsep=0.45cm]{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{xtab}
+\usepackage{listings}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning}
+\tikzset{
+  pbox/.style={draw=linkblue,thick,rounded corners=2pt,fill=linkblue!8,align=center,
+               minimum height=9mm,text width=21mm,font=\footnotesize},
+  pmine/.style={pbox,fill=linkblue!25,very thick},
+  parr/.style={-{Stealth[length=2mm]},thick},
+  plab/.style={font=\scriptsize,midway,fill=white,inner sep=1pt}}
+\usepackage{fancyhdr}
+\usepackage{setspace}
+\usepackage{microtype}
+
+\definecolor{linkblue}{RGB}{0,106,150}
+\definecolor{bannergray}{RGB}{229,229,229}
+\usepackage[colorlinks=true,linkcolor=linkblue,citecolor=linkblue,urlcolor=linkblue]{hyperref}
+
+\titleformat{\section}{\normalsize\bfseries}{\thesection.}{0.55em}{}
+\titleformat{\subsection}{\small\itshape}{\thesubsection.}{0.55em}{}
+\titlespacing*{\section}{0pt}{10pt}{4pt}
+\titlespacing*{\subsection}{0pt}{7pt}{3pt}
+\setlength{\parskip}{0pt}
+\setlength{\parindent}{1.1em}
+\setlength{\arraycolsep}{2pt}
+\setlength{\abovedisplayskip}{4pt}
+\setlength{\belowdisplayskip}{4pt}
+\renewcommand{\figurename}{Hình}
+\renewcommand{\tablename}{Bảng}
+\renewcommand{\refname}{Tài liệu tham khảo}
+\captionsetup{font={footnotesize},labelfont=bf,labelsep=period,justification=justified,singlelinecheck=false,skip=3pt}
+\captionsetup[table]{position=top}
+\emergencystretch=3em
+\setlength{\textfloatsep}{9pt plus 2pt minus 2pt}
+\setlength{\floatsep}{7pt plus 2pt minus 2pt}
+\setlength{\intextsep}{7pt plus 2pt minus 2pt}
+\linespread{1.04}
+\raggedbottom
+
+\lstset{basicstyle=\ttfamily\fontsize{6.4}{7.4}\selectfont,breaklines=true,frame=single,
+  rulecolor=\color{gray!55},backgroundcolor=\color{gray!5},xleftmargin=2pt,xrightmargin=2pt,
+  framesep=2pt,aboveskip=1pt,belowskip=3pt,columns=fullflexible,keepspaces=true}
+
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\Sig}{\symbf{\Sigma}}
+\newcommand{\loc}[1]{\par\raggedright\noindent{\scriptsize\textit{#1}}\par\vspace{-1pt}}
+\newcommand{\src}[1]{\par\raggedright\noindent{\footnotesize\textit{Mã nguồn:} \texttt{#1}}\par}
+\newcommand{\spaced}[1]{\textls[160]{#1}}
+
+\newcommand{\runauthor}{\textit{L.\,A.\ Kiet}}
+\newcommand{\runtitle}{\textit{Splat Editor: trình xem và chỉnh sửa 3D Gaussian Splatting}}
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhead[L]{\footnotesize\runauthor}
+\fancyhead[R]{\footnotesize\runtitle}
+\fancyfoot[C]{\footnotesize\thepage}
+\fancypagestyle{first}{%
+  \fancyhf{}\renewcommand{\headrulewidth}{0pt}%
+}
+
+\makeatletter
+\renewcommand\@biblabel[1]{\textcolor{linkblue}{[#1]}}
+\makeatother
+
+\begin{document}
+\thispagestyle{first}
+
+\twocolumn[{%
+\begin{@twocolumnfalse}
+\vspace{-0.3cm}
+\begin{center}\small\color{linkblue}Đồ họa máy tính, Báo cáo đồ án môn học (2026)\end{center}
+\vspace{-0.1cm}
+\noindent\rule{\textwidth}{0.5pt}\\[-2pt]
+\noindent\colorbox{bannergray}{\parbox{\dimexpr\textwidth-2\fboxsep}{\centering\vspace{3pt}
+  {\small Môn học: Đồ họa máy tính \;$\cdot$\; Trường Đại học Quốc tế, ĐHQG-HCM}\\[7pt]
+  {\Large Báo cáo đồ án môn học: Splat Editor}\vspace{4pt}}}\\[-1pt]
+\noindent\rule{\textwidth}{2.2pt}
+
+\vspace{0.55cm}
+{\fontsize{16.5}{20}\selectfont Splat Editor: trình xem và chỉnh sửa cảnh 3D Gaussian\\Splatting bằng Python và OpenGL~3.3\par}
+\vspace{0.4cm}
+{\large Lê Anh Kiệt\textsuperscript{\,a}\par}
+\vspace{0.2cm}
+{\scriptsize\textsuperscript{a}\,\textit{Trường Đại học Quốc tế, Đại học Quốc gia TP. Hồ Chí Minh, Việt Nam} \quad MSSV: ITCSIU24047\par}
+\vspace{0.3cm}
+\noindent\rule{\textwidth}{0.4pt}
+\vspace{0.25cm}
+
+\noindent\begin{minipage}[t]{0.255\textwidth}
+{\footnotesize\spaced{T H Ô N G \ \ T I N}\par}
+\vspace{2pt}\noindent\rule{\linewidth}{0.4pt}\par\vspace{3pt}
+{\scriptsize Sinh viên: Lê Anh Kiệt\\[3pt]
+\textit{Từ khóa:}\\
+3D Gaussian Splatting\\
+OpenGL, GLSL\\
+Camera và phép chiếu\\
+Ánh sáng và bóng đổ\\
+Mô phỏng vật lý\\
+Giao diện ImGui\par}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.715\textwidth}
+{\footnotesize\spaced{T Ó M \ \ T Ắ T}\par}
+\vspace{2pt}\noindent\rule{\linewidth}{0.4pt}\par\vspace{3pt}
+{\scriptsize\setlength{\parindent}{0pt}\linespread{1.08}\selectfont
+Đồ án xây dựng Splat Editor, một chương trình xem và chỉnh sửa cảnh 3D Gaussian Splatting (3DGS) bằng Python và OpenGL~3.3. Chương trình tự cài đặt pipeline hiển thị 3DGS: đọc file PLY, chiếu ellipsoid thành ellipse, sắp xếp theo độ sâu và trộn alpha. Trên nền đó, đồ án dùng sáu nhóm kỹ thuật của môn học: phép biến đổi, camera, texture, ánh sáng, hoạt họa và tương tác. Người dùng có thể chọn, xóa, hoàn tác và lưu lại file.\par}
+\end{minipage}
+
+\vspace{0.25cm}
+\noindent\rule{\textwidth}{0.4pt}
+\vspace{0.35cm}
+\end{@twocolumnfalse}
+}]
+
+%====================================================================
+\section{Giới thiệu và lý thuyết gaussian}
+\label{chap:theory}
+%====================================================================
+
+\subsection{Giới thiệu}
+3D Gaussian Splatting (3DGS) hiển thị một cảnh 3D bằng hàng triệu ellipsoid mềm, gọi là gaussian \cite{kerbl2023gaussian}. Cảnh được huấn luyện từ ảnh chụp quanh vật thể (Hình~\ref{fig:pipeline}). File \code{.ply} thu được luôn có các gaussian lơ lửng. Vì vậy cần một chương trình để xem và làm sạch file. SuperSplat \cite{supersplat} làm việc này trên trình duyệt. Tôi viết một trình chỉnh sửa tương tự bằng Python và OpenGL~3.3.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+  node distance=5mm and 7mm,
+  box/.style={draw=linkblue,thick,rounded corners=2pt,fill=linkblue!8,align=center,
+              minimum height=9mm,text width=19mm,font=\footnotesize},
+  mine/.style={box,fill=linkblue!25,very thick},
+  arr/.style={-{Stealth[length=2mm]},thick}]
+  \node[box] (photos) {Ảnh chụp\\quanh vật thể};
+  \node[box,right=of photos] (colmap) {COLMAP\\(point cloud)};
+  \node[box,right=of colmap] (train) {Huấn luyện\\mô hình 3DGS};
+  \node[box,below=of train] (ply) {File\\\code{.ply}};
+  \node[mine,left=of ply] (editor) {Splat Editor\\(đồ án này)};
+  \draw[arr] (photos) -- (colmap);
+  \draw[arr] (colmap) -- (train);
+  \draw[arr] (train) -- (ply);
+  \draw[arr] (ply) -- (editor);
+\end{tikzpicture}
+\caption{Quy trình từ ảnh chụp đến Splat Editor. COLMAP \cite{schonberger2016colmap} tìm vị trí các camera.}
+\label{fig:pipeline}
+\end{figure}
+
+Đồ án có hai phần. Phần một là pipeline hiển thị 3DGS, từ file đến shader. Phần hai là sáu nhóm kỹ thuật của môn học (Bảng~\ref{tab:map}).
+
+\begin{table}[H]
+\centering
+\caption{Các nhóm kỹ thuật và các mục.}
+\label{tab:map}
+\footnotesize
+\begin{tabular}{@{}lll@{}}
+\toprule
+Nhóm & Nội dung chính & Mục \\
+\midrule
+T1 & layer, ma trận $\mathbf{M}$, bộ xương nhân vật & \ref{chap:t1} \\
+T2 & ma trận nhìn/chiếu, EWA, trộn alpha, camera & \ref{chap:t2} \\
+T3 & texture skin, texture buffer, nhân gaussian & \ref{chap:t3} \\
+T4 & màu SH, Phong, shadow map & \ref{chap:t4} \\
+T5 & ngày--đêm, va chạm, hoạt họa nhân vật & \ref{chap:t5} \\
+T6 & cọ chọn, xóa/hoàn tác, ImGui, HUD & \ref{chap:t6} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Dữ liệu đầu vào}
+\label{sec:input}
+Đầu vào là một file \code{.ply} do quá trình huấn luyện 3DGS tạo ra (Hình~\ref{fig:train}). Huấn luyện bắt đầu từ point cloud của COLMAP và đặt một gaussian tại mỗi điểm. Sau đó nó lặp lại ba bước. Nó vẽ các gaussian. Nó so ảnh vẽ ra với ảnh chụp thật. Nó cập nhật tham số của từng gaussian. Nó cũng xóa các gaussian vô ích và tách các gaussian quá lớn.
+
+\begin{figure*}[!t]
+\centering
+\includegraphics[width=0.9\textwidth]{figures/1 (6).png}
+\caption{Cách huấn luyện 3DGS tạo ra file đầu vào \cite{kerbl2023gaussian}. Các gaussian bắt đầu tại các điểm structure-from-motion. Chúng được chiếu, vẽ và so với ảnh chụp thật. Kết quả của vòng lặp này là file \code{.ply}.}
+\label{fig:train}
+\end{figure*}
+
+File có hai phần: header dạng văn bản và phần thân nhị phân. Header liệt kê các thuộc tính. Phần thân có một bản ghi cho mỗi gaussian. Mỗi giá trị là một số thực 32 bit. Bảng~\ref{tab:ply} liệt kê các thuộc tính. Với SH bậc 3, một bản ghi có 62 giá trị, tức 248 byte. Hình~\ref{fig:csv} là các dòng đầu của một file, xuất ra CSV.
+
+\begin{table}[H]
+\centering
+\caption{Các thuộc tính của một gaussian trong file PLY.}
+\label{tab:ply}
+\footnotesize
+\begin{tabular}{@{}p{2.3cm}p{0.9cm}p{4.4cm}@{}}
+\toprule
+Thuộc tính & Số & Ý nghĩa \\
+\midrule
+\code{x, y, z} & 3 & tâm $\symbf{\mu}$ \\
+\code{nx, ny, nz} & 3 & pháp tuyến, luôn bằng 0, không dùng \\
+\code{f\_dc\_0..2} & 3 & màu cơ bản (SH bậc 0) \\
+\code{f\_rest\_*} & 45 & hệ số SH bậc 1--3 \\
+\code{opacity} & 1 & độ đục thô \\
+\code{scale\_0..2} & 3 & logarit của kích thước \\
+\code{rot\_0..3} & 4 & quaternion quay \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\columnwidth]{figures/csv_head.png}\\[2pt]
+\includegraphics[width=\columnwidth]{figures/csv_tail.png}
+\caption{Sáu gaussian đầu tiên của một file PLY, hiển thị dạng CSV. Trên: vị trí, pháp tuyến và màu cơ bản. Dưới: độ đục, kích thước và phép quay. Các cột \code{f\_rest} ở giữa được ẩn đi.}
+\label{fig:csv}
+\end{figure}
+
+Chương trình ánh xạ file nhị phân thẳng vào bộ nhớ. Vì vậy file có hàng triệu gaussian mở gần như tức thì. Hình~\ref{fig:viewer} là một bản chụp nhỏ của một người. Các đốm mờ quanh người là gaussian lơ lửng mà trình chỉnh sửa phải xóa. Cảnh thử nghiệm chính là một con phố có khoảng 5 triệu gaussian (Hình~\ref{fig:scene}).
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.6\columnwidth]{figures/viewer.png}
+\caption{File PLY của một người được chụp lại. Các gaussian lơ lửng hiện rõ quanh người và gần mặt đất.}
+\label{fig:viewer}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\columnwidth]{figures/t4-day.png}\\[3pt]
+\includegraphics[width=\columnwidth]{figures/t4-night.png}
+\caption{Một cảnh khoảng 5 triệu gaussian trong Splat Editor, ban ngày (trên) và ban đêm (dưới).}
+\label{fig:scene}
+\end{figure}
+
+\subsection{Gaussian và file PLY}
+\label{sec:decode}
+Mỗi gaussian có vị trí $\symbf{\mu}$, màu $\mathbf{c}$, độ đục $\alpha$, kích thước $\mathbf{s}$ và phép quay $\symbf{q}$ (quaternion). Mật độ của nó giảm dần từ tâm ra ngoài. Ta có thể hình dung nó là một ellipsoid (Hình~\ref{fig:g2e}). File PLY lưu giá trị thô. Chương trình giải mã khi đọc:
+\begin{itemize}\itemsep0pt
+  \item Kích thước: $s_i=\exp(\code{scale\_i})$.
+  \item Độ đục: $\alpha=1/(1+e^{-\code{opacity}})$.
+  \item Màu: $\mathrm{RGB}=0{,}5+C_0\,\code{f\_dc}$, với $C_0\approx0{,}2821$.
+  \item Phép quay: chuẩn hóa quaternion \code{rot\_0..3} về độ dài 1.
+\end{itemize}
+Khi lưu file, chương trình làm ngược lại.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\columnwidth]{figures/1 (4).png}
+\caption{Gaussian 3D là một đốm mềm. Mặt của nó tại một độ lệch chuẩn là một ellipsoid.}
+\label{fig:g2e}
+\end{figure}
+
+Hình dạng của gaussian nằm trong ma trận hiệp phương sai $\Sig$. Nó được tạo từ ma trận co giãn $\mathbf{S}=\mathrm{diag}(\mathbf{s})$ và ma trận quay $\mathbf{R}(\symbf{q})$:
+\begin{equation}
+\Sig=\mathbf{R}\,\mathbf{S}\mathbf{S}^{\top}\mathbf{R}^{\top}.
+\label{eq:cov3d}
+\end{equation}
+Hình~\ref{fig:rs} cho hai ma trận này. Hình~\ref{fig:ellipsoid} vẽ kết quả cho gaussian đầu tiên của Hình~\ref{fig:csv}. Ba kích thước $s_0,s_1,s_2$ là các bán trục của ellipsoid. Quaternion xoay các trục này trong không gian. Mục~\ref{sec:ewa} chiếu ellipsoid này lên màn hình.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.75\columnwidth]{figures/1 (5).png}
+\caption{Ma trận quay $\mathbf{R}$ từ quaternion $(q_w,q_x,q_y,q_z)$ và ma trận co giãn $\mathbf{S}$.}
+\label{fig:rs}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\columnwidth]{figures/example_ellipsoid.png}
+\caption{Một gaussian trong file. Trái: ellipsoid $1\sigma$ với ba trục và tâm $\symbf{\mu}$. Phải: cùng ellipsoid đó với màu phụ thuộc hướng nhìn.}
+\label{fig:ellipsoid}
+\end{figure}
+
+
+%====================================================================
+\section{T1: Phép biến đổi và mô hình phân cấp}
+\label{chap:t1}
+%====================================================================
+\textbf{Layer.} Mỗi file \code{.ply} là một layer. Layer có vector tịnh tiến $\mathbf{t}$, ba góc Euler và hệ số co giãn $s$. Chúng tạo thành ma trận $\mathbf{M}$. Ma trận này đưa gaussian từ không gian file sang thế giới:
+\begin{equation}
+\mathbf{p}_w=s\mathbf{A}\mathbf{p}_f+\mathbf{t},\qquad
+\Sig_w=s^{2}\mathbf{A}\,\Sig_f\,\mathbf{A}^{\top}.
+\label{eq:world}
+\end{equation}
+Ở đây $\mathbf{A}=\mathbf{R}_z\mathbf{R}_y\mathbf{R}_x\mathbf{F}$. $\mathbf{F}=\mathrm{diag}(-1,-1,1)$ là phép lật tùy chọn cho file COLMAP có trục $Y$ hướng xuống. Dữ liệu gaussian không đổi. Chỉ $\mathbf{M}$ thay đổi. Vì vậy di chuyển, xoay hoặc co giãn một layer diễn ra tức thì. Khi lưu, chương trình ghi phép biến đổi vào từng gaussian. Nó cũng xoay các hệ số SH để màu theo hướng nhìn vẫn đúng.
+
+\textbf{Quay quanh một điểm.} Layer có thể quay quanh điểm $\mathbf{c}$ bằng ma trận $\symbf{\Delta}$:
+\begin{equation}
+\mathbf{R}'=\symbf{\Delta}\mathbf{R},\qquad \mathbf{t}'=\symbf{\Delta}(\mathbf{t}-\mathbf{c})+\mathbf{c}.
+\end{equation}
+
+\subsection{Bộ xương nhân vật}
+\label{sec:skeleton}
+Nhân vật hiện ra khi bấm \code{F5}. Nó có sáu hộp: đầu, thân, hai tay và hai chân. Mỗi hộp có một ma trận riêng. Ma trận này là tích các ma trận khớp từ gốc xuống (Hình~\ref{fig:skeleton}). Mỗi khớp quay quanh một điểm $\mathbf{p}$:
+\begin{equation}
+\mathbf{M}_{\text{con}}=\mathbf{M}_{\text{cha}}\,\mathbf{T}(\mathbf{p})\,\mathbf{R}\,\mathbf{T}(-\mathbf{p}).
+\end{equation}
+Chân là con của gốc. Tay và đầu là con của thân, nên chúng nghiêng theo thân. Các góc khớp đến từ hoạt họa (Mục~\ref{chap:t5}).
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[node distance=5mm and 5mm]
+  \node[pbox] (root) {Gốc\\$\mathbf{M}_{\text{root}}$};
+  \node[pbox,right=12mm of root] (body) {Thân\\(khớp hông)};
+  \node[pbox,below=of root] (leg) {Chân trái/phải\\(khớp hông)};
+  \node[pbox,right=of body] (arm) {Tay trái/phải\\(khớp vai)};
+  \node[pbox,below=of arm] (head) {Đầu\\(khớp cổ)};
+  \draw[parr] (root) -- (body);
+  \draw[parr] (root) -- (leg);
+  \draw[parr] (body) -- (arm);
+  \draw[parr] (body) -- (head);
+\end{tikzpicture}
+\caption{Cây phân cấp của nhân vật. Mỗi mũi tên là một phép nhân ma trận.}
+\label{fig:skeleton}
+\end{figure}
+
+\begin{figure*}[!t]
+\centering
+\begin{minipage}{0.495\textwidth}\centering\includegraphics[width=\linewidth]{figures/t4-zombie-day.png}\\{\footnotesize (a) Ban ngày, 15:59.}\end{minipage}\hfill
+\begin{minipage}{0.495\textwidth}\centering\includegraphics[width=\linewidth]{figures/t4-dawn.png}\\{\footnotesize (b) Bình minh, 06:15.}\end{minipage}\\[5pt]
+\begin{minipage}{0.495\textwidth}\centering\includegraphics[width=\linewidth]{figures/t4-lamp-zombie.png}\\{\footnotesize (c) Môi trường $0{,}08$ và một đèn.}\end{minipage}\hfill
+\begin{minipage}{0.495\textwidth}\centering\includegraphics[width=\linewidth]{figures/t4-dusk.png}\\{\footnotesize (d) Hoàng hôn, 17:40.}\end{minipage}
+\caption{Cảnh có mặt trời, một đèn điểm và nhân vật vào các giờ khác nhau trong ngày.}
+\label{fig:t4}
+\end{figure*}
+
+%====================================================================
+\section{T2: Camera và phép chiếu}
+\label{chap:t2}
+%====================================================================
+Một gaussian đi qua bốn bước để thành pixel trên màn hình \cite{zwicker2002ewa}. Mỗi bước là một ô trong Hình~\ref{fig:ewa}, đọc từ trái sang phải.
+\begin{itemize}\itemsep0pt
+\item \textbf{Bước 1, phép biến đổi nhìn} (\emph{viewing transformation}). Đưa gaussian từ không gian vật thể về không gian camera.
+\item \textbf{Bước 2, phép chiếu} (\emph{projective mapping}). Biến ellipsoid 3D thành ellipse 2D.
+\item \textbf{Bước 3, tô màu và trộn} (\emph{shading and integration}). Tính độ đục của từng pixel và trộn các gaussian với nhau.
+\item \textbf{Bước 4, phép biến đổi vùng nhìn} (\emph{viewport transformation}). Đặt kết quả vào vùng nhìn của cửa sổ.
+\end{itemize}
+Bốn mục dưới đây đi theo đúng thứ tự này. Mục cuối nói về camera, vì camera cho đầu vào của bước 1.
+\begin{figure}[H]
+\centering
+\includegraphics[width=\columnwidth]{figures/1 (3).png}
+\caption{Pipeline splatting của EWA \cite{zwicker2002ewa}. Phép biến đổi nhìn là $\mathbf{W}$ và phép chiếu được xấp xỉ bằng $\mathbf{J}$.}
+\label{fig:ewa}
+\end{figure}
+
+\subsection{Bước 1: Phép biến đổi nhìn}
+\label{sec:cam}
+Bước này đổi hệ tọa độ. Sau bước này, camera nằm ở gốc tọa độ và nhìn dọc theo trục $-z$. Hàm \code{look\_at} tạo ba trục camera từ vị trí mắt $\mathbf{e}$ và điểm nhìn: phải $\mathbf{r}$, lên $\mathbf{u}$ và trước $\mathbf{f}$. Ma trận nhìn là
+\begin{equation}
+\mathbf{V}=\begin{pmatrix}
+\mathbf{r}^{\top}&-\mathbf{r}\!\cdot\!\mathbf{e}\\
+\mathbf{u}^{\top}&-\mathbf{u}\!\cdot\!\mathbf{e}\\
+-\mathbf{f}^{\top}&\mathbf{f}\!\cdot\!\mathbf{e}\\
+\mathbf{0}^{\top}&1\end{pmatrix}.
+\label{eq:view}
+\end{equation}
+Tâm gaussian được nhân với $\mathbf{V}$. Kết quả là tâm trong không gian camera $(v_x,v_y,v_z)$. Hình dạng của gaussian chỉ bị quay. Gọi $\mathbf{W}$ là phần quay của $\mathbf{V}$, tức khối $3\times3$ trên trái: $\mathbf{W}=\begin{pmatrix}\mathbf{r}&\mathbf{u}&-\mathbf{f}\end{pmatrix}^{\top}$. Ellipsoid \eqref{eq:cov3d} trong không gian camera là $\mathbf{W}\,\Sig\,\mathbf{W}^{\top}$.
+
+\subsection{Bước 2: Phép chiếu}
+\label{sec:ewa}
+Bước này đưa không gian camera lên mặt phẳng ảnh.
+
+\textbf{Chiếu một điểm.} Ma trận chiếu phối cảnh dùng góc nhìn dọc $\varphi$ ($k=1/\tan(\varphi/2)$), tỉ lệ khung hình $a$, mặt phẳng gần $n$ và xa $f$:
+\begin{equation}
+\mathbf{P}=\begin{pmatrix}
+\frac{k}{a}&0&0&0\\0&k&0&0\\
+0&0&\frac{f+n}{n-f}&\frac{2fn}{n-f}\\0&0&-1&0\end{pmatrix}.
+\label{eq:proj}
+\end{equation}
+Điểm được nhân với $\mathbf{P}$ rồi chia cho $c_w$. Kết quả là tọa độ chuẩn hóa $(n_x,n_y)$ trong khoảng $[-1,1]$. Phép chia cho $c_w$ làm vật ở xa trông nhỏ hơn. Tâm gaussian được chiếu theo cách này.
+
+\textbf{Chiếu một gaussian.} Gaussian không phải là một điểm. Ellipsoid của nó phải thành một ellipse trên màn hình. Phép chia cho $c_w$ không tuyến tính, nên không thể nhân $\mathbf{P}$ với ellipsoid. EWA thay phép chiếu bằng đạo hàm của nó (Jacobian) tại tâm gaussian:
+\begin{equation}
+\mathbf{J}=\begin{pmatrix}
+\frac{f_{px}}{-v_z}&0&\frac{f_{px}\,v_x}{v_z^{2}}\\[1mm]
+0&\frac{f_{px}}{-v_z}&\frac{f_{px}\,v_y}{v_z^{2}}\\[1mm]
+0&0&0
+\end{pmatrix}.
+\label{eq:jac}
+\end{equation}
+Ở đây $f_{px}=kH/2$ là tiêu cự tính bằng pixel, với $k$ lấy từ \eqref{eq:proj} và $H$ là chiều cao vùng nhìn. Ghép bước 1 và bước 2, hiệp phương sai 2D là
+\begin{equation}
+\Sig'=\mathbf{J}\,\mathbf{W}\,\Sig\,\mathbf{W}^{\top}\mathbf{J}^{\top}.
+\label{eq:ewa}
+\end{equation}
+Ở đây $\Sig$ là hiệp phương sai 3D \eqref{eq:cov3d}. $\mathbf{W}$ là phần quay của ma trận nhìn ở bước 1. $\mathbf{J}$ là Jacobian \eqref{eq:jac}. Gọi khối $2\times2$ trên trái của $\Sig'$ là $\begin{pmatrix}a&b\\b&c\end{pmatrix}$. Giá trị riêng của nó là
+\begin{equation}
+\lambda_{1,2}=\frac{a+c}{2}\pm\sqrt{\Big(\frac{a-c}{2}\Big)^{2}+b^{2}}.
+\label{eq:eig}
+\end{equation}
+Hai bán trục của ellipse tỉ lệ với $\sqrt{\lambda_1}$ và $\sqrt{\lambda_2}$. Shader vẽ mỗi gaussian thành một hình vuông phủ tối đa 3 độ lệch chuẩn. Nó bỏ các gaussian có tâm ở sau camera hoặc ngoài màn hình quá $1{,}3$ lần.
+
+\subsection{Bước 3: Tô màu và trộn alpha}
+\label{sec:blend}
+Bước này cho mỗi pixel một màu. Với mỗi pixel của hình vuông, fragment shader tính khoảng cách $r$ đến tâm ellipse, đo bằng độ lệch chuẩn. Độ đục có dạng hình chuông:
+\begin{equation}
+a=\alpha\,e^{-r^2/2}.
+\label{eq:gauss}
+\end{equation}
+Các gaussian được vẽ từ xa đến gần và trộn với nhau:
+\begin{equation}
+\mathbf{C}_i=\mathbf{c}_i a_i+(1-a_i)\,\mathbf{C}_{i-1}.
+\label{eq:over}
+\end{equation}
+Ở đây $\mathbf{C}_{i-1}$ là màu đã tích lũy trước splat thứ $i$. Kết quả phụ thuộc thứ tự, nên phải sắp xếp theo độ sâu. Chương trình đổi độ sâu sang 16 bit và sắp xếp bằng NumPy trong một luồng nền. Khi chưa sắp xếp xong, nó vẽ tạm bằng thứ tự của lần sắp xếp trước. Depth test được tắt, vì gaussian trong suốt không được che mất gaussian phía sau.
+
+\subsection{Bước 4: Phép biến đổi vùng nhìn}
+\label{sec:viewport}
+Bước cuối đổi tọa độ chuẩn hóa $(n_x,n_y)$ của bước 2 sang pixel. Vùng nhìn có kích thước $W\times H$ và góc $(x_0,y_0)$:
+\begin{equation}
+x_{px}=x_0+\tfrac{n_x+1}{2}W,\qquad y_{px}=y_0+\tfrac{1-n_y}{2}H.
+\label{eq:pixel}
+\end{equation}
+OpenGL tự làm bước này khi vẽ. Chương trình cũng dùng công thức này để biết một gaussian nằm ở pixel nào, ví dụ khi chọn bằng cọ (Mục~\ref{chap:t6}).
+
+\subsection{Ba loại camera}
+\textbf{Camera quỹ đạo.} Camera luôn nhìn vào điểm $\mathbf{t}$. Vị trí của nó dùng góc yaw $\theta$, góc pitch $\phi$ và khoảng cách $d$:
+\begin{equation}
+\mathbf{e}=\mathbf{t}+d\,(\cos\phi\sin\theta,\ \sin\phi,\ \cos\phi\cos\theta).
+\label{eq:eye}
+\end{equation}
+Pitch bị giới hạn ở khoảng $\pm89^{\circ}$ để camera không lật.
+
+\textbf{Camera bay.} Vận tốc không đổi ngay. Nó tiến dần đến vận tốc mong muốn $\mathbf{v}^{*}$, nên camera có quán tính:
+\begin{equation}
+\mathbf{v}\leftarrow\mathbf{v}+(\mathbf{v}^{*}-\mathbf{v})\min(10\Delta t,1),\qquad
+\mathbf{e}\leftarrow\mathbf{e}+\mathbf{v}\,\Delta t.
+\label{eq:fly}
+\end{equation}
+
+\textbf{Góc nhìn thứ ba.} Ở chế độ đi bộ, camera lùi ra sau nhân vật một đoạn. Chương trình bắn một tia từ mắt nhân vật đến vị trí camera trong bản đồ voxel. Nếu tia chạm tường, camera co lại ngay để không xuyên tường. Khi hết vướng, nó lùi ra dần.
+
+%====================================================================
+\section{T3: Ánh xạ texture}
+\label{chap:t3}
+%====================================================================
+Chương trình dùng texture theo ba cách.
+
+\textbf{(1) Skin của nhân vật.} Skin là một ảnh $64\times64$, trải theo kiểu chữ thập của Minecraft. Hàm \code{load\_png} tự viết đọc ảnh này. Bộ lọc \code{GL\_NEAREST} giữ các pixel sắc nét. Mỗi mặt hộp có 4 đỉnh riêng. UV của một đỉnh là vị trí pixel chia cho 64. Mỗi hộp được vẽ hai lần: lớp nền và lớp áo. Fragment shader bỏ các pixel trong suốt của lớp áo.
+
+\textbf{(2) Dữ liệu dưới dạng texture.} Hàng triệu gaussian nằm trong các \emph{texture buffer}. Shader đọc chúng bằng \code{texelFetch}. Có bốn buffer: dữ liệu gaussian, trạng thái chọn/xóa, hệ số SH và ma trận layer. Khi trạng thái hoặc ma trận layer thay đổi, chương trình chỉ ghi lại một buffer nhỏ. Nó không tải lại cả cảnh.
+
+\textbf{(3) Nhân gaussian thủ tục.} Độ đục $a=\alpha e^{-r^2/2}$ \eqref{eq:gauss} được tính ngay trong fragment shader. Không cần ảnh nào. Shadow map (Mục~\ref{chap:t4}) cũng là một texture.
+
+%====================================================================
+\section{T4: Ánh sáng và bóng đổ}
+\label{chap:t4}
+%====================================================================
+\subsection{Màu phụ thuộc hướng nhìn}
+\label{sec:sh}
+Màu của một gaussian thay đổi theo hướng nhìn $\mathbf{d}$. 3DGS lưu điều này bằng các hệ số điều hòa cầu (SH) \cite{kerbl2023gaussian}:
+\begin{equation}
+\mathbf{c}(\mathbf{d})=\operatorname{clip}\!\Big(\mathbf{c}_0+\sum_{k=1}^{K}Y_k(\mathbf{d})\,\mathbf{h}_k,\,0,\,1\Big).
+\label{eq:sh}
+\end{equation}
+Ở đây $\mathbf{c}_0$ là màu cơ bản, $\mathbf{h}_k$ là các hệ số trong file và $Y_k$ là các hàm cơ sở. Các hệ số nằm trong không gian file. Vì vậy shader quay hướng nhìn về không gian đó: $\mathbf{d}=\operatorname{norm}\!\big(\mathbf{A}^{\top}(\mathbf{p}_w-\mathbf{e})\big)$. Nó không phải quay các hệ số trong mỗi khung hình. Hình~\ref{fig:sh} minh họa ý tưởng cho bậc 0 đến 2. Mỗi hàm cơ sở là một mẫu hình trên mặt cầu. Tổng có trọng số cho một màu ứng với mỗi hướng nhìn.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\columnwidth]{figures/1 (1).png}
+\caption{Điều hòa cầu đến bậc 2. Chín hàm cơ sở được nhân với các hệ số $c_1..c_9$ rồi cộng lại. Màu được đọc tại hướng nhìn $(\theta,\varphi)$.}
+\label{fig:sh}
+\end{figure}
+
+\subsection{Chiếu sáng Phong và bóng đổ}
+Ánh sáng được tính một lần cho mỗi gaussian. Pháp tuyến $\mathbf{n}$ là trục ngắn nhất của ellipsoid, lật về phía camera. Màu cuối dùng mô hình Phong \cite{phong1975}. Mô hình có ba phần (Hình~\ref{fig:phong}). Gọi $\mathbf{c}$ là màu của gaussian.
+
+\textbf{Ambient.} Ánh sáng môi trường $\mathbf{L}_a$ chiếu đều lên mọi gaussian:
+\begin{equation}
+\mathbf{I}_a=\mathbf{c}\,\mathbf{L}_a.
+\label{eq:phong-a}
+\end{equation}
+
+\textbf{Diffuse.} Mặt hướng về đèn thì sáng hơn. Với đèn $j$, $\mathbf{L}_j$ là màu và $\mathbf{l}_j$ là hướng về đèn:
+\begin{equation}
+\begin{aligned}
+\mathbf{I}_d&=\mathbf{c}\sum_j \mathbf{L}_j\,w(\mathbf{n},\mathbf{l}_j)\,S_j,\\
+w(\mathbf{n},\mathbf{l})&=\operatorname{clip}\!\Big(\frac{\mathbf{n}\!\cdot\!\mathbf{l}+0{,}35}{1{,}35},0,1\Big).
+\end{aligned}
+\label{eq:phong-d}
+\end{equation}
+$w$ là $\mathbf{n}\!\cdot\!\mathbf{l}$ đã làm mềm, vì pháp tuyến ước lượng khá nhiễu.
+
+\textbf{Specular.} Điểm sáng bóng hiện ra khi tia phản xạ $\mathbf{r}_j$ gần với hướng $\mathbf{v}$ về camera:
+\begin{equation}
+\mathbf{I}_s=k_s\sum_{j}\mathbf{L}_j\,(\mathbf{r}_j\!\cdot\!\mathbf{v})_{+}^{m}\,S_j.
+\label{eq:phong-s}
+\end{equation}
+Ở đây $k_s$ là cường độ specular và $m$ là độ bóng. Phần này không dùng màu $\mathbf{c}$. Nó bằng 0 khi $\mathbf{n}\!\cdot\!\mathbf{l}_j\le0$.
+
+\textbf{Tổng.} Màu cuối là tổng của ba phần:
+\begin{equation}
+\mathbf{c}_{out}=\mathbf{I}_a+\mathbf{I}_d+\mathbf{I}_s.
+\label{eq:phong-wrap}
+\end{equation}
+$S_j$ là hệ số bóng đổ của mặt trời, hoặc độ suy giảm theo khoảng cách của đèn điểm. Cảnh có một mặt trời và tối đa 8 đèn điểm. Đèn điểm không đổ bóng.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\columnwidth]{figures/1 (2).png}
+\caption{Mô hình Phong \cite{phong1975}: phần ambient, diffuse và specular, và tổng của chúng.}
+\label{fig:phong}
+\end{figure}
+
+\textbf{Mặt trời.} Hướng mặt trời tính từ giờ $h$ trong ngày. Mặt trời mọc lúc 6 giờ, cao nhất lúc 12 giờ và lặn lúc 18 giờ. Màu trời và ánh sáng môi trường đổi dần giữa ngày và đêm. Chúng hơi cam lúc hoàng hôn (Hình~\ref{fig:t4}).
+
+\textbf{Bóng đổ.} Chương trình vẽ tâm các gaussian đặc thành điểm vào một depth map $2048^2$ nhìn từ mặt trời \cite{williams1978}. Mỗi gaussian được chiếu vào map này để so độ sâu. Nếu có vật gần mặt trời hơn, gaussian nằm trong bóng. Chương trình lấy trung bình $3\times3$ mẫu để làm mềm cạnh bóng (PCF \cite{reeves1987}):
+\begin{equation}
+S=\frac19\sum_{i,j=-1}^{1}\big[\,z_s-b\le D_s(u_s+i\tau,\,v_s+j\tau)\,\big].
+\label{eq:pcf}
+\end{equation}
+Ở đây $(u_s,v_s,z_s)$ là tọa độ của gaussian trong map, $D_s$ là độ sâu đã lưu, $\tau$ là bước texel và $b$ là bias. Bias ngăn gaussian tự đổ bóng lên chính nó.
+
+%====================================================================
+\section{T5: Hoạt họa và mô phỏng}
+\label{chap:t5}
+%====================================================================
+Mọi chuyển động đều nhân với thời gian khung hình $\Delta t$. Nhờ vậy tốc độ ít phụ thuộc vào máy.
+
+\textbf{Chu kỳ ngày--đêm.} Đây là một máy trạng thái có 4 trạng thái: NIGHT $\to$ DAWN $\to$ DAY $\to$ DUSK. Đồng hồ tự chạy. Đèn đặt ``bật vào ban đêm'' sẽ bật lúc hoàng hôn và tắt lúc bình minh.
+
+\textbf{Va chạm với voxel.} Gaussian không có bề mặt rõ ràng, nên khó tính va chạm trực tiếp. Chương trình chia không gian thành các voxel cạnh $v$. Voxel có đủ gaussian là voxel đặc. Mỗi voxel đặc được lưu thành một số nguyên 64 bit:
+\begin{equation}
+\mathbf{c} = \left\lfloor \frac{\mathbf{p}-\mathbf{o}}{v} \right\rfloor,
+\qquad
+\text{key} = (c_x \ll 42)\,|\,(c_z \ll 21)\,|\,c_y.
+\label{eq:voxel}
+\end{equation}
+Các khóa được sắp xếp. Vì $c_y$ nằm ở các bit thấp, các ô cùng một cột đứng liền nhau. Tìm mặt đất dưới chân chỉ cần một lệnh \code{np.searchsorted}.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[node distance=9mm and 6mm]
+  \node[pbox] (key) {Phím\\W A S D, Space};
+  \node[pbox,right=of key] (move) {Bước ngang\\(trượt tường)};
+  \node[pbox,right=of move] (grav) {Trọng lực\\$v_y\leftarrow v_y-g\Delta t$};
+  \node[pbox,below=of grav] (gr) {Mặt đất\\(voxel)};
+  \node[pmine,left=of gr] (eye) {Vị trí mắt\\(làm mượt)};
+  \draw[parr] (key) -- (move);
+  \draw[parr] (move) -- (grav);
+  \draw[parr] (grav) -- (gr);
+  \draw[parr] (gr) -- (eye);
+\end{tikzpicture}
+\caption{Một khung hình của chế độ đi bộ.}
+\label{fig:t5}
+\end{figure}
+
+\textbf{Người chơi.} Hình~\ref{fig:t5} tóm tắt một khung hình. Người chơi là một hình trụ. Khi gặp tường, người chơi trượt dọc theo tường. Người chơi leo được bậc thấp và nhảy được. Khi không đứng trên đất, chương trình tích phân theo Euler:
+\begin{equation}
+v_y \leftarrow v_y - g\,\Delta t,
+\qquad
+y \leftarrow y + v_y\,\Delta t.
+\label{eq:euler}
+\end{equation}
+Mọi kích thước và tốc độ tỉ lệ theo chiều cao người chơi $H$. Lý do là cảnh 3DGS không có đơn vị cố định.
+
+\textbf{Hoạt họa nhân vật.} Khi đi, tay và chân đung đưa theo hàm $\sin$ của quãng đường đã đi. Các tư thế khác (ngồi, cúi, vẫy tay) chuyển mượt bằng cùng bộ lọc như \eqref{eq:fly}. Bộ lọc này tránh các cú giật.
+
+%====================================================================
+\section{T6: Tương tác và giao diện}
+\label{chap:t6}
+%====================================================================
+\textbf{Xử lý sự kiện.} Sự kiện chuột và bàn phím đến ImGui trước. Nếu ImGui không dùng, chúng đến camera, cọ chọn và các phím tắt.
+
+\textbf{Chọn bằng cọ.} Nhấn \code{B} để bật cọ. Tô lên màn hình để chọn gaussian. Chúng chuyển sang màu vàng. Tâm mỗi gaussian được chiếu thành pixel $\mathbf{p}$ (Mục~\ref{sec:cam}). Một nét vẽ từ $\mathbf{a}$ đến $\mathbf{b}$ là một capsule bán kính $r$. Gaussian được chọn nếu
+\begin{equation}
+\lVert\mathbf{p}-\mathbf{a}-\tau(\mathbf{b}-\mathbf{a})\rVert\le r,\quad \tau=\operatorname{clip}\tfrac{(\mathbf{p}-\mathbf{a})\cdot(\mathbf{b}-\mathbf{a})}{\lVert\mathbf{b}-\mathbf{a}\rVert^2}\in[0,1].
+\label{eq:capsule}
+\end{equation}
+Tức là khoảng cách từ $\mathbf{p}$ đến đoạn $\mathbf{ab}$ không quá $r$. Cọ chỉ xét tâm gaussian và không kiểm tra độ sâu. Vì vậy nó chọn xuyên qua cảnh, giống SuperSplat \cite{supersplat}. Để nhanh, cọ loại cả khối 1024 gaussian khi hộp bao của khối nằm ngoài nét vẽ.
+
+\textbf{Xóa mềm và hoàn tác.} Mỗi gaussian có một byte trạng thái trên GPU với hai bit: \emph{đã chọn} và \emph{đã xóa}. Lệnh \code{Delete} chỉ bật bit ``đã xóa''. Shader bỏ qua các gaussian này. Dữ liệu gốc không đổi. Mỗi lần xóa là một lệnh trong \code{History} (mẫu Command \cite{gamma1994design}, tối đa 20 bước). \code{Ctrl+Z} khôi phục lệnh cuối.
+
+\textbf{Giao diện.} Bảng ImGui bên trái điều khiển layer, phép biến đổi, vùng chọn, chế độ camera và ánh sáng. HUD hiển thị tâm ngắm, đồng hồ, vị trí và vòng tròn cọ. Bảng~\ref{tab:keys} liệt kê các phím chính.
+\begin{table}[H]
+\centering
+\caption{Các phím điều khiển chính.}
+\label{tab:keys}
+\footnotesize
+\begin{tabular}{@{}p{3.1cm}p{4.6cm}@{}}
+\toprule
+Phím / chuột & Chức năng \\
+\midrule
+Kéo chuột trái / giữa & Xoay quanh / pan \\
+Kéo chuột phải + \code{WASD} & Nhìn quanh, bay (\code{Ctrl} = nhanh) \\
+\code{M}, \code{F5}, \code{C}, \code{V} & Bay/đi bộ; góc nhìn thứ ba; ngồi; vẫy tay \\
+\code{F}, \code{G} & Xem toàn cảnh; hiện/ẩn lưới \\
+\code{B}, \code{[}, \code{]} & Cọ chọn; cỡ cọ \\
+\code{Delete}, \code{Ctrl+Z} & Xóa / hoàn tác \\
+\code{Ctrl+O/I/S} & Mở / thêm layer / lưu \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+%====================================================================
+\section{Kết luận}
+\label{chap:end}
+%====================================================================
+Splat Editor đọc, hiển thị, chỉnh sửa và lưu được file 3DGS. Chương trình dùng đủ sáu nhóm kỹ thuật của môn học. Bảng~\ref{tab:src} chỉ vị trí của từng phần trong mã nguồn.
+
+\begin{table}[H]
+\centering
+\caption{Các file mã nguồn chính (trong \code{splat\_editor/}).}
+\label{tab:src}
+\footnotesize
+\begin{tabular}{@{}p{2.2cm}>{\raggedright\arraybackslash}p{5.5cm}@{}}
+\toprule
+Phần & File \\
+\midrule
+Đọc/ghi PLY & \mbox{\code{io/ply.py}}, \mbox{\code{io/codec.py}} \\
+Hiển thị gaussian & \mbox{\code{render/splat\_renderer.py}}, \mbox{\code{render/sorter.py}}, \mbox{\code{render/shaders/splat\_prep.vert}} \\
+T1 & \mbox{\code{core/layer.py}}, \mbox{\code{core/transform.py}}, \mbox{\code{core/avatar\_pose.py}} \\
+T2 & \mbox{\code{core/math3d.py}}, \mbox{\code{render/camera.py}} \\
+T3 & \mbox{\code{render/avatar\_renderer.py}} \\
+T4 & \mbox{\code{core/sh.py}}, \mbox{\code{core/lighting.py}}, \mbox{\code{render/shaders/shadow.vert}} \\
+T5 & \mbox{\code{core/physics.py}}, \mbox{\code{core/avatar\_pose.py}} \\
+T6 & \mbox{\code{editor/brush.py}}, \mbox{\code{core/history.py}}, \mbox{\code{ui/}} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{thebibliography}{99}\footnotesize\itemsep0pt\parskip0pt
+\bibitem{schonberger2016colmap} J.~L.~Sch{\"o}nberger, J.-M.~Frahm, Structure-from-motion revisited, in: CVPR, 2016, pp.~4104--4113.
+\bibitem{kerbl2023gaussian} B.~Kerbl, G.~Kopanas, T.~Leimk{\"u}hler, G.~Drettakis, 3D Gaussian splatting for real-time radiance field rendering, ACM Trans. Graph. 42(4) (2023) 139.
+\bibitem{supersplat} PlayCanvas, SuperSplat: an open-source 3D Gaussian Splat editor, \url{https://github.com/playcanvas/supersplat}.
+\bibitem{zwicker2002ewa} M.~Zwicker, H.~Pfister, J.~van Baar, M.~Gross, EWA splatting, IEEE Trans. Vis. Comput. Graph. 8(3) (2002) 223--238.
+\bibitem{phong1975} B.~T.~Phong, Illumination for computer generated pictures, Commun. ACM 18(6) (1975) 311--317.
+\bibitem{williams1978} L.~Williams, Casting curved shadows on curved surfaces, in: SIGGRAPH, 1978, pp.~270--274.
+\bibitem{reeves1987} W.~T.~Reeves, D.~H.~Salesin, R.~L.~Cook, Rendering antialiased shadows with depth maps, in: SIGGRAPH, 1987, pp.~283--291.
+\bibitem{gamma1994design} E.~Gamma, R.~Helm, R.~Johnson, J.~Vlissides, Design Patterns: Elements of Reusable Object-Oriented Software, Addison-Wesley, 1994.
+\end{thebibliography}
+
+\end{document}
