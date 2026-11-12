@@ -29,6 +29,11 @@ class SidePanel:
                 continue
             if imgui.collapsing_header(section.header, imgui.TreeNodeFlags_.default_open):
                 imgui.spacing()
-                section.draw()
+                # mỗi mục một phạm vi ID riêng: "Position" của Lighting không trùng "Position" của Transform
+                imgui.push_id(type(section).__name__)
+                try:
+                    section.draw()
+                finally:
+                    imgui.pop_id()
                 imgui.spacing()
         imgui.end()
