@@ -23,6 +23,7 @@ class InputController:
         self.gui = app.gui.backend
         self.last_mouse = None
         self.drag_button = None      # nút chuột đang kéo trong vùng 3D (xoay / dịch / nhìn quanh)
+        self._click_start = None     # vị trí nhấn chuột trái, để phân biệt click (chọn đèn) với kéo (xoay)
 
         handle = app.window.handle
         glfw.set_cursor_pos_callback(handle, self.on_mouse_move)
@@ -79,13 +80,21 @@ class InputController:
             if self.app.gui.wants_mouse or not self.app.layout.viewport.contains(x, y):
                 return
             if button == glfw.MOUSE_BUTTON_LEFT and self.brush.active:
+                self.app.lighting.picked = -1            # tô cọ -> Delete xoá gaussian, không phải đèn
                 self.brush.begin_stroke(select=not (mods & glfw.MOD_CONTROL))   # giữ Ctrl: bỏ chọn
                 self.app.paint(x, y)
             elif self.drag_button is None:
+                if button == glfw.MOUSE_BUTTON_LEFT:
+                    self._click_start = (x, y)           # có thể là click chọn đèn (nếu không kéo)
                 self._set_drag(button)
         elif action == glfw.RELEASE:
             if button == glfw.MOUSE_BUTTON_LEFT:
                 self.brush.end_stroke()
+                start, self._click_start = self._click_start, None
+                if start is not None and not self.brush.active and not self.app.gui.wants_mouse:
+                    x, y = glfw.get_cursor_pos(window)
+                    if abs(x - start[0]) < 4 and abs(y - start[1]) < 4:
+                        self.app.pick_light(x, y)
             if button == self.drag_button:
                 self._set_drag(None)
 
@@ -118,5 +127,10 @@ class InputController:
         else:
             forward = pressed(glfw.KEY_W) - pressed(glfw.KEY_S)
             right = pressed(glfw.KEY_D) - pressed(glfw.KEY_A)
-            up = pressed(glfw.KEY_SPACE) - (pressed(glfw.KEY_LEFT_SHIFT) or pressed(glfw.KEY_RIGHT_SHIFT))
-        camera.fly(forward, right, up, min(dt, 0.1), sprint=ctrl)
+            shift = pressed(glfw.KEY_LEFT_SHIFT) or pressed(glfw.KEY_RIGHT_SHIFT)
+            up = pressed(glfw.KEY_SPACE) - shift
+        if self.app.mode == "survival":
+            # sinh tồn: Space nhảy, Ctrl chạy nhanh, Shift đi chậm; camera là mắt người chơi
+            self.app.walk(forward, right, up > 0, ctrl and (forward or right), up < 0, dt)
+        else:
+            camera.fly(forward, right, up, min(dt, 0.1), sprint=ctrl)

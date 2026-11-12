@@ -15,6 +15,8 @@ class MainMenuBar:
         ("Edit", ["undo", None, "select_all", "select_none", "invert_selection", None,
                   "delete_selected", "remove_layer"]),
         ("View", ["frame_scene", "frame_layer", None, "show_grid", "view_sh", "flip_y", None, "brush"]),
+        ("World", ["toggle_mode", "third_person", None, "sit", "wave", "zombie", "cheer", None,
+                   "lighting", "shadows", "add_sun", "add_light"]),
         ("Help", ["shortcuts"]),
     ]
 

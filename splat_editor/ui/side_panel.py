@@ -8,6 +8,7 @@ panel.draw(layout.side_panel)           # gọi mỗi khung hình với Rect b�
 from imgui_bundle import imgui
 
 from .sections import (LayersSection, SelectionSection, TransformSection, ViewSection)
+from .world_sections import LightingSection, ModeSection
 
 
 class SidePanel:
@@ -16,7 +17,8 @@ class SidePanel:
              imgui.WindowFlags_.no_bring_to_front_on_focus)
 
     def __init__(self, app):
-        self.sections = [LayersSection(app), TransformSection(app), SelectionSection(app), ViewSection(app)]
+        self.sections = [LayersSection(app), ModeSection(app), LightingSection(app), TransformSection(app),
+                         SelectionSection(app), ViewSection(app)]
 
     def draw(self, rect):
         imgui.set_next_window_pos(imgui.ImVec2(rect.left, rect.top))

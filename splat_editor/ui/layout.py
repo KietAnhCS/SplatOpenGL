@@ -19,32 +19,35 @@ layout.viewport                         # Rect vùng 3D
 layout.status_bar                       # Rect thanh trạng thái
 """
 
-from ..core.rect import Rect 
+from ..core.rect import Rect
+
 
 class Layout:
-    SIDE_PANEL_WIDTH = 330 
+    SIDE_PANEL_WIDTH = 330
 
     def __init__(self):
         self.width = 0
         self.height = 0
-        self.menu_height = 0 
-        self.status_height = 0 
+        self.menu_height = 0
+        self.status_height = 0
 
-    def update():
-        pass 
+    def update(self, width, height, menu_height, status_height):
+        self.width, self.height = width, height
+        self.menu_height, self.status_height = menu_height, status_height
 
     @property
-    def _body_height(self);
-        pass 
+    def _body_height(self):
+        return max(self.height - self.menu_height - self.status_height, 0)
 
     @property
     def side_panel(self):
-        pass 
+        return Rect(0, self.menu_height, min(self.SIDE_PANEL_WIDTH, self.width), self._body_height)
 
-    @property 
+    @property
     def viewport(self):
-        pass 
+        left = self.side_panel.width
+        return Rect(left, self.menu_height, max(self.width - left, 0), self._body_height)
 
     @property
     def status_bar(self):
-        pass 
+        return Rect(0, self.height - self.status_height, self.width, self.status_height)
