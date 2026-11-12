@@ -22,8 +22,10 @@ from typing import NamedTuple
 import numpy as np
 from OpenGL import GL
 
+from .avatar_renderer import AvatarRenderer
 from .camera import OrbitCamera
 from .grid_renderer import GridRenderer
+from .light_renderer import LightRenderer
 from .splat_renderer import SplatRenderer
 
 
@@ -52,6 +54,13 @@ class Viewport:
         self.camera = OrbitCamera()
         self.splat_renderer = SplatRenderer()
         self.grid = GridRenderer()
+        self.light_renderer = LightRenderer()
+        self.avatar_renderer = AvatarRenderer()
+        self.avatar = None            # (6 ma trận model, độ sáng RGB) của nhân vật người chơi, None: không vẽ
+        self.occluder = None          # Physics: dùng bản đồ va chạm để cảnh che mặt trời
+        self.lighting = None         # core.lighting.Lighting (gắn bởi Application)
+        self.unit = 1.0              # chiều cao người chơi: thước đo kích thước vật thể
+        self.clock = 0.0             # giây, cho hạt chuyển động
         self.show_grid = True
         self.background = [0.13, 0.13, 0.15]
         self.render_scale = 1.0
@@ -62,6 +71,7 @@ class Viewport:
         self.set_quality(DEFAULT_QUALITY)
         self._fbo = GL.glGenFramebuffers(1)
         self._fbo_texture = GL.glGenTextures(1)
+        self._fbo_depth = GL.glGenRenderbuffers(1)     # độ sâu riêng cho nhân vật (gaussian không ghi độ sâu)
         self._fbo_size = None
         self._last_view = None
         self._still_frames = self.MOTION_HOLD_FRAMES
@@ -119,7 +129,7 @@ class Viewport:
         """rect: vùng 3D theo toạ độ cửa sổ (gốc trên-trái), được đổi sang pixel framebuffer."""
         fb_w, fb_h = framebuffer_size
         GL.glViewport(0, 0, fb_w, fb_h)
-        GL.glClearColor(*self.background, 1.0)
+        GL.glClearColor(*self.sky(), 1.0)
         GL.glClear(GL.GL_COLOR_BUFFER_BIT)
         if rect.is_empty or window_size[0] <= 0 or window_size[1] <= 0:
             return
@@ -150,7 +160,7 @@ class Viewport:
             sw, sh = max(int(w * scale), 1), max(int(h * scale), 1)
             self._bind_offscreen(sw, sh)
             GL.glViewport(0, 0, sw, sh)
-            GL.glClearColor(*self.background, 1.0)
+            GL.glClearColor(*self.sky(), 1.0)
             GL.glClear(GL.GL_COLOR_BUFFER_BIT)
             self._draw_scene(view, projection, sw, sh)
             GL.glBindFramebuffer(GL.GL_READ_FRAMEBUFFER, self._fbo)
@@ -159,10 +169,25 @@ class Viewport:
             GL.glBindFramebuffer(GL.GL_FRAMEBUFFER, 0)
         GL.glViewport(0, 0, fb_w, fb_h)
 
+    def sky(self):
+        """Màu nền: đổi theo giờ trong ngày khi có mặt trời, ngược lại là màu người dùng chọn."""
+        light = self.lighting
+        if light is not None and light.enabled and light.sun_on and light.sky_follows:
+            return light.sky_color()
+        return self.background
+
     def _draw_scene(self, view, projection, w, h):
         if self.show_grid:
             self.grid.draw(view.astype(np.float64), projection, self.camera.distance)
+        if self.lighting is not None:
+            self.splat_renderer.set_lighting(self.lighting.params())
         self.splat_renderer.draw(view, projection, w, h)
+        if self.lighting is not None:
+            self.light_renderer.draw(view, projection, self.lighting, self.clock, self.unit,
+                                     self.occluder)
+        if self.avatar is not None and self.camera.view_mode:
+            matrices, brightness = self.avatar
+            self.avatar_renderer.draw(view, projection, matrices, brightness)
         if self.auto_budget:
             self.splat_renderer.adapt_budget(GPU_SHARE * 1000.0 / self.target_fps)
 
@@ -178,4 +203,9 @@ class Viewport:
         GL.glFramebufferTexture2D(GL.GL_FRAMEBUFFER, GL.GL_COLOR_ATTACHMENT0, GL.GL_TEXTURE_2D,
                                   self._fbo_texture, 0)
         GL.glBindTexture(GL.GL_TEXTURE_2D, 0)
+        GL.glBindRenderbuffer(GL.GL_RENDERBUFFER, self._fbo_depth)
+        GL.glRenderbufferStorage(GL.GL_RENDERBUFFER, GL.GL_DEPTH_COMPONENT24, w, h)
+        GL.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER, GL.GL_DEPTH_ATTACHMENT, GL.GL_RENDERBUFFER,
+                                     self._fbo_depth)
+        GL.glBindRenderbuffer(GL.GL_RENDERBUFFER, 0)
         self._fbo_size = (w, h)
