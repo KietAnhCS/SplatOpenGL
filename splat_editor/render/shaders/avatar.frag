@@ -1,7 +1,7 @@
 #version 330 core
 in vec3 vNormal;
 in vec2 vUV;
-uniform sampler2D skin;
+uniform sampler2D uSkin;
 uniform vec3 uLight;
 uniform vec3 uBright;
 out vec4 fragColor;
