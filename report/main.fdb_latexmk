@@ -1,10 +1,10 @@
 # Fdb version 4
-["xdvipdfmx"] 1794566287.42326 "main.xdv" "main.pdf" "main" 1794566305.25635 0
-  "main.xdv" 1794566287.00807 566796 2ba5603b6bddb20a41ed0e855459ef02 "xelatex"
+["xdvipdfmx"] 1794585994.34806 "main.xdv" "main.pdf" "main" 1794586012.21446 0
+  "main.xdv" 1794585993.94291 521136 a4aaf5e4727273234ff0d5b47cc6d464 "xelatex"
   (generated)
   "main.pdf"
   (rewritten before read)
-["xelatex"] 1794566284.62967 "main.tex" "main.xdv" "main" 1794566305.23091 0
+["xelatex"] 1794585991.56989 "main.tex" "main.xdv" "main" 1794586012.19006 0
   "C:/Users/kelly/AppData/Local/MiKTeX/miktex/data/le/xetex/xelatex.fmt" 1792572223.27402 27176674 bb140bc90770b00da53f83e020756299 ""
   "C:/Users/kelly/AppData/Local/Programs/MiKTeX/fonts/tfm/adobe/zapfding/pzdr.tfm" 1136747054 1528 f853c4d1b4e0550255e02831fdc8496f ""
   "C:/Users/kelly/AppData/Local/Programs/MiKTeX/fonts/tfm/public/cm/cmmi5.tfm" 1136765053 1508 3b32edd0d68f6498a5a375e78f9edc5e ""
@@ -168,9 +168,9 @@
   "figures/t4-night.png" 1794417846.0447 1436412 305d83159b8dc04f8d1d92705a8c4ae0 ""
   "figures/t4-zombie-day.png" 1794417846.07017 1716953 6e07787ac013b33146f7b824ffd0345b ""
   "figures/viewer.png" 1794212530.88828 763578 d5eee1307c70ee544158988fdee74d2a ""
-  "main.aux" 1794566286.99501 24922 2bcd03b027bfb9dd3dd8996064b139ae "xelatex"
-  "main.out" 1794566287.00607 6387 cc51f124a4ffd3bff358f356d735c906 "xelatex"
-  "main.tex" 1794566277.50674 62016 6acdd9b59cd0f35371b5fc66f1855f33 ""
+  "main.aux" 1794585993.92491 23589 81dcc335923d4884164aa52e15881958 "xelatex"
+  "main.out" 1794585993.93491 5988 cfc18c981e2740fea298251fc6dbddda "xelatex"
+  "main.tex" 1794585987.52714 57884 c3f7d7bfddf7d297002761b822abbea3 ""
   (generated)
   "main.aux"
   "main.log"

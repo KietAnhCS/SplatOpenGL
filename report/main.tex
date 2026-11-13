@@ -169,11 +169,11 @@ The project has two parts. Part one is the 3DGS rendering pipeline, from the fil
 \toprule
 Group & Main content & Section \\
 \midrule
-T1 & layers, matrix $\mathbf{M}$, character skeleton & \ref{chap:t1} \\
+T1 & layers, matrix $\mathbf{M}$ & \ref{chap:t1} \\
 T2 & view/projection matrices, EWA, blending, cameras & \ref{chap:t2} \\
 T3 & character skin texture & \ref{chap:t3} \\
 T4 & SH colour, Phong, shadow map & \ref{chap:t4} \\
-T5 & day--night, collision, character animation & \ref{chap:t5} \\
+T5 & day--night, collision, player & \ref{chap:t5} \\
 T6 & selection brush, delete/undo, ImGui, HUD & \ref{chap:t6} \\
 \bottomrule
 \end{tabular}
@@ -356,11 +356,10 @@ mat3 sigma = M * transpose(M);
 \section{T1: Transformations and hierarchical models}
 \label{chap:t1}
 %====================================================================
-This chapter has three parts. The first two move a whole layer, the last one moves a hierarchical model.
+This chapter has two parts. Both move a whole layer.
 \begin{itemize}\itemsep0pt
 \item \textbf{Part 1, layer transformation.} Put a gaussian of a \code{.ply} file into the world.
 \item \textbf{Part 2, rotation about a point.} Rotate a layer around a chosen centre.
-\item \textbf{Part 3, character skeleton.} Build the matrices of the character from a hierarchy of joints.
 \end{itemize}
 
 \subsection{Part 1: Layer transformation}
@@ -401,43 +400,6 @@ def rotate_about(self, delta, pivot):
     self.position = list(delta @ (self.translation() - pivot) + pivot)
 \end{lstlisting}
 \end{codebox}
-
-\subsection{Part 3: Character skeleton}
-\label{sec:skeleton}
-The character appears when you press \code{F5}. It has six boxes: head, body, two arms and two legs. Each box has its own matrix. This matrix is the product of the joint matrices from the root down (Fig.~\ref{fig:skeleton}). Each joint rotates about a point $\mathbf{p}$:
-\begin{equation}
-\mathbf{M}_{\text{child}}=\mathbf{M}_{\text{parent}}\,\mathbf{T}(\mathbf{p})\,\mathbf{R}\,\mathbf{T}(-\mathbf{p}).
-\end{equation}
-The legs are children of the root. The arms and head are children of the body, so they lean with the body. The joint angles come from the animation (Section~\ref{chap:t5}).
-
-\begin{codebox}
-\begin{lstlisting}[language=Python,caption={\code{core/avatar\_pose.py}, \code{limb\_matrices}: joint matrices},label={lst:joint}]
-def leg(angle):
-    return (root @ _translate(0, HIP_Y, 0) @ _rot("x", angle)
-            @ _translate(0, -HIP_Y, 0))
-
-def arm(px, angles):
-    return (upper @ _translate(px, SHOULDER_Y, 0) @ _rot("z", angles[1])
-            @ _rot("x", angles[0]) @ _translate(-px, -SHOULDER_Y, 0))
-\end{lstlisting}
-\end{codebox}
-
-\begin{figure}[H]
-\centering
-\begin{tikzpicture}[node distance=5mm and 5mm]
-  \node[pbox] (root) {Root\\$\mathbf{M}_{\text{root}}$};
-  \node[pbox,right=12mm of root] (body) {Body\\(hip joint)};
-  \node[pbox,below=of root] (leg) {Left/right leg\\(hip joint)};
-  \node[pbox,right=of body] (arm) {Left/right arm\\(shoulder joint)};
-  \node[pbox,below=of arm] (head) {Head\\(neck joint)};
-  \draw[parr] (root) -- (body);
-  \draw[parr] (root) -- (leg);
-  \draw[parr] (body) -- (arm);
-  \draw[parr] (body) -- (head);
-\end{tikzpicture}
-\caption{The character hierarchy. Each arrow is one matrix multiplication.}
-\label{fig:skeleton}
-\end{figure}
 
 %====================================================================
 \section{T2: Camera and projection}
@@ -674,7 +636,6 @@ self.target += self.velocity * dt
 \end{lstlisting}
 \end{codebox}
 
-\textbf{Third-person view.} In walk mode, the camera pulls back behind the character. The program casts a ray from the character's eye to the camera position in the voxel map. If the ray hits a wall, the camera pulls in at once so it does not go through the wall. When the path is clear, it moves back out gradually.
 
 
 %====================================================================
@@ -917,12 +878,11 @@ return (proj @ view).astype(np.float32), texel, bias
 \section{T5: Animation and simulation}
 \label{chap:t5}
 %====================================================================
-Every motion is multiplied by the frame time $\Delta t$. So the speed depends little on the machine. There are four parts, in the order of one frame.
+Every motion is multiplied by the frame time $\Delta t$. So the speed depends little on the machine. There are three parts, in the order of one frame.
 \begin{itemize}\itemsep0pt
 \item \textbf{Part 1, day--night cycle.} Advance the clock and move the sun.
 \item \textbf{Part 2, voxel collision.} Turn the gaussians into solid voxels.
 \item \textbf{Part 3, the player.} Walk, jump and fall on the voxels.
-\item \textbf{Part 4, character animation.} Compute the joint angles of the character.
 \end{itemize}
 
 \subsection{Part 1: Day--night cycle}
@@ -1018,35 +978,6 @@ if not player.on_ground:
     new_y = y + player.vel_y * dt
 \end{lstlisting}
 \end{codebox}
-
-\subsection{Part 4: Character animation}
-Only the joint angles are computed (in degrees); the renderer builds the matrices. Let $d$ be the distance walked in this frame, in units of the player height. The gait phase grows with the distance, not with time, so the legs never slide on the ground:
-\begin{equation}
-\psi\leftarrow\psi+1.75\cdot2\,d,\qquad
-\theta_{leg}=\pm A\,a\,\sin\psi,\quad
-\theta_{arm}=\mp A\,a\,\sin\psi,
-\label{eq:gait}
-\end{equation}
-with $A=60^{\circ}$. The leg and the opposite arm move together.
-
-\textbf{Blending states.} The amplitude $a\in[0,1]$ follows the speed with the filter $x\leftarrow x+(x^{*}-x)\min(1,k\,\Delta t)$ \eqref{eq:fly}, with $k=8$. The same filter, with $k=7$, blends the other states: sit (legs $-90^{\circ}$, body lowered), crouch (body leaning $28^{\circ}$) and the gestures wave, zombie and cheer. Two poses are mixed linearly, $\theta=(1-w)\theta_a+w\,\theta_b$, so a gesture fades in and out. When standing, a small $\sin$ term moves the arms to imitate breathing.
-
-\begin{codebox}
-\begin{lstlisting}[language=Python,caption={\code{core/avatar\_pose.py}: gait phase and smoothing filter},label={lst:gait}]
-def _approach(value, target, rate, dt):
-    return value + (target - value) * min(1.0, dt * rate)
-
-walked = distance / max(height, 1e-9)
-self.amount = _approach(self.amount, target, BLEND, dt)
-self.phase += walked * STRIDE * GAIT_SCALE
-swing = math.sin(self.phase) * SWING_ANGLE * walk
-leg_l, leg_r = swing, -swing
-arm_l = [-swing + idle, 0.0]
-arm_r = [swing - idle, 0.0]
-\end{lstlisting}
-\end{codebox}
-
-\textbf{Joint matrices.} Each limb is a rotation about its joint: $\mathbf{M}=\mathbf{T}(\mathbf{j})\,\mathbf{R}(\theta)\,\mathbf{T}(-\mathbf{j})$ applied after the parent matrix, for example the arm after the torso.
 
 %====================================================================
 \section{T6: Interaction and GUI}

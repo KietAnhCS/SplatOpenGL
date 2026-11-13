@@ -51,129 +51,133 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Part 2: Rotation about a point}{3}{subsection.2.2}\protected@file@percent }
 \newlabel{lst:pivot}{{4}{3}{\code {core/transform.py}, \code {Transform.rotate\_about}}{lstlisting.4}{}}
 \@writefile{lol}{\contentsline {lstlisting}{\numberline {4}{\ignorespaces \texttt  {core/transform.py}, \texttt  {Transform.rotate\_about}}}{3}{lstlisting.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Part 3: Character skeleton}{3}{subsection.2.3}\protected@file@percent }
-\newlabel{sec:skeleton}{{2.3}{3}{Part 3: Character skeleton}{subsection.2.3}{}}
-\newlabel{lst:joint}{{5}{3}{\code {core/avatar\_pose.py}, \code {limb\_matrices}: joint matrices}{lstlisting.5}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {5}{\ignorespaces \texttt  {core/avatar\_pose.py}, \texttt  {limb\_matrices}: joint matrices}}{3}{lstlisting.5}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces The character hierarchy. Each arrow is one matrix multiplication.}}{3}{figure.caption.12}\protected@file@percent }
-\newlabel{fig:skeleton}{{10}{3}{The character hierarchy. Each arrow is one matrix multiplication}{figure.caption.12}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {3}T2: Camera and projection}{3}{section.3}\protected@file@percent }
 \newlabel{chap:t2}{{3}{3}{T2: Camera and projection}{section.3}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces The splatting pipeline of EWA \cite  {zwicker2002ewa}. The viewing transformation is $\mathbf {W}$ and the projective mapping is approximated by $\mathbf {J}$.}}{3}{figure.caption.13}\protected@file@percent }
-\newlabel{fig:ewa}{{11}{3}{The splatting pipeline of EWA \cite {zwicker2002ewa}. The viewing transformation is $\mathbf {W}$ and the projective mapping is approximated by $\mathbf {J}$}{figure.caption.13}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces The splatting pipeline of EWA \cite  {zwicker2002ewa}. The viewing transformation is $\mathbf {W}$ and the projective mapping is approximated by $\mathbf {J}$.}}{3}{figure.caption.12}\protected@file@percent }
+\newlabel{fig:ewa}{{10}{3}{The splatting pipeline of EWA \cite {zwicker2002ewa}. The viewing transformation is $\mathbf {W}$ and the projective mapping is approximated by $\mathbf {J}$}{figure.caption.12}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Part 1: Viewing transformation}{3}{subsection.3.1}\protected@file@percent }
 \newlabel{sec:cam}{{3.1}{3}{Part 1: Viewing transformation}{subsection.3.1}{}}
-\newlabel{eq:view}{{5}{3}{Part 1: Viewing transformation}{equation.5}{}}
+\newlabel{eq:view}{{4}{3}{Part 1: Viewing transformation}{equation.4}{}}
+\newlabel{eq:W}{{5}{3}{Part 1: Viewing transformation}{equation.5}{}}
+\newlabel{lst:lookat}{{5}{3}{\code {core/math3d.py}, \code {look\_at}: view matrix $\mathbf {V}$}{lstlisting.5}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {5}{\ignorespaces \texttt  {core/math3d.py}, \texttt  {look\_at}: view matrix $\mathbf {V}$}}{3}{lstlisting.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Part 2: Projective mapping}{3}{subsection.3.2}\protected@file@percent }
+\newlabel{sec:ewa}{{3.2}{3}{Part 2: Projective mapping}{subsection.3.2}{}}
+\newlabel{eq:proj}{{6}{3}{Part 2: Projective mapping}{equation.6}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces A scene with the sun, one point light and the character at different times of day.}}{4}{figure.caption.11}\protected@file@percent }
 \newlabel{fig:t4}{{9}{4}{A scene with the sun, one point light and the character at different times of day}{figure.caption.11}{}}
-\newlabel{eq:W}{{6}{4}{Part 1: Viewing transformation}{equation.6}{}}
-\newlabel{lst:lookat}{{6}{4}{\code {core/math3d.py}, \code {look\_at}: view matrix $\mathbf {V}$}{lstlisting.6}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {6}{\ignorespaces \texttt  {core/math3d.py}, \texttt  {look\_at}: view matrix $\mathbf {V}$}}{4}{lstlisting.6}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Part 2: Projective mapping}{4}{subsection.3.2}\protected@file@percent }
-\newlabel{sec:ewa}{{3.2}{4}{Part 2: Projective mapping}{subsection.3.2}{}}
-\newlabel{eq:proj}{{7}{4}{Part 2: Projective mapping}{equation.7}{}}
-\newlabel{lst:persp}{{7}{4}{\code {core/math3d.py}, \code {perspective}: projection matrix $\mathbf {P}$}{lstlisting.7}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {7}{\ignorespaces \texttt  {core/math3d.py}, \texttt  {perspective}: projection matrix $\mathbf {P}$}}{4}{lstlisting.7}\protected@file@percent }
-\newlabel{eq:jac}{{8}{4}{Part 2: Projective mapping}{equation.8}{}}
-\newlabel{eq:ewa}{{9}{4}{Part 2: Projective mapping}{equation.9}{}}
-\newlabel{eq:eig}{{10}{4}{Part 2: Projective mapping}{equation.10}{}}
-\newlabel{lst:ewa}{{8}{5}{\code {render/shaders/splat\_prep.vert}: Jacobian $\mathbf {J}$ and $\Sigma '=\mathbf {J}\mathbf {W}\Sigma \mathbf {W}^{\top }\mathbf {J}^{\top }$}{lstlisting.8}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {8}{\ignorespaces \texttt  {render/shaders/splat\_prep.vert}: Jacobian $\mathbf {J}$ and $\mitSigma '=\mathbf {J}\mathbf {W}\mitSigma \mathbf {W}^{\top }\mathbf {J}^{\top }$}}{5}{lstlisting.8}\protected@file@percent }
-\newlabel{lst:eig}{{9}{5}{\code {render/shaders/splat\_prep.vert}: eigenvalues and the two ellipse axes}{lstlisting.9}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {9}{\ignorespaces \texttt  {render/shaders/splat\_prep.vert}: eigenvalues and the two ellipse axes}}{5}{lstlisting.9}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Part 3: Shading and alpha blending}{5}{subsection.3.3}\protected@file@percent }
-\newlabel{sec:blend}{{3.3}{5}{Part 3: Shading and alpha blending}{subsection.3.3}{}}
-\newlabel{eq:gauss}{{11}{5}{Part 3: Shading and alpha blending}{equation.11}{}}
-\newlabel{lst:frag}{{10}{5}{\code {render/shaders/splat.frag}: $a=\alpha \,e^{-r^2/2}$}{lstlisting.10}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {10}{\ignorespaces \texttt  {render/shaders/splat.frag}: $a=\mitalpha \,e^{-r^2/2}$}}{5}{lstlisting.10}\protected@file@percent }
-\newlabel{eq:over}{{12}{5}{Part 3: Shading and alpha blending}{equation.12}{}}
-\newlabel{lst:blend}{{11}{5}{\code {render/splat\_renderer.py}: the blend $\mathbf {C}\leftarrow \mathbf {c}a+(1-a)\mathbf {C}$}{lstlisting.11}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {11}{\ignorespaces \texttt  {render/splat\_renderer.py}: the blend $\mathbf {C}\leftarrow \mathbf {c}a+(1-a)\mathbf {C}$}}{5}{lstlisting.11}\protected@file@percent }
-\newlabel{lst:sort}{{12}{5}{\code {render/sorter.py}, \code {DepthSorter.sort}: far-to-near order}{lstlisting.12}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {12}{\ignorespaces \texttt  {render/sorter.py}, \texttt  {DepthSorter.sort}: far-to-near order}}{5}{lstlisting.12}\protected@file@percent }
+\newlabel{lst:persp}{{6}{4}{\code {core/math3d.py}, \code {perspective}: projection matrix $\mathbf {P}$}{lstlisting.6}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {6}{\ignorespaces \texttt  {core/math3d.py}, \texttt  {perspective}: projection matrix $\mathbf {P}$}}{4}{lstlisting.6}\protected@file@percent }
+\newlabel{eq:jac}{{7}{4}{Part 2: Projective mapping}{equation.7}{}}
+\newlabel{eq:ewa}{{8}{4}{Part 2: Projective mapping}{equation.8}{}}
+\newlabel{eq:eig}{{9}{4}{Part 2: Projective mapping}{equation.9}{}}
+\newlabel{lst:ewa}{{7}{4}{\code {render/shaders/splat\_prep.vert}: Jacobian $\mathbf {J}$ and $\Sigma '=\mathbf {J}\mathbf {W}\Sigma \mathbf {W}^{\top }\mathbf {J}^{\top }$}{lstlisting.7}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {7}{\ignorespaces \texttt  {render/shaders/splat\_prep.vert}: Jacobian $\mathbf {J}$ and $\mitSigma '=\mathbf {J}\mathbf {W}\mitSigma \mathbf {W}^{\top }\mathbf {J}^{\top }$}}{4}{lstlisting.7}\protected@file@percent }
+\newlabel{lst:eig}{{8}{4}{\code {render/shaders/splat\_prep.vert}: eigenvalues and the two ellipse axes}{lstlisting.8}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {8}{\ignorespaces \texttt  {render/shaders/splat\_prep.vert}: eigenvalues and the two ellipse axes}}{4}{lstlisting.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Part 3: Shading and alpha blending}{4}{subsection.3.3}\protected@file@percent }
+\newlabel{sec:blend}{{3.3}{4}{Part 3: Shading and alpha blending}{subsection.3.3}{}}
+\newlabel{eq:gauss}{{10}{4}{Part 3: Shading and alpha blending}{equation.10}{}}
+\newlabel{lst:frag}{{9}{5}{\code {render/shaders/splat.frag}: $a=\alpha \,e^{-r^2/2}$}{lstlisting.9}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {9}{\ignorespaces \texttt  {render/shaders/splat.frag}: $a=\mitalpha \,e^{-r^2/2}$}}{5}{lstlisting.9}\protected@file@percent }
+\newlabel{eq:over}{{11}{5}{Part 3: Shading and alpha blending}{equation.11}{}}
+\newlabel{lst:blend}{{10}{5}{\code {render/splat\_renderer.py}: the blend $\mathbf {C}\leftarrow \mathbf {c}a+(1-a)\mathbf {C}$}{lstlisting.10}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {10}{\ignorespaces \texttt  {render/splat\_renderer.py}: the blend $\mathbf {C}\leftarrow \mathbf {c}a+(1-a)\mathbf {C}$}}{5}{lstlisting.10}\protected@file@percent }
+\newlabel{lst:sort}{{11}{5}{\code {render/sorter.py}, \code {DepthSorter.sort}: far-to-near order}{lstlisting.11}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {11}{\ignorespaces \texttt  {render/sorter.py}, \texttt  {DepthSorter.sort}: far-to-near order}}{5}{lstlisting.11}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.4}Part 4: Viewport transformation}{5}{subsection.3.4}\protected@file@percent }
 \newlabel{sec:viewport}{{3.4}{5}{Part 4: Viewport transformation}{subsection.3.4}{}}
-\newlabel{eq:pixel}{{13}{5}{Part 4: Viewport transformation}{equation.13}{}}
-\newlabel{lst:pixel}{{13}{5}{\code {editor/brush.py}, \code {BrushTool.\_to\_screen}: clip space to pixels}{lstlisting.13}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {13}{\ignorespaces \texttt  {editor/brush.py}, \texttt  {BrushTool.\_to\_screen}: clip space to pixels}}{5}{lstlisting.13}\protected@file@percent }
+\newlabel{eq:pixel}{{12}{5}{Part 4: Viewport transformation}{equation.12}{}}
+\newlabel{lst:pixel}{{12}{5}{\code {editor/brush.py}, \code {BrushTool.\_to\_screen}: clip space to pixels}{lstlisting.12}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {12}{\ignorespaces \texttt  {editor/brush.py}, \texttt  {BrushTool.\_to\_screen}: clip space to pixels}}{5}{lstlisting.12}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.5}Part 5: Three cameras}{5}{subsection.3.5}\protected@file@percent }
-\newlabel{eq:eye}{{14}{5}{Part 5: Three cameras}{equation.14}{}}
-\newlabel{lst:eye}{{14}{5}{\code {render/camera.py}, \code {OrbitCamera.position}}{lstlisting.14}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {14}{\ignorespaces \texttt  {render/camera.py}, \texttt  {OrbitCamera.position}}}{5}{lstlisting.14}\protected@file@percent }
-\newlabel{eq:fly}{{15}{5}{Part 5: Three cameras}{equation.15}{}}
-\newlabel{lst:fly}{{15}{5}{\code {render/camera.py}, \code {OrbitCamera.fly}}{lstlisting.15}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {15}{\ignorespaces \texttt  {render/camera.py}, \texttt  {OrbitCamera.fly}}}{5}{lstlisting.15}\protected@file@percent }
+\newlabel{eq:eye}{{13}{5}{Part 5: Three cameras}{equation.13}{}}
+\newlabel{lst:eye}{{13}{5}{\code {render/camera.py}, \code {OrbitCamera.position}}{lstlisting.13}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {13}{\ignorespaces \texttt  {render/camera.py}, \texttt  {OrbitCamera.position}}}{5}{lstlisting.13}\protected@file@percent }
+\newlabel{eq:fly}{{14}{5}{Part 5: Three cameras}{equation.14}{}}
+\newlabel{lst:fly}{{14}{5}{\code {render/camera.py}, \code {OrbitCamera.fly}}{lstlisting.14}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {14}{\ignorespaces \texttt  {render/camera.py}, \texttt  {OrbitCamera.fly}}}{5}{lstlisting.14}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {4}T3: Texture mapping}{5}{section.4}\protected@file@percent }
 \newlabel{chap:t3}{{4}{5}{T3: Texture mapping}{section.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces Three steps to draw the skin.}}{5}{figure.caption.13}\protected@file@percent }
+\newlabel{fig:skinflow}{{11}{5}{Three steps to draw the skin}{figure.caption.13}{}}
+\newlabel{lst:boxcorner}{{15}{5}{\code {render/avatar\_renderer.py}, \code {\_box}: corner $\mathbf {p}$ of a face}{lstlisting.15}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {15}{\ignorespaces \texttt  {render/avatar\_renderer.py}, \texttt  {\_box}: corner $\mathbf {p}$ of a face}}{5}{lstlisting.15}\protected@file@percent }
+\newlabel{eq:skin-uv}{{15}{5}{T3: Texture mapping}{equation.15}{}}
+\newlabel{lst:skinuv}{{16}{5}{\code {render/avatar\_renderer.py}: skin cell and UV of a face}{lstlisting.16}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {16}{\ignorespaces \texttt  {render/avatar\_renderer.py}: skin cell and UV of a face}}{5}{lstlisting.16}\protected@file@percent }
 \citation{kerbl2023gaussian}
 \citation{phong1975}
-\@writefile{lof}{\contentsline {figure}{\numberline {12}{\ignorespaces Three steps to draw the skin.}}{6}{figure.caption.14}\protected@file@percent }
-\newlabel{fig:skinflow}{{12}{6}{Three steps to draw the skin}{figure.caption.14}{}}
-\newlabel{lst:boxcorner}{{16}{6}{\code {render/avatar\_renderer.py}, \code {\_box}: corner $\mathbf {p}$ of a face}{lstlisting.16}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {16}{\ignorespaces \texttt  {render/avatar\_renderer.py}, \texttt  {\_box}: corner $\mathbf {p}$ of a face}}{6}{lstlisting.16}\protected@file@percent }
-\newlabel{eq:skin-uv}{{16}{6}{T3: Texture mapping}{equation.16}{}}
-\newlabel{lst:skinuv}{{17}{6}{\code {render/avatar\_renderer.py}: skin cell and UV of a face}{lstlisting.17}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {17}{\ignorespaces \texttt  {render/avatar\_renderer.py}: skin cell and UV of a face}}{6}{lstlisting.17}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {13}{\ignorespaces A 3D box and its cross layout. The $+Z$ face ($w\times h$) has the cell $(o_x{+}d,\,o_y{+}d,\,w,\,h)$ and the $+Y$ face has the cell $(o_x{+}d,\,o_y,\,w,\,d)$. The corners 1, 2, 3, 4 of each face get $(k,l)=(0,0),(1,0),(1,1),(0,1)$ in \eqref  {eq:skin-uv}.}}{6}{figure.caption.15}\protected@file@percent }
-\newlabel{fig:skincross}{{13}{6}{A 3D box and its cross layout. The $+Z$ face ($w\times h$) has the cell $(o_x{+}d,\,o_y{+}d,\,w,\,h)$ and the $+Y$ face has the cell $(o_x{+}d,\,o_y,\,w,\,d)$. The corners 1, 2, 3, 4 of each face get $(k,l)=(0,0),(1,0),(1,1),(0,1)$ in \eqref {eq:skin-uv}}{figure.caption.15}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {14}{\ignorespaces The $64\times 64$ skin of the character. Each box (head, body, arms, legs) has one cross for the base layer and one for the overlay (hat, jacket, sleeves).}}{6}{figure.caption.16}\protected@file@percent }
-\newlabel{fig:skin}{{14}{6}{The $64\times 64$ skin of the character. Each box (head, body, arms, legs) has one cross for the base layer and one for the overlay (hat, jacket, sleeves)}{figure.caption.16}{}}
+\citation{phong1975}
+\@writefile{lof}{\contentsline {figure}{\numberline {12}{\ignorespaces A 3D box and its cross layout. The $+Z$ face ($w\times h$) has the cell $(o_x{+}d,\,o_y{+}d,\,w,\,h)$ and the $+Y$ face has the cell $(o_x{+}d,\,o_y,\,w,\,d)$. The corners 1, 2, 3, 4 of each face get $(k,l)=(0,0),(1,0),(1,1),(0,1)$ in \eqref  {eq:skin-uv}.}}{6}{figure.caption.14}\protected@file@percent }
+\newlabel{fig:skincross}{{12}{6}{A 3D box and its cross layout. The $+Z$ face ($w\times h$) has the cell $(o_x{+}d,\,o_y{+}d,\,w,\,h)$ and the $+Y$ face has the cell $(o_x{+}d,\,o_y,\,w,\,d)$. The corners 1, 2, 3, 4 of each face get $(k,l)=(0,0),(1,0),(1,1),(0,1)$ in \eqref {eq:skin-uv}}{figure.caption.14}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {13}{\ignorespaces The $64\times 64$ skin of the character. Each box (head, body, arms, legs) has one cross for the base layer and one for the overlay (hat, jacket, sleeves).}}{6}{figure.caption.15}\protected@file@percent }
+\newlabel{fig:skin}{{13}{6}{The $64\times 64$ skin of the character. Each box (head, body, arms, legs) has one cross for the base layer and one for the overlay (hat, jacket, sleeves)}{figure.caption.15}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {5}T4: Lighting and shadows}{6}{section.5}\protected@file@percent }
 \newlabel{chap:t4}{{5}{6}{T4: Lighting and shadows}{section.5}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Part 1: View-dependent colour}{6}{subsection.5.1}\protected@file@percent }
 \newlabel{sec:sh}{{5.1}{6}{Part 1: View-dependent colour}{subsection.5.1}{}}
-\newlabel{eq:sh}{{17}{6}{Part 1: View-dependent colour}{equation.17}{}}
-\newlabel{lst:sh}{{18}{6}{\code {render/shaders/splat\_prep.vert}: view-dependent SH colour}{lstlisting.18}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {18}{\ignorespaces \texttt  {render/shaders/splat\_prep.vert}: view-dependent SH colour}}{6}{lstlisting.18}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {15}{\ignorespaces Spherical harmonics up to degree 2. The nine basis functions are weighted by the coefficients $c_1..c_9$ and added. The colour is read at the view direction $(\mittheta ,\mitvarphi )$.}}{6}{figure.caption.17}\protected@file@percent }
-\newlabel{fig:sh}{{15}{6}{Spherical harmonics up to degree 2. The nine basis functions are weighted by the coefficients $c_1..c_9$ and added. The colour is read at the view direction $(\theta ,\varphi )$}{figure.caption.17}{}}
-\citation{phong1975}
+\newlabel{eq:sh}{{16}{6}{Part 1: View-dependent colour}{equation.16}{}}
+\newlabel{lst:sh}{{17}{6}{\code {render/shaders/splat\_prep.vert}: view-dependent SH colour}{lstlisting.17}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {17}{\ignorespaces \texttt  {render/shaders/splat\_prep.vert}: view-dependent SH colour}}{6}{lstlisting.17}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {14}{\ignorespaces Spherical harmonics up to degree 2. The nine basis functions are weighted by the coefficients $c_1..c_9$ and added. The colour is read at the view direction $(\mittheta ,\mitvarphi )$.}}{6}{figure.caption.16}\protected@file@percent }
+\newlabel{fig:sh}{{14}{6}{Spherical harmonics up to degree 2. The nine basis functions are weighted by the coefficients $c_1..c_9$ and added. The colour is read at the view direction $(\theta ,\varphi )$}{figure.caption.16}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Part 2: Phong lighting}{6}{subsection.5.2}\protected@file@percent }
+\newlabel{eq:phong-a}{{17}{6}{Part 2: Phong lighting}{equation.17}{}}
+\newlabel{eq:phong-d}{{18}{6}{Part 2: Phong lighting}{equation.18}{}}
+\newlabel{eq:phong-s}{{19}{6}{Part 2: Phong lighting}{equation.19}{}}
+\newlabel{eq:phong-wrap}{{20}{6}{Part 2: Phong lighting}{equation.20}{}}
+\newlabel{lst:phong}{{18}{6}{\code {render/shaders/splat\_prep.vert}, \code {shade}: Phong lighting}{lstlisting.18}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {18}{\ignorespaces \texttt  {render/shaders/splat\_prep.vert}, \texttt  {shade}: Phong lighting}}{6}{lstlisting.18}\protected@file@percent }
 \citation{williams1978}
 \citation{reeves1987}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Part 2: Phong lighting}{7}{subsection.5.2}\protected@file@percent }
-\newlabel{eq:phong-a}{{18}{7}{Part 2: Phong lighting}{equation.18}{}}
-\newlabel{eq:phong-d}{{19}{7}{Part 2: Phong lighting}{equation.19}{}}
-\newlabel{eq:phong-s}{{20}{7}{Part 2: Phong lighting}{equation.20}{}}
-\newlabel{eq:phong-wrap}{{21}{7}{Part 2: Phong lighting}{equation.21}{}}
-\newlabel{lst:phong}{{19}{7}{\code {render/shaders/splat\_prep.vert}, \code {shade}: Phong lighting}{lstlisting.19}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {19}{\ignorespaces \texttt  {render/shaders/splat\_prep.vert}, \texttt  {shade}: Phong lighting}}{7}{lstlisting.19}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {16}{\ignorespaces The Phong model \cite  {phong1975}: ambient, diffuse and specular parts, and their sum.}}{7}{figure.caption.18}\protected@file@percent }
-\newlabel{fig:phong}{{16}{7}{The Phong model \cite {phong1975}: ambient, diffuse and specular parts, and their sum}{figure.caption.18}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {15}{\ignorespaces The Phong model \cite  {phong1975}: ambient, diffuse and specular parts, and their sum.}}{7}{figure.caption.17}\protected@file@percent }
+\newlabel{fig:phong}{{15}{7}{The Phong model \cite {phong1975}: ambient, diffuse and specular parts, and their sum}{figure.caption.17}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Part 3: The sun}{7}{subsection.5.3}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.4}Part 4: Shadows}{7}{subsection.5.4}\protected@file@percent }
-\newlabel{eq:pcf}{{22}{7}{Part 4: Shadows}{equation.22}{}}
-\newlabel{lst:pcf}{{20}{7}{\code {render/shaders/splat\_prep.vert}, \code {shadowFactor}: $3\times 3$ PCF}{lstlisting.20}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {20}{\ignorespaces \texttt  {render/shaders/splat\_prep.vert}, \texttt  {shadowFactor}: $3\times 3$ PCF}}{7}{lstlisting.20}\protected@file@percent }
-\newlabel{lst:shadowsetup}{{21}{7}{\code {core/lighting.py}, \code {Lighting.shadow\_setup}: view matrix from the sun}{lstlisting.21}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {21}{\ignorespaces \texttt  {core/lighting.py}, \texttt  {Lighting.shadow\_setup}: view matrix from the sun}}{7}{lstlisting.21}\protected@file@percent }
+\newlabel{eq:pcf}{{21}{7}{Part 4: Shadows}{equation.21}{}}
+\newlabel{lst:pcf}{{19}{7}{\code {render/shaders/splat\_prep.vert}, \code {shadowFactor}: $3\times 3$ PCF}{lstlisting.19}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {19}{\ignorespaces \texttt  {render/shaders/splat\_prep.vert}, \texttt  {shadowFactor}: $3\times 3$ PCF}}{7}{lstlisting.19}\protected@file@percent }
+\newlabel{lst:shadowsetup}{{20}{7}{\code {core/lighting.py}, \code {Lighting.shadow\_setup}: view matrix from the sun}{lstlisting.20}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {20}{\ignorespaces \texttt  {core/lighting.py}, \texttt  {Lighting.shadow\_setup}: view matrix from the sun}}{7}{lstlisting.20}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {6}T5: Animation and simulation}{7}{section.6}\protected@file@percent }
 \newlabel{chap:t5}{{6}{7}{T5: Animation and simulation}{section.6}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Part 1: Day--night cycle}{7}{subsection.6.1}\protected@file@percent }
-\newlabel{eq:sun}{{23}{7}{Part 1: Day--night cycle}{equation.23}{}}
-\newlabel{lst:sun}{{22}{8}{\code {core/lighting.py}: hour, sun direction and daylight factor}{lstlisting.22}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {22}{\ignorespaces \texttt  {core/lighting.py}: hour, sun direction and daylight factor}}{8}{lstlisting.22}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Part 2: Collision with voxels}{8}{subsection.6.2}\protected@file@percent }
-\newlabel{eq:voxel}{{24}{8}{Part 2: Collision with voxels}{equation.24}{}}
-\newlabel{lst:voxel}{{23}{8}{\code {core/physics.py}, \code {CollisionWorld}: voxel keys and ground search}{lstlisting.23}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {23}{\ignorespaces \texttt  {core/physics.py}, \texttt  {CollisionWorld}: voxel keys and ground search}}{8}{lstlisting.23}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {17}{\ignorespaces One frame of walk mode.}}{8}{figure.caption.19}\protected@file@percent }
-\newlabel{fig:t5}{{17}{8}{One frame of walk mode}{figure.caption.19}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Part 3: The player}{8}{subsection.6.3}\protected@file@percent }
-\newlabel{eq:euler}{{25}{8}{Part 3: The player}{equation.25}{}}
-\newlabel{eq:jump}{{26}{8}{Part 3: The player}{equation.26}{}}
-\newlabel{lst:jump}{{24}{8}{\code {core/physics.py}, \code {Physics.walk}: jump and gravity}{lstlisting.24}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {24}{\ignorespaces \texttt  {core/physics.py}, \texttt  {Physics.walk}: jump and gravity}}{8}{lstlisting.24}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.4}Part 4: Character animation}{8}{subsection.6.4}\protected@file@percent }
-\newlabel{eq:gait}{{27}{8}{Part 4: Character animation}{equation.27}{}}
-\newlabel{lst:gait}{{25}{8}{\code {core/avatar\_pose.py}: gait phase and smoothing filter}{lstlisting.25}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {25}{\ignorespaces \texttt  {core/avatar\_pose.py}: gait phase and smoothing filter}}{8}{lstlisting.25}\protected@file@percent }
+\newlabel{eq:sun}{{22}{7}{Part 1: Day--night cycle}{equation.22}{}}
+\newlabel{lst:sun}{{21}{7}{\code {core/lighting.py}: hour, sun direction and daylight factor}{lstlisting.21}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {21}{\ignorespaces \texttt  {core/lighting.py}: hour, sun direction and daylight factor}}{7}{lstlisting.21}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Part 2: Collision with voxels}{7}{subsection.6.2}\protected@file@percent }
+\newlabel{eq:voxel}{{23}{7}{Part 2: Collision with voxels}{equation.23}{}}
+\newlabel{lst:voxel}{{22}{7}{\code {core/physics.py}, \code {CollisionWorld}: voxel keys and ground search}{lstlisting.22}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {22}{\ignorespaces \texttt  {core/physics.py}, \texttt  {CollisionWorld}: voxel keys and ground search}}{7}{lstlisting.22}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {16}{\ignorespaces One frame of walk mode.}}{7}{figure.caption.18}\protected@file@percent }
+\newlabel{fig:t5}{{16}{7}{One frame of walk mode}{figure.caption.18}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Part 3: The player}{7}{subsection.6.3}\protected@file@percent }
+\newlabel{eq:euler}{{24}{7}{Part 3: The player}{equation.24}{}}
+\citation{supersplat}
+\citation{gamma1994design}
+\newlabel{eq:jump}{{25}{8}{Part 3: The player}{equation.25}{}}
+\newlabel{lst:jump}{{23}{8}{\code {core/physics.py}, \code {Physics.walk}: jump and gravity}{lstlisting.23}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {23}{\ignorespaces \texttt  {core/physics.py}, \texttt  {Physics.walk}: jump and gravity}}{8}{lstlisting.23}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {7}T6: Interaction and GUI}{8}{section.7}\protected@file@percent }
 \newlabel{chap:t6}{{7}{8}{T6: Interaction and GUI}{section.7}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {7.1}Part 1: Event handling}{8}{subsection.7.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {7.2}Part 2: Brush selection}{8}{subsection.7.2}\protected@file@percent }
-\newlabel{eq:capsule}{{28}{8}{Part 2: Brush selection}{equation.28}{}}
-\citation{supersplat}
-\citation{gamma1994design}
+\newlabel{eq:capsule}{{26}{8}{Part 2: Brush selection}{equation.26}{}}
+\newlabel{lst:capsule}{{24}{8}{\code {editor/brush.py}, \code {BrushTool.\_segment\_dist2}: capsule test}{lstlisting.24}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {24}{\ignorespaces \texttt  {editor/brush.py}, \texttt  {BrushTool.\_segment\_dist2}: capsule test}}{8}{lstlisting.24}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.3}Part 3: Soft delete and undo}{8}{subsection.7.3}\protected@file@percent }
+\newlabel{lst:history}{{25}{8}{\code {core/layer.py} and \code {core/history.py}: soft delete and undo}{lstlisting.25}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {25}{\ignorespaces \texttt  {core/layer.py} and \texttt  {core/history.py}: soft delete and undo}}{8}{lstlisting.25}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.4}Part 4: Interface}{8}{subsection.7.4}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Main controls.}}{8}{table.caption.19}\protected@file@percent }
+\newlabel{tab:keys}{{3}{8}{Main controls}{table.caption.19}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {8}Limitations and future work}{8}{section.8}\protected@file@percent }
+\newlabel{chap:future}{{8}{8}{Limitations and future work}{section.8}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.1}Limitations}{8}{subsection.8.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.2}Future work}{8}{subsection.8.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {9}AI usage statement}{8}{section.9}\protected@file@percent }
+\newlabel{chap:ai}{{9}{8}{AI usage statement}{section.9}{}}
 \bibcite{schonberger2016colmap}{1}
 \bibcite{kerbl2023gaussian}{2}
 \bibcite{supersplat}{3}
@@ -182,22 +186,8 @@
 \bibcite{williams1978}{6}
 \bibcite{reeves1987}{7}
 \bibcite{gamma1994design}{8}
-\newlabel{lst:capsule}{{26}{9}{\code {editor/brush.py}, \code {BrushTool.\_segment\_dist2}: capsule test}{lstlisting.26}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {26}{\ignorespaces \texttt  {editor/brush.py}, \texttt  {BrushTool.\_segment\_dist2}: capsule test}}{9}{lstlisting.26}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {7.3}Part 3: Soft delete and undo}{9}{subsection.7.3}\protected@file@percent }
-\newlabel{lst:history}{{27}{9}{\code {core/layer.py} and \code {core/history.py}: soft delete and undo}{lstlisting.27}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {27}{\ignorespaces \texttt  {core/layer.py} and \texttt  {core/history.py}: soft delete and undo}}{9}{lstlisting.27}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {7.4}Part 4: Interface}{9}{subsection.7.4}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Main controls.}}{9}{table.caption.20}\protected@file@percent }
-\newlabel{tab:keys}{{3}{9}{Main controls}{table.caption.20}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {8}Limitations and future work}{9}{section.8}\protected@file@percent }
-\newlabel{chap:future}{{8}{9}{Limitations and future work}{section.8}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {8.1}Limitations}{9}{subsection.8.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {8.2}Future work}{9}{subsection.8.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {9}AI usage statement}{9}{section.9}\protected@file@percent }
-\newlabel{chap:ai}{{9}{9}{AI usage statement}{section.9}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {10}Conclusion}{9}{section.10}\protected@file@percent }
 \newlabel{chap:end}{{10}{9}{Conclusion}{section.10}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Main source files (in \texttt  {splat\_editor/}).}}{9}{table.caption.21}\protected@file@percent }
-\newlabel{tab:src}{{4}{9}{Main source files (in \code {splat\_editor/})}{table.caption.21}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Main source files (in \texttt  {splat\_editor/}).}}{9}{table.caption.20}\protected@file@percent }
+\newlabel{tab:src}{{4}{9}{Main source files (in \code {splat\_editor/})}{table.caption.20}{}}
 \gdef \@abspage@last{9}

@@ -179,11 +179,11 @@ Giao diện ImGui\par}
 \toprule
 Nhóm & Nội dung chính & Mục \\
 \midrule
-T1 & layer, ma trận $\mathbf{M}$, bộ xương nhân vật & \ref{chap:t1} \\
+T1 & layer, ma trận $\mathbf{M}$ & \ref{chap:t1} \\
 T2 & ma trận nhìn/chiếu, EWA, trộn alpha, camera & \ref{chap:t2} \\
 T3 & texture skin của nhân vật & \ref{chap:t3} \\
 T4 & màu SH, Phong, shadow map & \ref{chap:t4} \\
-T5 & ngày--đêm, va chạm, hoạt họa nhân vật & \ref{chap:t5} \\
+T5 & ngày--đêm, va chạm, người chơi & \ref{chap:t5} \\
 T6 & cọ chọn, xóa/hoàn tác, ImGui, HUD & \ref{chap:t6} \\
 \bottomrule
 \end{tabular}
@@ -366,11 +366,10 @@ mat3 sigma = M * transpose(M);
 \section{T1: Phép biến đổi và mô hình phân cấp}
 \label{chap:t1}
 %====================================================================
-Chương này có ba phần. Hai phần đầu di chuyển cả một layer, phần cuối di chuyển một mô hình phân cấp.
+Chương này có hai phần. Cả hai đều di chuyển cả một layer.
 \begin{itemize}\itemsep0pt
 \item \textbf{Phần 1, biến đổi layer.} Đưa gaussian của một file \code{.ply} vào thế giới.
 \item \textbf{Phần 2, quay quanh một điểm.} Quay layer quanh một tâm tùy chọn.
-\item \textbf{Phần 3, bộ xương nhân vật.} Dựng ma trận của nhân vật từ một cây khớp.
 \end{itemize}
 
 \subsection{Phần 1: Biến đổi layer}
@@ -411,44 +410,6 @@ def rotate_about(self, delta, pivot):
     self.position = list(delta @ (self.translation() - pivot) + pivot)
 \end{lstlisting}
 \end{codebox}
-
-\subsection{Phần 3: Bộ xương nhân vật}
-\label{sec:skeleton}
-Nhân vật hiện ra khi bấm \code{F5}. Nó có sáu hộp: đầu, thân, hai tay và hai chân. Mỗi hộp có một ma trận riêng. Ma trận này là tích các ma trận khớp từ gốc xuống (Hình~\ref{fig:skeleton}). Mỗi khớp quay quanh một điểm $\mathbf{p}$:
-\begin{equation}
-\mathbf{M}_{\text{con}}=\mathbf{M}_{\text{cha}}\,\mathbf{T}(\mathbf{p})\,\mathbf{R}\,\mathbf{T}(-\mathbf{p}).
-\end{equation}
-Chân là con của gốc. Tay và đầu là con của thân, nên chúng nghiêng theo thân. Các góc khớp đến từ hoạt họa (Mục~\ref{chap:t5}).
-
-\begin{codebox}
-\begin{lstlisting}[language=Python,caption={\code{core/avatar\_pose.py}, \code{limb\_matrices}: ma trận khớp},label={lst:joint}]
-def leg(angle):
-    return (root @ _translate(0, HIP_Y, 0) @ _rot("x", angle)
-            @ _translate(0, -HIP_Y, 0))
-
-def arm(px, angles):
-    return (upper @ _translate(px, SHOULDER_Y, 0) @ _rot("z", angles[1])
-            @ _rot("x", angles[0]) @ _translate(-px, -SHOULDER_Y, 0))
-\end{lstlisting}
-\end{codebox}
-
-\begin{figure}[H]
-\centering
-\begin{tikzpicture}[node distance=5mm and 5mm]
-  \node[pbox] (root) {Gốc\\$\mathbf{M}_{\text{root}}$};
-  \node[pbox,right=12mm of root] (body) {Thân\\(khớp hông)};
-  \node[pbox,below=of root] (leg) {Chân trái/phải\\(khớp hông)};
-  \node[pbox,right=of body] (arm) {Tay trái/phải\\(khớp vai)};
-  \node[pbox,below=of arm] (head) {Đầu\\(khớp cổ)};
-  \draw[parr] (root) -- (body);
-  \draw[parr] (root) -- (leg);
-  \draw[parr] (body) -- (arm);
-  \draw[parr] (body) -- (head);
-\end{tikzpicture}
-\caption{Cây phân cấp của nhân vật. Mỗi mũi tên là một phép nhân ma trận.}
-\label{fig:skeleton}
-\end{figure}
-
 
 %====================================================================
 \section{T2: Camera và phép chiếu}
@@ -684,7 +645,6 @@ self.target += self.velocity * dt
 \end{lstlisting}
 \end{codebox}
 
-\textbf{Góc nhìn thứ ba.} Ở chế độ đi bộ, camera lùi ra sau nhân vật một đoạn. Chương trình bắn một tia từ mắt nhân vật đến vị trí camera trong bản đồ voxel. Nếu tia chạm tường, camera co lại ngay để không xuyên tường. Khi hết vướng, nó lùi ra dần.
 
 %====================================================================
 \section{T3: Ánh xạ texture}
@@ -925,12 +885,11 @@ return (proj @ view).astype(np.float32), texel, bias
 \section{T5: Hoạt họa và mô phỏng}
 \label{chap:t5}
 %====================================================================
-Mọi chuyển động đều nhân với thời gian khung hình $\Delta t$. Nhờ vậy tốc độ ít phụ thuộc vào máy. Có bốn phần, theo thứ tự trong một khung hình.
+Mọi chuyển động đều nhân với thời gian khung hình $\Delta t$. Nhờ vậy tốc độ ít phụ thuộc vào máy. Có ba phần, theo thứ tự trong một khung hình.
 \begin{itemize}\itemsep0pt
 \item \textbf{Phần 1, chu kỳ ngày--đêm.} Chạy đồng hồ và di chuyển mặt trời.
 \item \textbf{Phần 2, va chạm voxel.} Biến các gaussian thành voxel đặc.
 \item \textbf{Phần 3, người chơi.} Đi, nhảy và rơi trên các voxel.
-\item \textbf{Phần 4, hoạt họa nhân vật.} Tính góc các khớp của nhân vật.
 \end{itemize}
 
 \subsection{Phần 1: Chu kỳ ngày--đêm}
@@ -1026,35 +985,6 @@ if not player.on_ground:
     new_y = y + player.vel_y * dt
 \end{lstlisting}
 \end{codebox}
-
-\subsection{Phần 4: Hoạt họa nhân vật}
-Chương trình chỉ tính góc các khớp (đơn vị độ); renderer dựng ma trận. Gọi $d$ là quãng đường đi được trong khung hình này, tính theo chiều cao người. Pha của bước đi tăng theo quãng đường chứ không theo thời gian, nên chân không bị trượt trên đất:
-\begin{equation}
-\psi\leftarrow\psi+1{,}75\cdot2\,d,\qquad
-\theta_{chân}=\pm A\,a\,\sin\psi,\quad
-\theta_{tay}=\mp A\,a\,\sin\psi,
-\label{eq:gait}
-\end{equation}
-với $A=60^{\circ}$. Chân và tay đối diện chuyển động cùng nhau.
-
-\textbf{Trộn trạng thái.} Biên độ $a\in[0,1]$ bám theo tốc độ bằng bộ lọc $x\leftarrow x+(x^{*}-x)\min(1,k\,\Delta t)$ \eqref{eq:fly}, với $k=8$. Cùng bộ lọc này, với $k=7$, trộn các trạng thái khác: ngồi (chân $-90^{\circ}$, thân hạ xuống), cúi (thân nghiêng $28^{\circ}$) và các cử chỉ vẫy tay, zombie, cổ vũ. Hai tư thế được trộn tuyến tính, $\theta=(1-w)\theta_a+w\,\theta_b$, nên cử chỉ hiện ra và mất đi mượt. Khi đứng yên, một số hạng $\sin$ nhỏ làm tay lắc nhẹ để giả lập nhịp thở.
-
-\begin{codebox}
-\begin{lstlisting}[language=Python,caption={\code{core/avatar\_pose.py}: nhịp đi và bộ lọc làm mượt},label={lst:gait}]
-def _approach(value, target, rate, dt):
-    return value + (target - value) * min(1.0, dt * rate)
-
-walked = distance / max(height, 1e-9)
-self.amount = _approach(self.amount, target, BLEND, dt)
-self.phase += walked * STRIDE * GAIT_SCALE
-swing = math.sin(self.phase) * SWING_ANGLE * walk
-leg_l, leg_r = swing, -swing
-arm_l = [-swing + idle, 0.0]
-arm_r = [swing - idle, 0.0]
-\end{lstlisting}
-\end{codebox}
-
-\textbf{Ma trận khớp.} Mỗi chi là một phép quay quanh khớp của nó: $\mathbf{M}=\mathbf{T}(\mathbf{j})\,\mathbf{R}(\theta)\,\mathbf{T}(-\mathbf{j})$, nhân sau ma trận của khối cha, ví dụ tay nhân sau thân.
 
 %====================================================================
 \section{T6: Tương tác và giao diện}
