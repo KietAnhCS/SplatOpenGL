@@ -31,6 +31,26 @@ class LightRenderer:
         GL.glVertexAttribPointer(0, 2, GL.GL_FLOAT, GL.GL_FALSE, 0, None)
         GL.glBindVertexArray(0)
 
+    def draw_sun(self, view, projection, lighting):
+        """Vẽ mặt trời TRƯỚC các gaussian: nó là phần tử xa nhất nên các gaussian (đã sắp xa -> gần)
+        tự blend đè lên nó, không cần kiểm tra che khuất."""
+        if not lighting.enabled or not lighting.sun_on:
+            return
+        direction = lighting.sun_direction()
+        above = float(np.clip((direction[1] + 0.1) / 0.2, 0.0, 1.0))
+        if above <= 0:
+            return
+        view = np.asarray(view, np.float32)
+        projection = np.asarray(projection, np.float32)
+        GL.glDisable(GL.GL_DEPTH_TEST)
+        GL.glEnable(GL.GL_BLEND)
+        GL.glBlendFunc(GL.GL_ONE, GL.GL_ONE_MINUS_SRC_ALPHA)
+        GL.glBindVertexArray(self.vao)
+        center = lighting.center + direction * lighting.radius * 6.0
+        self._sphere(view, projection, center, lighting.radius * 0.45, 2.6,
+                     np.array(lighting.sun_color_for_gizmo()), above)
+        GL.glBindVertexArray(0)
+
     def draw(self, view, projection, lighting, time, unit, physics=None):
         """unit: chiều cao người chơi (đơn vị cảnh) để chọn kích thước quả cầu."""
         if not lighting.enabled:
@@ -42,26 +62,6 @@ class LightRenderer:
         GL.glEnable(GL.GL_BLEND)
         GL.glBlendFunc(GL.GL_ONE, GL.GL_ONE_MINUS_SRC_ALPHA)
         GL.glBindVertexArray(self.vao)
-
-        if lighting.sun_on:
-            direction = lighting.sun_direction()
-            above = float(np.clip((direction[1] + 0.1) / 0.2, 0.0, 1.0))
-            if above > 0:
-                color = np.array(lighting.sun_color_for_gizmo())
-                center = lighting.center + direction * lighting.radius * 6.0
-                radius = lighting.radius * 0.45
-                if physics is not None:       # gaussian không ghi độ sâu: tự kiểm tra cảnh có che mặt trời không
-                    right, up = view[0, :3], view[1, :3]
-                    targets = [center]
-                    for k in range(8):       # vòng quanh đĩa mặt trời: nhiều tia để tường thưa không làm lọt sáng
-                        a = k * np.pi / 4
-                        targets.append(center + (right * np.cos(a) + up * np.sin(a)) * radius * 0.8)
-                    seen = physics.visibility(cam_pos, targets)
-                    # chỉ hiện khi đa số tia thấy được; bị che phần lớn thì tắt hẳn (không để mờ mờ)
-                    t = float(np.clip((seen - 0.5) / 0.35, 0.0, 1.0))
-                    above *= t * t * (3.0 - 2.0 * t)
-                if above > 0:
-                    self._sphere(view, projection, center, radius, 2.6, color, above)
 
         visible = {}
         for light in lighting.lights:

@@ -181,6 +181,7 @@ class Viewport:
             self.grid.draw(view.astype(np.float64), projection, self.camera.distance)
         if self.lighting is not None:
             self.splat_renderer.set_lighting(self.lighting.params())
+            self.light_renderer.draw_sun(view, projection, self.lighting)     # xa nhất: vẽ trước gaussian
         self.splat_renderer.draw(view, projection, w, h)
         if self.lighting is not None:
             self.light_renderer.draw(view, projection, self.lighting, self.clock, self.unit,
