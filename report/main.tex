@@ -86,7 +86,7 @@
 \begin{@twocolumnfalse}
 \vspace{-0.3cm}
 
-{\fontsize{16.5}{20}\selectfont Splat Editor: a viewer and editor for 3D Gaussian\\Splatting scenes in Python and OpenGL~3.3\par}
+{\fontsize{16.5}{20}\selectfont Splat Editor: a Viewer and Editor for\\3D Gaussian Splatting Scenes\par}
 \vspace{0.4cm}
 {\large Lê Anh Kiệt\textsuperscript{\,a}\par}
 \vspace{0.2cm}
@@ -267,7 +267,17 @@ Fig.~\ref{fig:rs} gives the two matrices. Fig.~\ref{fig:ellipsoid} draws the res
 \end{figure}
 
 
-\clearpage
+\twocolumn[{%
+\centering
+\begin{minipage}{0.495\textwidth}\centering\includegraphics[width=\linewidth]{figures/t4-zombie-day.png}\\{\footnotesize (a) Day, 15:59.}\end{minipage}\hfill
+\begin{minipage}{0.495\textwidth}\centering\includegraphics[width=\linewidth]{figures/t4-dawn.png}\\{\footnotesize (b) Dawn, 06:15.}\end{minipage}\\[5pt]
+\begin{minipage}{0.495\textwidth}\centering\includegraphics[width=\linewidth]{figures/t4-lamp-zombie.png}\\{\footnotesize (c) Ambient $0.08$ and a lamp.}\end{minipage}\hfill
+\begin{minipage}{0.495\textwidth}\centering\includegraphics[width=\linewidth]{figures/t4-dusk.png}\\{\footnotesize (d) Dusk, 17:40.}\end{minipage}
+\captionof{figure}{A scene with the sun, one point light and the character at different times of day.}
+\label{fig:t4}
+\vspace{6pt}
+}]
+
 %====================================================================
 \section{T1: Transformations and hierarchical models}
 \label{chap:t1}
@@ -310,17 +320,6 @@ The legs are children of the root. The arms and head are children of the body, s
 \label{fig:skeleton}
 \end{figure}
 
-\begin{figure*}[!t]
-\centering
-\begin{minipage}{0.495\textwidth}\centering\includegraphics[width=\linewidth]{figures/t4-zombie-day.png}\\{\footnotesize (a) Day, 15:59.}\end{minipage}\hfill
-\begin{minipage}{0.495\textwidth}\centering\includegraphics[width=\linewidth]{figures/t4-dawn.png}\\{\footnotesize (b) Dawn, 06:15.}\end{minipage}\\[5pt]
-\begin{minipage}{0.495\textwidth}\centering\includegraphics[width=\linewidth]{figures/t4-lamp-zombie.png}\\{\footnotesize (c) Ambient $0.08$ and a lamp.}\end{minipage}\hfill
-\begin{minipage}{0.495\textwidth}\centering\includegraphics[width=\linewidth]{figures/t4-dusk.png}\\{\footnotesize (d) Dusk, 17:40.}\end{minipage}
-\caption{A scene with the sun, one point light and the character at different times of day.}
-\label{fig:t4}
-\end{figure*}
-
-\clearpage
 %====================================================================
 \section{T2: Camera and projection}
 \label{chap:t2}
