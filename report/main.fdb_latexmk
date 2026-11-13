@@ -1,15 +1,14 @@
 # Fdb version 4
-["xdvipdfmx"] 1794500633.94693 "main.xdv" "main.pdf" "main" 1794500651.84665 0
-  "main.xdv" 1794500633.5451 261000 c13c950ddaf55ad36aeca7952e08b667 "xelatex"
+["xdvipdfmx"] 1794539373.20737 "main.xdv" "main.pdf" "main" 1794539391.67787 0
+  "main.xdv" 1794539372.79727 259272 ce41496f558441fad31bfd8a67611472 "xelatex"
   (generated)
   "main.pdf"
   (rewritten before read)
-["xelatex"] 1794500631.66805 "main.tex" "main.xdv" "main" 1794500651.82302 0
+["xelatex"] 1794539370.90761 "main.tex" "main.xdv" "main" 1794539391.65141 0
   "C:/Users/kelly/AppData/Local/MiKTeX/miktex/data/le/xetex/xelatex.fmt" 1792572223.27402 27176674 bb140bc90770b00da53f83e020756299 ""
   "C:/Users/kelly/AppData/Local/Programs/MiKTeX/fonts/tfm/adobe/zapfding/pzdr.tfm" 1136747054 1528 f853c4d1b4e0550255e02831fdc8496f ""
   "C:/Users/kelly/AppData/Local/Programs/MiKTeX/fonts/tfm/public/cm/cmmi5.tfm" 1136765053 1508 3b32edd0d68f6498a5a375e78f9edc5e ""
   "C:/Users/kelly/AppData/Local/Programs/MiKTeX/fonts/tfm/public/cm/cmmi6.tfm" 1136765053 1512 f21f83efb36853c0b70002322c1ab3ad ""
-  "C:/Users/kelly/AppData/Local/Programs/MiKTeX/fonts/tfm/public/cm/cmmi8.tfm" 1136765053 1520 eccf95517727cb11801f4f1aee3a21b4 ""
   "C:/Users/kelly/AppData/Local/Programs/MiKTeX/fonts/tfm/public/cm/cmmi9.tfm" 1136765053 1524 d89e2d087a9828407a196f428428ef4a ""
   "C:/Users/kelly/AppData/Local/Programs/MiKTeX/tex/generic/bigintcalc/bigintcalc.sty" 1576433602 40635 c40361e206be584d448876bba8a64a3b ""
   "C:/Users/kelly/AppData/Local/Programs/MiKTeX/tex/generic/bitset/bitset.sty" 1575926576 33961 6b5c75130e435b2bfdb9f480a09a39f9 ""
@@ -166,9 +165,9 @@
   "figures/t4-night.png" 1794417846.0447 1436412 305d83159b8dc04f8d1d92705a8c4ae0 ""
   "figures/t4-zombie-day.png" 1794417846.07017 1716953 6e07787ac013b33146f7b824ffd0345b ""
   "figures/viewer.png" 1794212530.88828 763578 d5eee1307c70ee544158988fdee74d2a ""
-  "main.aux" 1794500633.52609 12484 f4002b669ddb0729d6d36c4b0c95f675 "xelatex"
-  "main.out" 1794500633.53507 3397 ecc69763c650a7eafa785424d7cbb528 "xelatex"
-  "main.tex" 1794500608.76299 35805 8a72c58fb36ed31aaa5ea9d193cd0b1e ""
+  "main.aux" 1794539372.78477 12484 8b3e98f5980685347e732de89bec8293 "xelatex"
+  "main.out" 1794539372.79528 3397 ecc69763c650a7eafa785424d7cbb528 "xelatex"
+  "main.tex" 1794539366.06345 35943 28563fd13bac63bc2a37d2ebe0c722e8 ""
   (generated)
   "main.aux"
   "main.log"

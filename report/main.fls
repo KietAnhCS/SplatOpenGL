@@ -1,4 +1,4 @@
-PWD C:\Users\kelly\OneDrive\Desktop\GS\supersplatOpenGL\report-vn
+PWD C:\Users\kelly\OneDrive\Desktop\SplatOpenGL\report
 INPUT C:\Users\kelly\AppData\Local\MiKTeX\miktex\data\le\xetex\xelatex.fmt
 INPUT main.tex
 OUTPUT main.log
@@ -277,30 +277,29 @@ INPUT main.out
 INPUT .\main.out
 INPUT .\main.out
 OUTPUT main.out
-INPUT C:\Users\kelly\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmmi8.tfm
 INPUT C:\Users\kelly\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmmi6.tfm
+INPUT .\figures\1 (6).png
+INPUT .\figures\1 (6).png
+INPUT .\figures\1 (6).png
+INPUT .\figures\csv_head.png
+INPUT .\figures\csv_head.png
+INPUT .\figures\csv_head.png
+INPUT .\figures\csv_tail.png
+INPUT .\figures\csv_tail.png
+INPUT .\figures\csv_tail.png
+INPUT .\figures\viewer.png
+INPUT .\figures\viewer.png
+INPUT .\figures\viewer.png
+INPUT .\figures\t4-day.png
+INPUT .\figures\t4-day.png
+INPUT .\figures\t4-day.png
+INPUT .\figures\t4-night.png
+INPUT .\figures\t4-night.png
+INPUT .\figures\t4-night.png
+OUTPUT main.xdv
 INPUT C:\Users\kelly\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmmi9.tfm
 INPUT C:\Users\kelly\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmmi6.tfm
 INPUT C:\Users\kelly\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmmi5.tfm
-INPUT .\figures\1 (6).png
-INPUT .\figures\1 (6).png
-INPUT .\figures\1 (6).png
-INPUT .\figures\csv_head.png
-INPUT .\figures\csv_head.png
-INPUT .\figures\csv_head.png
-INPUT .\figures\csv_tail.png
-INPUT .\figures\csv_tail.png
-INPUT .\figures\csv_tail.png
-INPUT .\figures\viewer.png
-INPUT .\figures\viewer.png
-INPUT .\figures\viewer.png
-OUTPUT main.xdv
-INPUT .\figures\t4-day.png
-INPUT .\figures\t4-day.png
-INPUT .\figures\t4-day.png
-INPUT .\figures\t4-night.png
-INPUT .\figures\t4-night.png
-INPUT .\figures\t4-night.png
 INPUT .\figures\1 (4).png
 INPUT .\figures\1 (4).png
 INPUT .\figures\1 (4).png
