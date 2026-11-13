@@ -1,0 +1,660 @@
+\contentsline {section}{Tổng quan: bản đồ chương trình và điểm vào}{3}{Doc-Start}%
+\contentsline {section}{Tổng quan: điểm vào và app.py}{3}{Doc-Start}%
+\contentsline {subsection}{\numberline {0.1}\code {main.py}}{3}{subsection.0.1}%
+\contentsline {subsection}{\numberline {0.2}\code {splat_editor/__main__.py}}{3}{subsection.0.2}%
+\contentsline {subsection}{\numberline {0.3}\code {splat_editor/app.py}}{4}{subsection.0.3}%
+\contentsline {paragraph}{Mô tả đầu file và cách dùng.}{4}{paragraph*.1}%
+\contentsline {subsubsection}{\code {class FpsCounter}}{4}{subsubsection*.2}%
+\contentsline {subsubsection}{\code {FpsCounter.__init__(self, interval=0.5)}}{4}{subsubsection*.3}%
+\contentsline {subsubsection}{\code {FpsCounter.tick(self, now)}}{4}{subsubsection*.4}%
+\contentsline {subsubsection}{\code {class Application}}{5}{subsubsection*.5}%
+\contentsline {subsubsection}{\code {Application.__init__(self, width=1500, height=900)}}{5}{subsubsection*.6}%
+\contentsline {subsubsection}{\code {Application._create_actions(self)}}{5}{subsubsection*.7}%
+\contentsline {subsubsection}{\code {Application.open_file(self, path)}}{6}{subsubsection*.8}%
+\contentsline {subsubsection}{\code {Application.add_files(self, paths)}}{6}{subsubsection*.9}%
+\contentsline {subsubsection}{\code {Application.open_dialog(self)}}{6}{subsubsection*.10}%
+\contentsline {subsubsection}{\code {Application.add_dialog(self)}}{7}{subsubsection*.11}%
+\contentsline {subsubsection}{\code {Application.save_dialog(self)}}{7}{subsubsection*.12}%
+\contentsline {subsubsection}{\code {Application.frame_scene(self, layer=None)}}{7}{subsubsection*.13}%
+\contentsline {subsubsection}{\code {Application._update_bounds(self, positions=None, reset_scale=False)}}{7}{subsubsection*.14}%
+\contentsline {subsubsection}{\code {Application.toggle_lighting(self)}}{7}{subsubsection*.15}%
+\contentsline {subsubsection}{\code {Application.toggle_shadows(self)}}{7}{subsubsection*.16}%
+\contentsline {subsubsection}{\code {Application.add_sun(self)}}{8}{subsubsection*.17}%
+\contentsline {subsubsection}{\code {Application.add_light(self)}}{8}{subsubsection*.18}%
+\contentsline {subsubsection}{\code {Application.pick_light(self, x, y)}}{8}{subsubsection*.19}%
+\contentsline {subsubsection}{\code {Application.delete_key(self)}}{8}{subsubsection*.20}%
+\contentsline {subsubsection}{\code {Application.set_mode(self, mode)}}{9}{subsubsection*.21}%
+\contentsline {subsubsection}{\code {Application._spawn_player(self)}}{9}{subsubsection*.22}%
+\contentsline {subsubsection}{\code {Application.toggle_mode(self)}}{9}{subsubsection*.23}%
+\contentsline {subsubsection}{\code {Application.walk(self, forward, right, jump, sprint, sneak, dt)}}{9}{subsubsection*.24}%
+\contentsline {subsubsection}{\code {Application.cycle_view(self)}}{10}{subsubsection*.25}%
+\contentsline {subsubsection}{\code {Application._leave_third_person(self)}}{10}{subsubsection*.26}%
+\contentsline {subsubsection}{\code {Application._update_avatar(self, feet, walked, dt)}}{10}{subsubsection*.27}%
+\contentsline {subsubsection}{\code {Application.update_world(self, dt)}}{11}{subsubsection*.28}%
+\contentsline {subsubsection}{\code {Application.toggle_grid(self)}}{11}{subsubsection*.29}%
+\contentsline {subsubsection}{\code {Application.toggle_sh(self)}}{11}{subsubsection*.30}%
+\contentsline {subsubsection}{\code {Application.set_flip(self, flip)}}{11}{subsubsection*.31}%
+\contentsline {subsubsection}{\code {Application.exit_brush(self)}}{11}{subsubsection*.32}%
+\contentsline {subsubsection}{\code {Application.shortcuts_window_toggle(self)}}{11}{subsubsection*.33}%
+\contentsline {subsubsection}{\code {Application.paint(self, x, y)}}{11}{subsubsection*.34}%
+\contentsline {subsubsection}{\code {Application.drag_speed(self)}}{12}{subsubsection*.35}%
+\contentsline {subsubsection}{\code {Application._draw_gui(self)}}{12}{subsubsection*.36}%
+\contentsline {subsubsection}{\code {Application.run(self)}}{12}{subsubsection*.37}%
+\contentsline {subsubsection}{\code {main(argv=None)}}{12}{subsubsection*.38}%
+\contentsline {section}{\numberline {1}Thư mục core: logic thuần}{13}{section.1}%
+\contentsline {subsection}{\numberline {1.1}\code {splat_editor/core/math3d.py}}{13}{subsection.1.1}%
+\contentsline {paragraph}{Mô tả đầu file và cách dùng.}{13}{paragraph*.39}%
+\contentsline {subsubsection}{Cơ sở toán: Quaternion}{13}{subsubsection*.40}%
+\contentsline {paragraph}{Quaternion sang ma trận (\code {quat_to_matrix}, giống hệt trong \code {splat_prep.vert}).}{13}{paragraph*.41}%
+\contentsline {paragraph}{Ma trận sang quaternion (\code {matrix_to_quat}, phương pháp Shepperd).}{13}{paragraph*.42}%
+\contentsline {paragraph}{Nhân quaternion (\code {quat_mul}, tích Hamilton).}{13}{paragraph*.43}%
+\contentsline {paragraph}{Lượng tử hóa quaternion lên GPU (\code {splat_renderer.pack}, \code {splat_prep.vert}).}{13}{paragraph*.44}%
+\contentsline {subsubsection}{Cơ sở toán: Camera và phép chiếu}{14}{subsubsection*.45}%
+\contentsline {paragraph}{Ma trận nhìn (\code {look_at(e, target, up)}).}{14}{paragraph*.46}%
+\contentsline {paragraph}{Phép chiếu phối cảnh (\code {perspective(fov, a, n, f)}).}{14}{paragraph*.47}%
+\contentsline {paragraph}{Phép chiếu trực giao (\code {orthographic(h, n, f)}).}{14}{paragraph*.48}%
+\contentsline {paragraph}{Ví dụ số (\code {report/project3d_table.tex}).}{14}{paragraph*.49}%
+\contentsline {subsubsection}{\code {perspective(fov_y_deg, aspect, near, far)}}{14}{subsubsection*.50}%
+\contentsline {subsubsection}{\code {orthographic(half_size, near, far)}}{15}{subsubsection*.51}%
+\contentsline {subsubsection}{\code {orthographic(half_size, near, far)}}{15}{subsubsection*.52}%
+\contentsline {subsubsection}{\code {look_at(eye, target, up)}}{15}{subsubsection*.53}%
+\contentsline {subsubsection}{\code {euler_to_matrix(degrees)}}{16}{subsubsection*.54}%
+\contentsline {subsubsection}{\code {matrix_to_euler(m)}}{16}{subsubsection*.55}%
+\contentsline {subsubsection}{\code {axis_angle_matrix(axis, degrees)}}{16}{subsubsection*.56}%
+\contentsline {subsubsection}{\code {matrix_to_quat(m)}}{16}{subsubsection*.57}%
+\contentsline {subsubsection}{\code {quat_mul(a, b)}}{17}{subsubsection*.58}%
+\contentsline {subsubsection}{\code {quat_to_matrix(q)}}{17}{subsubsection*.59}%
+\contentsline {subsection}{\numberline {1.2}\code {splat_editor/core/transform.py}}{17}{subsection.1.2}%
+\contentsline {paragraph}{Mô tả đầu file và cách dùng.}{18}{paragraph*.60}%
+\contentsline {subsubsection}{\code {class Transform}}{18}{subsubsection*.61}%
+\contentsline {subsubsection}{\code {Transform.reset(self)}}{18}{subsubsection*.62}%
+\contentsline {subsubsection}{\code {Transform.rotation_matrix(self)}}{18}{subsubsection*.63}%
+\contentsline {subsubsection}{\code {Transform.translation(self)}}{18}{subsubsection*.64}%
+\contentsline {subsubsection}{\code {Transform.rotate_about(self, delta, pivot)}}{18}{subsubsection*.65}%
+\contentsline {subsection}{\numberline {1.3}\code {splat_editor/core/splats.py}}{19}{subsection.1.3}%
+\contentsline {paragraph}{Mô tả đầu file và cách dùng.}{19}{paragraph*.66}%
+\contentsline {subsubsection}{\code {class Splats}}{19}{subsubsection*.67}%
+\contentsline {subsubsection}{\code {Splats.count(self)}}{19}{subsubsection*.68}%
+\contentsline {subsubsection}{\code {Splats.sh_count(self)}}{20}{subsubsection*.69}%
+\contentsline {subsubsection}{\code {Splats.world_sh(self, index=None, k=None)}}{20}{subsubsection*.70}%
+\contentsline {subsubsection}{\code {Splats.subset(self, mask)}}{20}{subsubsection*.71}%
+\contentsline {subsubsection}{\code {Splats.concat(cls, parts)}}{20}{subsubsection*.72}%
+\contentsline {subsection}{\numberline {1.4}\code {splat_editor/core/layer.py}}{20}{subsection.1.4}%
+\contentsline {paragraph}{Mô tả đầu file và cách dùng.}{21}{paragraph*.73}%
+\contentsline {subsubsection}{Cơ sở toán: Biến đổi layer}{21}{subsubsection*.74}%
+\contentsline {paragraph}{Ma trận quay từ góc Euler (\code {euler_to_matrix}).}{21}{paragraph*.75}%
+\contentsline {paragraph}{Ngược lại (\code {matrix_to_euler}).}{21}{paragraph*.76}%
+\contentsline {paragraph}{Công thức Rodrigues (\code {axis_angle_matrix}).}{21}{paragraph*.77}%
+\contentsline {paragraph}{Ma trận thế giới của layer (\code {Layer.world_transform / world_matrix}).}{21}{paragraph*.78}%
+\contentsline {paragraph}{Xoay quanh điểm pivot (\code {Transform.rotate_about(Δ, c)}).}{21}{paragraph*.79}%
+\contentsline {paragraph}{Xuất file (\code {Layer._export_block}).}{22}{paragraph*.80}%
+\contentsline {paragraph}{\code {Layer.world_splats} (dùng cho vật lý, bounds).}{22}{paragraph*.81}%
+\contentsline {subsubsection}{\code {class Layer}}{22}{subsubsection*.82}%
+\contentsline {subsubsection}{\code {Layer.__init__(self, name, data, path=None)}}{22}{subsubsection*.83}%
+\contentsline {subsubsection}{\code {Layer.from_file(cls, path)}}{22}{subsubsection*.84}%
+\contentsline {subsubsection}{\code {Layer.size(self)}}{22}{subsubsection*.85}%
+\contentsline {subsubsection}{\code {Layer.count(self)}}{23}{subsubsection*.86}%
+\contentsline {subsubsection}{\code {Layer.live_rows(self, rows=slice(None))}}{23}{subsubsection*.87}%
+\contentsline {subsubsection}{\code {Layer.selected_count(self)}}{23}{subsubsection*.88}%
+\contentsline {subsubsection}{\code {Layer.select_all(self)}}{23}{subsubsection*.89}%
+\contentsline {subsubsection}{\code {Layer.clear_selection(self)}}{23}{subsubsection*.90}%
+\contentsline {subsubsection}{\code {Layer.invert_selection(self)}}{23}{subsubsection*.91}%
+\contentsline {subsubsection}{\code {Layer.delete_selected(self)}}{23}{subsubsection*.92}%
+\contentsline {subsubsection}{\code {Layer.restore(self, indices)}}{24}{subsubsection*.93}%
+\contentsline {subsubsection}{\code {Layer.world_transform(self, flip)}}{24}{subsubsection*.94}%
+\contentsline {subsubsection}{\code {Layer.world_matrix(self, flip)}}{24}{subsubsection*.95}%
+\contentsline {subsubsection}{\code {Layer.world_splats(self, flip)}}{24}{subsubsection*.96}%
+\contentsline {subsubsection}{\code {Layer.export_blocks(self, flip, dtype)}}{25}{subsubsection*.97}%
+\contentsline {subsubsection}{\code {Layer.export_data(self, flip, dtype)}}{25}{subsubsection*.98}%
+\contentsline {subsubsection}{\code {Layer._export_block(self, rows, flip, dtype)}}{25}{subsubsection*.99}%
+\contentsline {subsection}{\numberline {1.5}\code {splat_editor/core/scene.py}}{25}{subsection.1.5}%
+\contentsline {paragraph}{Mô tả đầu file và cách dùng.}{26}{paragraph*.100}%
+\contentsline {subsubsection}{\code {class Scene}}{26}{subsubsection*.101}%
+\contentsline {subsubsection}{\code {Scene.__init__(self)}}{26}{subsubsection*.102}%
+\contentsline {subsubsection}{\code {Scene.active_layer(self)}}{26}{subsubsection*.103}%
+\contentsline {subsubsection}{\code {Scene.is_empty(self)}}{26}{subsubsection*.104}%
+\contentsline {subsubsection}{\code {Scene.add(self, layer)}}{26}{subsubsection*.105}%
+\contentsline {subsubsection}{\code {Scene.remove(self, index)}}{27}{subsubsection*.106}%
+\contentsline {subsubsection}{\code {Scene.clear(self)}}{27}{subsubsection*.107}%
+\contentsline {subsubsection}{\code {Scene.visible_layers(self)}}{27}{subsubsection*.108}%
+\contentsline {subsubsection}{\code {Scene.visible_ranges(self)}}{27}{subsubsection*.109}%
+\contentsline {subsubsection}{\code {Scene.selection_mask(self)}}{27}{subsubsection*.110}%
+\contentsline {subsubsection}{\code {Scene.deleted_mask(self)}}{27}{subsubsection*.111}%
+\contentsline {subsubsection}{\code {Scene.apply_selection(self, mask, value)}}{27}{subsubsection*.112}%
+\contentsline {subsubsection}{\code {Scene.apply_selection_indices(self, indices, value)}}{28}{subsubsection*.113}%
+\contentsline {subsubsection}{\code {Scene.selected_count(self)}}{28}{subsubsection*.114}%
+\contentsline {subsubsection}{\code {Scene.count(self)}}{28}{subsubsection*.115}%
+\contentsline {subsubsection}{\code {Scene.render_splats(self)}}{28}{subsubsection*.116}%
+\contentsline {subsubsection}{\code {Scene.layer_matrices(self)}}{28}{subsubsection*.117}%
+\contentsline {subsubsection}{\code {Scene.world_positions(self, layer=None, limit=2000000)}}{28}{subsubsection*.118}%
+\contentsline {subsubsection}{\code {Scene.solid_positions(self, limit=3000000, min_alpha=0.35)}}{29}{subsubsection*.119}%
+\contentsline {subsubsection}{\code {Scene.world_splats(self)}}{29}{subsubsection*.120}%
+\contentsline {subsubsection}{\code {Scene.export_dtype(self)}}{29}{subsubsection*.121}%
+\contentsline {subsubsection}{\code {Scene.export_blocks(self, dtype)}}{30}{subsubsection*.122}%
+\contentsline {subsubsection}{\code {Scene.export_data(self)}}{30}{subsubsection*.123}%
+\contentsline {subsection}{\numberline {1.6}\code {splat_editor/core/sh.py}}{30}{subsection.1.6}%
+\contentsline {paragraph}{Mô tả đầu file và cách dùng.}{30}{paragraph*.124}%
+\contentsline {subsubsection}{Cơ sở toán: Spherical Harmonics, màu theo hướng nhìn}{30}{subsubsection*.125}%
+\contentsline {paragraph}{Công thức màu.}{30}{paragraph*.126}%
+\contentsline {paragraph}{Hàm cơ sở thực (đúng quy ước dấu của 3DGS gốc).}{31}{paragraph*.127}%
+\contentsline {paragraph}{Xoay hệ số SH khi xoay gaussian (\code {sh.rotation_matrix}, \code {sh.rotate}).}{31}{paragraph*.128}%
+\contentsline {paragraph}{Trong shader (không xoay hệ số mỗi frame).}{31}{paragraph*.129}%
+\contentsline {subsubsection}{\code {degree_for_coeffs(k)}}{31}{subsubsection*.130}%
+\contentsline {subsubsection}{\code {basis(dirs, k=15)}}{31}{subsubsection*.131}%
+\contentsline {subsubsection}{\code {evaluate(sh_rest, dirs)}}{32}{subsubsection*.132}%
+\contentsline {subsubsection}{\code {_sample_dirs(n=64)}}{32}{subsubsection*.133}%
+\contentsline {subsubsection}{\code {rotation_matrix(rot, k)}}{32}{subsubsection*.134}%
+\contentsline {subsubsection}{\code {rotate(sh_rest, rot)}}{33}{subsubsection*.135}%
+\contentsline {subsubsection}{\code {column_count(names)}}{33}{subsubsection*.136}%
+\contentsline {subsubsection}{\code {from_columns(data, names, dtype=np.float32)}}{33}{subsubsection*.137}%
+\contentsline {subsubsection}{\code {block_coeffs(block, matrix, k)}}{33}{subsubsection*.138}%
+\contentsline {subsubsection}{\code {to_columns(sh_rest, out)}}{34}{subsubsection*.139}%
+\contentsline {subsection}{\numberline {1.7}\code {splat_editor/core/lod.py}}{34}{subsection.1.7}%
+\contentsline {paragraph}{Mô tả đầu file và cách dùng.}{34}{paragraph*.140}%
+\contentsline {subsubsection}{Cơ sở toán: LOD, Morton, Frustum}{34}{subsubsection*.141}%
+\contentsline {paragraph}{Mã Morton 3D, đường cong Z (\code {morton_codes}).}{34}{paragraph*.142}%
+\contentsline {paragraph}{Radix argsort (\code {radix_argsort}).}{34}{paragraph*.143}%
+\contentsline {paragraph}{Khối và độ quan trọng (\code {_build_group}).}{34}{paragraph*.144}%
+\contentsline {paragraph}{Cầu bao mỗi khối.}{35}{paragraph*.145}%
+\contentsline {paragraph}{Frustum culling (\code {_frustum_planes}, \code {select}).}{35}{paragraph*.146}%
+\contentsline {paragraph}{Phân bổ ngân sách (\code {select}).}{35}{paragraph*.147}%
+\contentsline {subsubsection}{\code {_parallel(fn, n, chunk=1 << 20)}}{35}{subsubsection*.148}%
+\contentsline {subsubsection}{\code {gather(array, index)}}{35}{subsubsection*.149}%
+\contentsline {subsubsection}{\code {_spread_table()}}{35}{subsubsection*.150}%
+\contentsline {subsubsection}{\code {morton_codes(positions)}}{35}{subsubsection*.151}%
+\contentsline {subsubsection}{\code {radix_argsort(key)}}{36}{subsubsection*.152}%
+\contentsline {subsubsection}{\code {_build_group(positions, scales, alphas, chunk_size)}}{36}{subsubsection*.153}%
+\contentsline {subsubsection}{\code {class LodIndex}}{37}{subsubsection*.154}%
+\contentsline {subsubsection}{\code {LodIndex.__init__(self, positions, scales, alphas, chunk_size=CHUNK_SIZE, ranges=None)}}{37}{subsubsection*.155}%
+\contentsline {subsubsection}{\code {LodIndex.world_bounds(self, transforms=None)}}{37}{subsubsection*.156}%
+\contentsline {subsubsection}{\code {LodIndex._frustum_planes(view_proj)}}{38}{subsubsection*.157}%
+\contentsline {subsubsection}{\code {LodIndex.select(self, model_view, projection, budget, transforms=None)}}{38}{subsubsection*.158}%
+\contentsline {subsection}{\numberline {1.8}\code {splat_editor/core/lighting.py}}{38}{subsection.1.8}%
+\contentsline {paragraph}{Mô tả đầu file và cách dùng.}{39}{paragraph*.159}%
+\contentsline {subsubsection}{Cơ sở toán: Mặt trời, ngày--đêm và bản đồ bóng}{39}{subsubsection*.160}%
+\contentsline {paragraph}{Mặt trời (\code {Lighting.sun_direction}).}{39}{paragraph*.161}%
+\contentsline {paragraph}{Máy trạng thái ngày--đêm (\code {DayCycle}).}{39}{paragraph*.162}%
+\contentsline {paragraph}{Bản đồ bóng (\code {Lighting.shadow_setup}, \code {shadow.vert}, \code {shadowFactor}).}{39}{paragraph*.163}%
+\contentsline {subsubsection}{\code {class DayPhase(Enum)}}{40}{subsubsection*.164}%
+\contentsline {subsubsection}{\code {class DayCycle}}{40}{subsubsection*.165}%
+\contentsline {subsubsection}{\code {DayCycle.__init__(self, hour=10.0)}}{40}{subsubsection*.166}%
+\contentsline {subsubsection}{\code {DayCycle.phase_for(cls, hour)}}{40}{subsubsection*.167}%
+\contentsline {subsubsection}{\code {DayCycle.update(self, hour)}}{40}{subsubsection*.168}%
+\contentsline {subsubsection}{\code {class PointLight}}{41}{subsubsection*.169}%
+\contentsline {subsubsection}{\code {_smooth(edge0, edge1, x)}}{41}{subsubsection*.170}%
+\contentsline {subsubsection}{\code {_mix(a, b, t)}}{41}{subsubsection*.171}%
+\contentsline {subsubsection}{\code {class Lighting}}{41}{subsubsection*.172}%
+\contentsline {subsubsection}{\code {Lighting.__init__(self)}}{41}{subsubsection*.173}%
+\contentsline {subsubsection}{\code {Lighting.set_bounds(self, center, radius)}}{41}{subsubsection*.174}%
+\contentsline {subsubsection}{\code {Lighting.add_sun(self)}}{42}{subsubsection*.175}%
+\contentsline {subsubsection}{\code {Lighting.remove_sun(self)}}{42}{subsubsection*.176}%
+\contentsline {subsubsection}{\code {Lighting.add_light(self, position, light_range=None)}}{42}{subsubsection*.177}%
+\contentsline {subsubsection}{\code {Lighting.remove_light(self, index)}}{42}{subsubsection*.178}%
+\contentsline {subsubsection}{\code {Lighting.active_light(self)}}{42}{subsubsection*.179}%
+\contentsline {subsubsection}{\code {Lighting.sun_direction(self)}}{42}{subsubsection*.180}%
+\contentsline {subsubsection}{\code {Lighting.daylight(self)}}{42}{subsubsection*.181}%
+\contentsline {subsubsection}{\code {Lighting.sun_color(self)}}{43}{subsubsection*.182}%
+\contentsline {subsubsection}{\code {Lighting.sun_color_for_gizmo(self)}}{43}{subsubsection*.183}%
+\contentsline {subsubsection}{\code {Lighting.ambient_color(self)}}{43}{subsubsection*.184}%
+\contentsline {subsubsection}{\code {Lighting.sky_color(self)}}{43}{subsubsection*.185}%
+\contentsline {subsubsection}{\code {Lighting.update(self, dt, physics=None)}}{43}{subsubsection*.186}%
+\contentsline {subsubsection}{\code {Lighting._on_enter(self, phase)}}{44}{subsubsection*.187}%
+\contentsline {subsubsection}{\code {Lighting._update_lights(self, dt, physics)}}{44}{subsubsection*.188}%
+\contentsline {subsubsection}{\code {Lighting.shadow_setup(self)}}{44}{subsubsection*.189}%
+\contentsline {subsubsection}{\code {Lighting.point_lights(self)}}{44}{subsubsection*.190}%
+\contentsline {subsubsection}{\code {Lighting.params(self)}}{45}{subsubsection*.191}%
+\contentsline {subsection}{\numberline {1.9}\code {splat_editor/core/physics.py}}{45}{subsection.1.9}%
+\contentsline {paragraph}{Mô tả đầu file và cách dùng.}{45}{paragraph*.192}%
+\contentsline {subsubsection}{Cơ sở toán: Vật lý và va chạm}{45}{subsubsection*.193}%
+\contentsline {paragraph}{Voxel hóa (\code {CollisionWorld.build}).}{45}{paragraph*.194}%
+\contentsline {paragraph}{Truy vấn cột (\code {_highest}).}{46}{paragraph*.195}%
+\contentsline {paragraph}{Tia kiểm tra tầm nhìn (\code {segment_blocked}).}{46}{paragraph*.196}%
+\contentsline {paragraph}{Người chơi.}{46}{paragraph*.197}%
+\contentsline {subsubsection}{\code {class CollisionWorld}}{46}{subsubsection*.198}%
+\contentsline {subsubsection}{\code {CollisionWorld.__init__(self)}}{46}{subsubsection*.199}%
+\contentsline {subsubsection}{\code {CollisionWorld.ready(self)}}{46}{subsubsection*.200}%
+\contentsline {subsubsection}{\code {CollisionWorld.build(self, positions, voxel, min_count=1)}}{46}{subsubsection*.201}%
+\contentsline {subsubsection}{\code {CollisionWorld._highest(self, x, z, y)}}{47}{subsubsection*.202}%
+\contentsline {subsubsection}{\code {CollisionWorld.column_top(self, x, z, y_max)}}{47}{subsubsection*.203}%
+\contentsline {subsubsection}{\code {CollisionWorld.segment_blocked(self, start, end, skip=1.0, skip_end=0.0)}}{47}{subsubsection*.204}%
+\contentsline {subsubsection}{\code {CollisionWorld.blocked(self, x, z, y0, y1)}}{48}{subsubsection*.205}%
+\contentsline {subsubsection}{\code {class Player}}{48}{subsubsection*.206}%
+\contentsline {subsubsection}{\code {Player.__init__(self)}}{48}{subsubsection*.207}%
+\contentsline {subsubsection}{\code {Player.place(self, eye, eye_height)}}{48}{subsubsection*.208}%
+\contentsline {subsubsection}{\code {Player.eye(self, eye_height, dt=None)}}{49}{subsubsection*.209}%
+\contentsline {subsubsection}{\code {class Physics}}{49}{subsubsection*.210}%
+\contentsline {subsubsection}{\code {Physics.__init__(self)}}{49}{subsubsection*.211}%
+\contentsline {subsubsection}{\code {Physics.eye_height(self)}}{49}{subsubsection*.212}%
+\contentsline {subsubsection}{\code {Physics.gravity(self)}}{49}{subsubsection*.213}%
+\contentsline {subsubsection}{\code {Physics.walk_speed(self)}}{49}{subsubsection*.214}%
+\contentsline {subsubsection}{\code {Physics.set_scale(self, radius)}}{50}{subsubsection*.215}%
+\contentsline {subsubsection}{\code {Physics.set_height(self, height)}}{50}{subsubsection*.216}%
+\contentsline {subsubsection}{\code {Physics.invalidate(self)}}{50}{subsubsection*.217}%
+\contentsline {subsubsection}{\code {Physics.building(self)}}{50}{subsubsection*.218}%
+\contentsline {subsubsection}{\code {Physics.ready(self)}}{50}{subsubsection*.219}%
+\contentsline {subsubsection}{\code {Physics.has_world(self)}}{50}{subsubsection*.220}%
+\contentsline {subsubsection}{\code {Physics.ensure_world(self, scene, needed)}}{50}{subsubsection*.221}%
+\contentsline {subsubsection}{\code {Physics.drop_height(self, x, z, y_from, radius=0.0)}}{51}{subsubsection*.222}%
+\contentsline {subsubsection}{\code {Physics.visibility(self, eye, targets, skip_end=0.0)}}{51}{subsubsection*.223}%
+\contentsline {subsubsection}{\code {Physics.walk(self, forward, right, yaw, jump, sprint, sneak, dt)}}{51}{subsubsection*.224}%
+\contentsline {subsection}{\numberline {1.10}\code {splat_editor/core/avatar_pose.py}}{52}{subsection.1.10}%
+\contentsline {paragraph}{Mô tả đầu file và cách dùng.}{52}{paragraph*.225}%
+\contentsline {subsubsection}{Cơ sở toán: Hoạt họa nhân vật}{53}{subsubsection*.226}%
+\contentsline {paragraph}{Cây phân cấp (\code {limb_matrices}).}{53}{paragraph*.227}%
+\contentsline {subsubsection}{\code {_approach(value, target, rate, dt)}}{53}{subsubsection*.228}%
+\contentsline {subsubsection}{\code {class AvatarPose}}{53}{subsubsection*.229}%
+\contentsline {subsubsection}{\code {AvatarPose.__init__(self)}}{53}{subsubsection*.230}%
+\contentsline {subsubsection}{\code {AvatarPose.toggle_sit(self)}}{54}{subsubsection*.231}%
+\contentsline {subsubsection}{\code {AvatarPose.stand(self)}}{54}{subsubsection*.232}%
+\contentsline {subsubsection}{\code {AvatarPose.toggle_gesture(self, name)}}{54}{subsubsection*.233}%
+\contentsline {subsubsection}{\code {AvatarPose.update(self, dt, distance, crouching, height=1.0)}}{54}{subsubsection*.234}%
+\contentsline {subsubsection}{\code {AvatarPose.stance(self)}}{54}{subsubsection*.235}%
+\contentsline {subsubsection}{\code {AvatarPose.joints(self)}}{55}{subsubsection*.236}%
+\contentsline {subsubsection}{\code {_mix_pair(a, b, k)}}{55}{subsubsection*.237}%
+\contentsline {subsubsection}{\code {_translate(x, y, z)}}{55}{subsubsection*.238}%
+\contentsline {subsubsection}{\code {_rot(axis, degrees)}}{55}{subsubsection*.239}%
+\contentsline {subsubsection}{\code {limb_matrices(feet, facing, head_yaw, head_pitch, joints, scale)}}{56}{subsubsection*.240}%
+\contentsline {subsection}{\numberline {1.11}\code {splat_editor/core/history.py}}{56}{subsection.1.11}%
+\contentsline {paragraph}{Mô tả đầu file và cách dùng.}{56}{paragraph*.241}%
+\contentsline {subsubsection}{Cơ sở toán: Undo}{56}{subsubsection*.242}%
+\contentsline {subsubsection}{\code {class Command(ABC)}}{56}{subsubsection*.243}%
+\contentsline {subsubsection}{\code {Command.description(self)}}{57}{subsubsection*.244}%
+\contentsline {subsubsection}{\code {Command.undo(self)}}{57}{subsubsection*.245}%
+\contentsline {subsubsection}{\code {Command.release(self, load)}}{57}{subsubsection*.246}%
+\contentsline {subsubsection}{\code {class DeleteGaussiansCommand(Command)}}{57}{subsubsection*.247}%
+\contentsline {subsubsection}{\code {DeleteGaussiansCommand.__init__(self, snapshots)}}{57}{subsubsection*.248}%
+\contentsline {subsubsection}{\code {DeleteGaussiansCommand.count(self)}}{57}{subsubsection*.249}%
+\contentsline {subsubsection}{\code {DeleteGaussiansCommand.description(self)}}{57}{subsubsection*.250}%
+\contentsline {subsubsection}{\code {DeleteGaussiansCommand.undo(self)}}{58}{subsubsection*.251}%
+\contentsline {subsubsection}{\code {class History}}{58}{subsubsection*.252}%
+\contentsline {subsubsection}{\code {History.__init__(self, max_steps=20)}}{58}{subsubsection*.253}%
+\contentsline {subsubsection}{\code {History.__len__(self)}}{58}{subsubsection*.254}%
+\contentsline {subsubsection}{\code {History.__iter__(self)}}{58}{subsubsection*.255}%
+\contentsline {subsubsection}{\code {History.can_undo(self)}}{58}{subsubsection*.256}%
+\contentsline {subsubsection}{\code {History.push(self, command)}}{58}{subsubsection*.257}%
+\contentsline {subsubsection}{\code {History.undo(self)}}{58}{subsubsection*.258}%
+\contentsline {subsubsection}{\code {History.clear(self)}}{59}{subsubsection*.259}%
+\contentsline {subsection}{\numberline {1.12}\code {splat_editor/core/rect.py}}{59}{subsection.1.12}%
+\contentsline {paragraph}{Mô tả đầu file và cách dùng.}{59}{paragraph*.260}%
+\contentsline {subsubsection}{\code {class Rect(NamedTuple)}}{59}{subsubsection*.261}%
+\contentsline {subsubsection}{\code {Rect.is_empty(self)}}{59}{subsubsection*.262}%
+\contentsline {subsubsection}{\code {Rect.aspect(self)}}{59}{subsubsection*.263}%
+\contentsline {subsubsection}{\code {Rect.center(self)}}{59}{subsubsection*.264}%
+\contentsline {subsubsection}{\code {Rect.contains(self, x, y)}}{59}{subsubsection*.265}%
+\contentsline {section}{\numberline {2}Thư mục editor: thao tác chỉnh sửa}{60}{section.2}%
+\contentsline {subsection}{\numberline {2.1}\code {splat_editor/editor/editor.py}}{60}{subsection.2.1}%
+\contentsline {paragraph}{Mô tả đầu file và cách dùng.}{60}{paragraph*.266}%
+\contentsline {subsubsection}{\code {class Editor}}{60}{subsubsection*.267}%
+\contentsline {subsubsection}{\code {Editor.__init__(self, max_undo=20)}}{60}{subsubsection*.268}%
+\contentsline {subsubsection}{\code {Editor.splats(self)}}{61}{subsubsection*.269}%
+\contentsline {subsubsection}{\code {Editor.lod(self)}}{61}{subsubsection*.270}%
+\contentsline {subsubsection}{\code {Editor.layer_matrices(self)}}{61}{subsubsection*.271}%
+\contentsline {subsubsection}{\code {Editor.total_count(self)}}{61}{subsubsection*.272}%
+\contentsline {subsubsection}{\code {Editor.notify_geometry_changed(self)}}{61}{subsubsection*.273}%
+\contentsline {subsubsection}{\code {Editor.notify_deleted_changed(self)}}{62}{subsubsection*.274}%
+\contentsline {subsubsection}{\code {Editor.notify_transform_changed(self)}}{62}{subsubsection*.275}%
+\contentsline {subsubsection}{\code {Editor.notify_selection_changed(self, indices=None, value=None)}}{62}{subsubsection*.276}%
+\contentsline {subsubsection}{\code {Editor.selection_changes_since(self, version)}}{62}{subsubsection*.277}%
+\contentsline {subsubsection}{\code {Editor.set_status(self, text)}}{62}{subsubsection*.278}%
+\contentsline {subsubsection}{\code {Editor._load_layer(self, path)}}{62}{subsubsection*.279}%
+\contentsline {subsubsection}{\code {Editor.open_file(self, path)}}{63}{subsubsection*.280}%
+\contentsline {subsubsection}{\code {Editor.add_file(self, path)}}{63}{subsubsection*.281}%
+\contentsline {subsubsection}{\code {Editor.can_save(self)}}{63}{subsubsection*.282}%
+\contentsline {subsubsection}{\code {Editor.suggested_save_name(self)}}{63}{subsubsection*.283}%
+\contentsline {subsubsection}{\code {Editor.save_file(self, path)}}{63}{subsubsection*.284}%
+\contentsline {subsubsection}{\code {Editor._release_file(self, path)}}{63}{subsubsection*.285}%
+\contentsline {subsubsection}{\code {Editor.remove_layer(self, index=None)}}{64}{subsubsection*.286}%
+\contentsline {subsubsection}{\code {Editor.select_all(self)}}{64}{subsubsection*.287}%
+\contentsline {subsubsection}{\code {Editor.select_none(self)}}{64}{subsubsection*.288}%
+\contentsline {subsubsection}{\code {Editor.invert_selection(self)}}{64}{subsubsection*.289}%
+\contentsline {subsubsection}{\code {Editor.paint(self, x, y, view_proj, rect)}}{64}{subsubsection*.290}%
+\contentsline {subsubsection}{\code {Editor.delete_selected(self)}}{65}{subsubsection*.291}%
+\contentsline {subsubsection}{\code {Editor.delete(self)}}{65}{subsubsection*.292}%
+\contentsline {subsubsection}{\code {Editor.undo(self)}}{65}{subsubsection*.293}%
+\contentsline {subsection}{\numberline {2.2}\code {splat_editor/editor/brush.py}}{65}{subsection.2.2}%
+\contentsline {paragraph}{Mô tả đầu file và cách dùng.}{65}{paragraph*.294}%
+\contentsline {subsubsection}{Cơ sở toán: biến đổi viewport (\code {brush._to_screen})}{65}{subsubsection*.295}%
+\contentsline {subsubsection}{Cơ sở toán: Cọ chọn}{66}{subsubsection*.296}%
+\contentsline {paragraph}{Khoảng cách điểm--đoạn, capsule (\code {_segment_dist2}).}{66}{paragraph*.297}%
+\contentsline {paragraph}{Chiếu tâm ra pixel.}{66}{paragraph*.298}%
+\contentsline {paragraph}{Tăng tốc theo khối.}{66}{paragraph*.299}%
+\contentsline {subsubsection}{\code {class BrushTool}}{66}{subsubsection*.300}%
+\contentsline {subsubsection}{\code {BrushTool.__init__(self)}}{66}{subsubsection*.301}%
+\contentsline {subsubsection}{\code {BrushTool.is_painting(self)}}{66}{subsubsection*.302}%
+\contentsline {subsubsection}{\code {BrushTool.toggle(self)}}{66}{subsubsection*.303}%
+\contentsline {subsubsection}{\code {BrushTool.resize(self, factor)}}{66}{subsubsection*.304}%
+\contentsline {subsubsection}{\code {BrushTool.begin_stroke(self, select)}}{67}{subsubsection*.305}%
+\contentsline {subsubsection}{\code {BrushTool.end_stroke(self)}}{67}{subsubsection*.306}%
+\contentsline {subsubsection}{\code {BrushTool._to_screen(clip, viewport)}}{67}{subsubsection*.307}%
+\contentsline {subsubsection}{\code {BrushTool._segment_dist2(p, a, b)}}{67}{subsubsection*.308}%
+\contentsline {subsubsection}{\code {BrushTool._candidate_chunks(self, lod, matrices, viewport, a, b)}}{67}{subsubsection*.309}%
+\contentsline {subsubsection}{\code {BrushTool.hit(self, lod, view_proj, viewport, start, end, transforms=None)}}{68}{subsubsection*.310}%
+\contentsline {section}{\numberline {3}Thư mục io: đọc ghi và giải mã}{69}{section.3}%
+\contentsline {subsection}{\numberline {3.1}\code {splat_editor/io/ply.py}}{69}{subsection.3.1}%
+\contentsline {paragraph}{Mô tả đầu file và cách dùng.}{69}{paragraph*.311}%
+\contentsline {subsubsection}{\code {read_block(data, start, end)}}{69}{subsubsection*.312}%
+\contentsline {subsubsection}{\code {class PlyError(ValueError)}}{69}{subsubsection*.313}%
+\contentsline {subsubsection}{\code {class PlyFile}}{70}{subsubsection*.314}%
+\contentsline {subsubsection}{\code {PlyFile.read(cls, path)}}{70}{subsubsection*.315}%
+\contentsline {subsubsection}{\code {PlyFile._read_header(cls, f)}}{70}{subsubsection*.316}%
+\contentsline {subsubsection}{\code {PlyFile._read_ascii(f, count, props)}}{70}{subsubsection*.317}%
+\contentsline {subsubsection}{\code {PlyFile._read_binary(f, count, props, endian)}}{71}{subsubsection*.318}%
+\contentsline {subsubsection}{\code {PlyFile.write(cls, path, data)}}{71}{subsubsection*.319}%
+\contentsline {subsubsection}{\code {PlyFile.write_blocks(cls, path, dtype, count, blocks)}}{71}{subsubsection*.320}%
+\contentsline {subsection}{\numberline {3.2}\code {splat_editor/io/codec.py}}{71}{subsection.3.2}%
+\contentsline {paragraph}{Mô tả đầu file và cách dùng.}{71}{paragraph*.321}%
+\contentsline {subsubsection}{Cơ sở toán: Giải mã và mã hóa file PLY}{72}{subsubsection*.322}%
+\contentsline {subsubsection}{\code {class SplatCodec}}{72}{subsubsection*.323}%
+\contentsline {subsubsection}{\code {SplatCodec.decode(cls, data, sh_dtype=np.float16)}}{72}{subsubsection*.324}%
+\contentsline {subsubsection}{\code {SplatCodec._decode_block(data, names, dtype)}}{73}{subsubsection*.325}%
+\contentsline {subsubsection}{\code {SplatCodec.encode(source, splats, dtype)}}{73}{subsubsection*.326}%
+\contentsline {section}{\numberline {4}Thư mục render: OpenGL}{75}{section.4}%
+\contentsline {subsection}{\numberline {4.1}\code {splat_editor/render/shader.py}}{75}{subsection.4.1}%
+\contentsline {paragraph}{Mô tả đầu file và cách dùng.}{75}{paragraph*.327}%
+\contentsline {subsubsection}{\code {class ShaderError(RuntimeError)}}{75}{subsubsection*.328}%
+\contentsline {subsubsection}{\code {class ShaderProgram}}{75}{subsubsection*.329}%
+\contentsline {subsubsection}{\code {ShaderProgram.__init__(self, vertex_src, fragment_src=None, feedback_varyings=None)}}{75}{subsubsection*.330}%
+\contentsline {subsubsection}{\code {ShaderProgram.load(cls, name, fragment=True, feedback_varyings=None)}}{76}{subsubsection*.331}%
+\contentsline {subsubsection}{\code {ShaderProgram._compile(src, kind)}}{76}{subsubsection*.332}%
+\contentsline {subsubsection}{\code {ShaderProgram.use(self)}}{76}{subsubsection*.333}%
+\contentsline {subsubsection}{\code {ShaderProgram.location(self, name)}}{76}{subsubsection*.334}%
+\contentsline {subsubsection}{\code {ShaderProgram.set_int(self, name, value)}}{76}{subsubsection*.335}%
+\contentsline {subsubsection}{\code {ShaderProgram.set_float(self, name, value)}}{77}{subsubsection*.336}%
+\contentsline {subsubsection}{\code {ShaderProgram.set_vec2(self, name, x, y)}}{77}{subsubsection*.337}%
+\contentsline {subsubsection}{\code {ShaderProgram.set_vec3(self, name, v)}}{77}{subsubsection*.338}%
+\contentsline {subsubsection}{\code {ShaderProgram.set_vec3_array(self, name, values)}}{77}{subsubsection*.339}%
+\contentsline {subsubsection}{\code {ShaderProgram.set_float_array(self, name, values)}}{77}{subsubsection*.340}%
+\contentsline {subsubsection}{\code {ShaderProgram.set_mat3(self, name, m)}}{77}{subsubsection*.341}%
+\contentsline {subsubsection}{\code {ShaderProgram.set_mat4(self, name, m)}}{77}{subsubsection*.342}%
+\contentsline {subsection}{\numberline {4.2}\code {splat_editor/render/camera.py}}{77}{subsection.4.2}%
+\contentsline {paragraph}{Mô tả đầu file và cách dùng.}{78}{paragraph*.343}%
+\contentsline {subsubsection}{Cơ sở toán: Camera quỹ đạo}{78}{subsubsection*.344}%
+\contentsline {subsubsection}{\code {class OrbitCamera}}{78}{subsubsection*.345}%
+\contentsline {subsubsection}{\code {OrbitCamera.__init__(self)}}{78}{subsubsection*.346}%
+\contentsline {subsubsection}{\code {OrbitCamera.reset(self)}}{78}{subsubsection*.347}%
+\contentsline {subsubsection}{\code {OrbitCamera.position(self)}}{79}{subsubsection*.348}%
+\contentsline {subsubsection}{\code {OrbitCamera.view_matrix(self)}}{79}{subsubsection*.349}%
+\contentsline {subsubsection}{\code {OrbitCamera.projection_matrix(self, aspect)}}{79}{subsubsection*.350}%
+\contentsline {subsubsection}{\code {OrbitCamera.orbit(self, dx, dy)}}{79}{subsubsection*.351}%
+\contentsline {subsubsection}{\code {OrbitCamera.pan(self, dx, dy, viewport_height)}}{80}{subsubsection*.352}%
+\contentsline {subsubsection}{\code {OrbitCamera.look(self, dx, dy)}}{80}{subsubsection*.353}%
+\contentsline {subsubsection}{\code {OrbitCamera.forward(self)}}{80}{subsubsection*.354}%
+\contentsline {subsubsection}{\code {OrbitCamera.set_eye(self, eye)}}{80}{subsubsection*.355}%
+\contentsline {subsubsection}{\code {OrbitCamera.fly(self, forward, right, up, dt, sprint=False)}}{80}{subsubsection*.356}%
+\contentsline {subsubsection}{\code {OrbitCamera.frame(self, points)}}{81}{subsubsection*.357}%
+\contentsline {subsection}{\numberline {4.3}\code {splat_editor/render/sorter.py}}{81}{subsection.4.3}%
+\contentsline {paragraph}{Mô tả đầu file và cách dùng.}{81}{paragraph*.358}%
+\contentsline {subsubsection}{Cơ sở toán: Sắp xếp theo độ sâu}{81}{subsubsection*.359}%
+\contentsline {subsubsection}{\code {class DepthSorter}}{82}{subsubsection*.360}%
+\contentsline {subsubsection}{\code {DepthSorter.__init__(self)}}{82}{subsubsection*.361}%
+\contentsline {subsubsection}{\code {DepthSorter.set_splats(self, lod, state=None)}}{82}{subsubsection*.362}%
+\contentsline {subsubsection}{\code {DepthSorter.request(self, model_view, projection, budget, transforms=None)}}{82}{subsubsection*.363}%
+\contentsline {subsubsection}{\code {DepthSorter.take_result(self)}}{83}{subsubsection*.364}%
+\contentsline {subsubsection}{\code {DepthSorter.close(self)}}{83}{subsubsection*.365}%
+\contentsline {subsubsection}{\code {DepthSorter._run(self)}}{83}{subsubsection*.366}%
+\contentsline {subsubsection}{\code {DepthSorter._select(lod, state, model_view, projection, budget, transforms)}}{83}{subsubsection*.367}%
+\contentsline {subsubsection}{\code {DepthSorter._depth_rows(model_view, transforms, lod, slots)}}{83}{subsubsection*.368}%
+\contentsline {subsubsection}{\code {DepthSorter.sort(positions, depth_rows)}}{84}{subsubsection*.369}%
+\contentsline {subsection}{\numberline {4.4}\code {splat_editor/render/splat_renderer.py}}{84}{subsection.4.4}%
+\contentsline {paragraph}{Mô tả đầu file và cách dùng.}{84}{paragraph*.370}%
+\contentsline {subsubsection}{Cơ sở toán: tự chỉnh ngân sách (\code {SplatRenderer.adapt_budget})}{85}{subsubsection*.371}%
+\contentsline {subsubsection}{Cơ sở toán: Lượng tử hóa và đóng gói GPU}{85}{subsubsection*.372}%
+\contentsline {subsubsection}{\code {class SplatRenderer}}{85}{subsubsection*.373}%
+\contentsline {subsubsection}{\code {SplatRenderer.__init__(self)}}{85}{subsubsection*.374}%
+\contentsline {subsubsection}{\code {SplatRenderer.pack(splats, index=slice(None), layers=0)}}{86}{subsubsection*.375}%
+\contentsline {subsubsection}{\code {SplatRenderer._upload_chunked(buffer, count, bytes_per_item, make_chunk)}}{87}{subsubsection*.376}%
+\contentsline {subsubsection}{\code {SplatRenderer.set_splats(self, splats, lod=None)}}{87}{subsubsection*.377}%
+\contentsline {subsubsection}{\code {SplatRenderer._upload_sh(self, splats, order)}}{87}{subsubsection*.378}%
+\contentsline {subsubsection}{\code {SplatRenderer._upload_state(self, resize=False, lo=0, hi=None)}}{88}{subsubsection*.379}%
+\contentsline {subsubsection}{\code {SplatRenderer._set_state_bit(self, bit, mask)}}{88}{subsubsection*.380}%
+\contentsline {subsubsection}{\code {SplatRenderer.set_selection(self, mask)}}{88}{subsubsection*.381}%
+\contentsline {subsubsection}{\code {SplatRenderer.set_deleted(self, mask)}}{88}{subsubsection*.382}%
+\contentsline {subsubsection}{\code {SplatRenderer.update_selection(self, indices, value)}}{89}{subsubsection*.383}%
+\contentsline {subsubsection}{\code {SplatRenderer.set_transforms(self, matrices)}}{89}{subsubsection*.384}%
+\contentsline {subsubsection}{\code {SplatRenderer.set_lighting(self, params)}}{89}{subsubsection*.385}%
+\contentsline {subsubsection}{\code {SplatRenderer._upload_order(self, slots, ranks)}}{89}{subsubsection*.386}%
+\contentsline {subsubsection}{\code {SplatRenderer._update_order(self, model_view, projection)}}{90}{subsubsection*.387}%
+\contentsline {subsubsection}{\code {SplatRenderer._prepare(self, model_view, projection, width, height)}}{90}{subsubsection*.388}%
+\contentsline {subsubsection}{\code {SplatRenderer._set_light_uniforms(self, s, light)}}{90}{subsubsection*.389}%
+\contentsline {subsubsection}{\code {SplatRenderer._create_shadow_map(self)}}{91}{subsubsection*.390}%
+\contentsline {subsubsection}{\code {SplatRenderer._render_shadow_map(self, light)}}{91}{subsubsection*.391}%
+\contentsline {subsubsection}{\code {SplatRenderer._collect_timings(self)}}{92}{subsubsection*.392}%
+\contentsline {subsubsection}{\code {SplatRenderer.adapt_budget(self, target_ms)}}{92}{subsubsection*.393}%
+\contentsline {subsubsection}{\code {SplatRenderer.draw(self, model_view, projection, width, height)}}{92}{subsubsection*.394}%
+\contentsline {subsubsection}{\code {SplatRenderer._draw_splats(self)}}{93}{subsubsection*.395}%
+\contentsline {subsection}{\numberline {4.5}\code {splat_editor/render/viewport.py}}{93}{subsection.4.5}%
+\contentsline {paragraph}{Mô tả đầu file và cách dùng.}{93}{paragraph*.396}%
+\contentsline {subsubsection}{\code {class QualityPreset(NamedTuple)}}{93}{subsubsection*.397}%
+\contentsline {subsubsection}{\code {class Viewport}}{94}{subsubsection*.398}%
+\contentsline {subsubsection}{\code {Viewport.__init__(self)}}{94}{subsubsection*.399}%
+\contentsline {subsubsection}{\code {Viewport.sync(self, editor)}}{94}{subsubsection*.400}%
+\contentsline {subsubsection}{\code {Viewport.set_quality(self, name)}}{95}{subsubsection*.401}%
+\contentsline {subsubsection}{\code {Viewport.view_projection(self, rect)}}{95}{subsubsection*.402}%
+\contentsline {subsubsection}{\code {Viewport.frame(self, positions)}}{95}{subsubsection*.403}%
+\contentsline {subsubsection}{\code {Viewport.render(self, rect, window_size, framebuffer_size)}}{95}{subsubsection*.404}%
+\contentsline {subsubsection}{\code {Viewport.sky(self)}}{96}{subsubsection*.405}%
+\contentsline {subsubsection}{\code {Viewport._draw_scene(self, view, projection, w, h)}}{96}{subsubsection*.406}%
+\contentsline {subsubsection}{\code {Viewport._bind_offscreen(self, w, h)}}{96}{subsubsection*.407}%
+\contentsline {subsection}{\numberline {4.6}\code {splat_editor/render/grid_renderer.py}}{96}{subsection.4.6}%
+\contentsline {paragraph}{Mô tả đầu file và cách dùng.}{97}{paragraph*.408}%
+\contentsline {subsubsection}{\code {class GridRenderer}}{97}{subsubsection*.409}%
+\contentsline {subsubsection}{\code {GridRenderer.__init__(self)}}{97}{subsubsection*.410}%
+\contentsline {subsubsection}{\code {GridRenderer.draw(self, view, projection, camera_distance)}}{97}{subsubsection*.411}%
+\contentsline {subsection}{\numberline {4.7}\code {splat_editor/render/light_renderer.py}}{97}{subsection.4.7}%
+\contentsline {paragraph}{Mô tả đầu file và cách dùng.}{98}{paragraph*.412}%
+\contentsline {subsubsection}{\code {class LightRenderer}}{98}{subsubsection*.413}%
+\contentsline {subsubsection}{\code {LightRenderer.__init__(self)}}{98}{subsubsection*.414}%
+\contentsline {subsubsection}{\code {LightRenderer.draw_sun(self, view, projection, lighting)}}{98}{subsubsection*.415}%
+\contentsline {subsubsection}{\code {LightRenderer.draw(self, view, projection, lighting, time, unit, physics=None)}}{98}{subsubsection*.416}%
+\contentsline {subsubsection}{\code {LightRenderer._sphere(self, view, projection, center, radius, halo, color, brightness)}}{99}{subsubsection*.417}%
+\contentsline {subsection}{\numberline {4.8}\code {splat_editor/render/avatar_renderer.py}}{99}{subsection.4.8}%
+\contentsline {paragraph}{Mô tả đầu file và cách dùng.}{99}{paragraph*.418}%
+\contentsline {subsubsection}{Cơ sở toán: Texture}{100}{subsubsection*.419}%
+\contentsline {subsubsection}{\code {load_png(path)}}{100}{subsubsection*.420}%
+\contentsline {subsubsection}{\code {_uv_region(face, ox, oy, w, h, d)}}{101}{subsubsection*.421}%
+\contentsline {subsubsection}{\code {_box(ox, oy, centre, size, inflate)}}{101}{subsubsection*.422}%
+\contentsline {subsubsection}{\code {build_mesh()}}{102}{subsubsection*.423}%
+\contentsline {subsubsection}{\code {class AvatarRenderer}}{102}{subsubsection*.424}%
+\contentsline {subsubsection}{\code {AvatarRenderer.__init__(self)}}{102}{subsubsection*.425}%
+\contentsline {subsubsection}{\code {AvatarRenderer.draw(self, view, projection, matrices, brightness=(1.0, 1.0, 1.0), light...)}}{102}{subsubsection*.426}%
+\contentsline {subsection}{\numberline {4.9}\code {shaders/}}{103}{subsection.4.9}%
+\contentsline {section}{\numberline {5}Thư mục ui: giao diện}{104}{section.5}%
+\contentsline {subsection}{\numberline {5.1}\code {splat_editor/ui/window.py}}{104}{subsection.5.1}%
+\contentsline {paragraph}{Mô tả đầu file và cách dùng.}{104}{paragraph*.427}%
+\contentsline {subsubsection}{\code {class Window}}{104}{subsubsection*.428}%
+\contentsline {subsubsection}{\code {Window.__init__(self, title, width, height)}}{104}{subsubsection*.429}%
+\contentsline {subsubsection}{\code {Window.should_close(self)}}{104}{subsubsection*.430}%
+\contentsline {subsubsection}{\code {Window.close(self)}}{104}{subsubsection*.431}%
+\contentsline {subsubsection}{\code {Window.size(self)}}{105}{subsubsection*.432}%
+\contentsline {subsubsection}{\code {Window.framebuffer_size(self)}}{105}{subsubsection*.433}%
+\contentsline {subsubsection}{\code {Window.cursor_pos(self)}}{105}{subsubsection*.434}%
+\contentsline {subsubsection}{\code {Window.is_key_down(self, key)}}{105}{subsubsection*.435}%
+\contentsline {subsubsection}{\code {Window.is_mouse_down(self, button)}}{105}{subsubsection*.436}%
+\contentsline {subsubsection}{\code {Window.poll_events()}}{105}{subsubsection*.437}%
+\contentsline {subsubsection}{\code {Window.swap_buffers(self)}}{105}{subsubsection*.438}%
+\contentsline {subsubsection}{\code {Window.destroy(self)}}{105}{subsubsection*.439}%
+\contentsline {subsection}{\numberline {5.2}\code {splat_editor/ui/gui.py}}{106}{subsection.5.2}%
+\contentsline {paragraph}{Mô tả đầu file và cách dùng.}{106}{paragraph*.440}%
+\contentsline {subsubsection}{\code {class Gui}}{106}{subsubsection*.441}%
+\contentsline {subsubsection}{\code {Gui.__init__(self, window)}}{106}{subsubsection*.442}%
+\contentsline {subsubsection}{\code {Gui.io(self)}}{106}{subsubsection*.443}%
+\contentsline {subsubsection}{\code {Gui.wants_mouse(self)}}{106}{subsubsection*.444}%
+\contentsline {subsubsection}{\code {Gui.wants_text(self)}}{106}{subsubsection*.445}%
+\contentsline {subsubsection}{\code {Gui.begin_frame(self)}}{107}{subsubsection*.446}%
+\contentsline {subsubsection}{\code {Gui.end_frame(self)}}{107}{subsubsection*.447}%
+\contentsline {subsubsection}{\code {Gui.draw(self)}}{107}{subsubsection*.448}%
+\contentsline {subsubsection}{\code {Gui.shutdown(self)}}{107}{subsubsection*.449}%
+\contentsline {subsection}{\numberline {5.3}\code {splat_editor/ui/theme.py}}{107}{subsection.5.3}%
+\contentsline {paragraph}{Mô tả đầu file và cách dùng.}{107}{paragraph*.450}%
+\contentsline {subsubsection}{\code {class Theme}}{107}{subsubsection*.451}%
+\contentsline {subsubsection}{\code {Theme.apply(cls)}}{108}{subsubsection*.452}%
+\contentsline {subsubsection}{\code {Theme._load_font(cls)}}{108}{subsubsection*.453}%
+\contentsline {subsection}{\numberline {5.4}\code {splat_editor/ui/actions.py}}{108}{subsection.5.4}%
+\contentsline {paragraph}{Mô tả đầu file và cách dùng.}{108}{paragraph*.454}%
+\contentsline {subsubsection}{\code {class Action}}{109}{subsubsection*.455}%
+\contentsline {subsubsection}{\code {class ActionRegistry}}{109}{subsubsection*.456}%
+\contentsline {subsubsection}{\code {ActionRegistry.__init__(self)}}{109}{subsubsection*.457}%
+\contentsline {subsubsection}{\code {ActionRegistry.add(self, name, action)}}{109}{subsubsection*.458}%
+\contentsline {subsubsection}{\code {ActionRegistry.__getitem__(self, name)}}{109}{subsubsection*.459}%
+\contentsline {subsubsection}{\code {ActionRegistry.__iter__(self)}}{109}{subsubsection*.460}%
+\contentsline {subsubsection}{\code {ActionRegistry.trigger(self, name)}}{110}{subsubsection*.461}%
+\contentsline {subsubsection}{\code {ActionRegistry.handle_key(self, key, ctrl)}}{110}{subsubsection*.462}%
+\contentsline {subsubsection}{\code {ActionRegistry.run_pending(self)}}{110}{subsubsection*.463}%
+\contentsline {subsection}{\numberline {5.5}\code {splat_editor/ui/input.py}}{110}{subsection.5.5}%
+\contentsline {paragraph}{Mô tả đầu file và cách dùng.}{110}{paragraph*.464}%
+\contentsline {subsubsection}{\code {class InputController}}{110}{subsubsection*.465}%
+\contentsline {subsubsection}{\code {InputController.__init__(self, app)}}{111}{subsubsection*.466}%
+\contentsline {subsubsection}{\code {InputController.brush(self)}}{111}{subsubsection*.467}%
+\contentsline {subsubsection}{\code {InputController.looking(self)}}{111}{subsubsection*.468}%
+\contentsline {subsubsection}{\code {InputController._set_drag(self, button)}}{111}{subsubsection*.469}%
+\contentsline {subsubsection}{\code {InputController.reset(self)}}{111}{subsubsection*.470}%
+\contentsline {subsubsection}{\code {InputController.on_mouse_move(self, window, x, y)}}{111}{subsubsection*.471}%
+\contentsline {subsubsection}{\code {InputController.on_mouse_button(self, window, button, action, mods)}}{112}{subsubsection*.472}%
+\contentsline {subsubsection}{\code {InputController.on_scroll(self, window, dx, dy)}}{112}{subsubsection*.473}%
+\contentsline {subsubsection}{\code {InputController.on_drop(self, window, paths)}}{112}{subsubsection*.474}%
+\contentsline {subsubsection}{\code {InputController.on_key(self, window, key, scancode, action, mods)}}{112}{subsubsection*.475}%
+\contentsline {subsubsection}{\code {InputController.update(self, dt)}}{112}{subsubsection*.476}%
+\contentsline {subsection}{\numberline {5.6}\code {splat_editor/ui/layout.py}}{113}{subsection.5.6}%
+\contentsline {paragraph}{Mô tả đầu file và cách dùng.}{113}{paragraph*.477}%
+\contentsline {subsubsection}{\code {class Layout}}{113}{subsubsection*.478}%
+\contentsline {subsubsection}{\code {Layout.__init__(self)}}{113}{subsubsection*.479}%
+\contentsline {subsubsection}{\code {Layout.update(self, width, height, menu_height, status_height)}}{113}{subsubsection*.480}%
+\contentsline {subsubsection}{\code {Layout._body_height(self)}}{114}{subsubsection*.481}%
+\contentsline {subsubsection}{\code {Layout.side_panel(self)}}{114}{subsubsection*.482}%
+\contentsline {subsubsection}{\code {Layout.viewport(self)}}{114}{subsubsection*.483}%
+\contentsline {subsubsection}{\code {Layout.status_bar(self)}}{114}{subsubsection*.484}%
+\contentsline {subsection}{\numberline {5.7}\code {splat_editor/ui/menu_bar.py}}{114}{subsection.5.7}%
+\contentsline {paragraph}{Mô tả đầu file và cách dùng.}{114}{paragraph*.485}%
+\contentsline {subsubsection}{\code {class MainMenuBar}}{114}{subsubsection*.486}%
+\contentsline {subsubsection}{\code {MainMenuBar.__init__(self, actions)}}{115}{subsubsection*.487}%
+\contentsline {subsubsection}{\code {MainMenuBar.draw(self)}}{115}{subsubsection*.488}%
+\contentsline {subsubsection}{\code {MainMenuBar._draw_item(self, name)}}{115}{subsubsection*.489}%
+\contentsline {subsection}{\numberline {5.8}\code {splat_editor/ui/side_panel.py}}{115}{subsection.5.8}%
+\contentsline {paragraph}{Mô tả đầu file và cách dùng.}{115}{paragraph*.490}%
+\contentsline {subsubsection}{\code {class SidePanel}}{115}{subsubsection*.491}%
+\contentsline {subsubsection}{\code {SidePanel.__init__(self, app)}}{116}{subsubsection*.492}%
+\contentsline {subsubsection}{\code {SidePanel.draw(self, rect)}}{116}{subsubsection*.493}%
+\contentsline {subsection}{\numberline {5.9}\code {splat_editor/ui/sections.py}}{116}{subsection.5.9}%
+\contentsline {paragraph}{Mô tả đầu file và cách dùng.}{116}{paragraph*.494}%
+\contentsline {subsubsection}{\code {class PanelSection(ABC)}}{116}{subsubsection*.495}%
+\contentsline {subsubsection}{\code {PanelSection.__init__(self, app)}}{117}{subsubsection*.496}%
+\contentsline {subsubsection}{\code {PanelSection.editor(self)}}{117}{subsubsection*.497}%
+\contentsline {subsubsection}{\code {PanelSection.scene(self)}}{117}{subsubsection*.498}%
+\contentsline {subsubsection}{\code {PanelSection.header(self)}}{117}{subsubsection*.499}%
+\contentsline {subsubsection}{\code {PanelSection.is_visible(self)}}{117}{subsubsection*.500}%
+\contentsline {subsubsection}{\code {PanelSection.draw(self)}}{117}{subsubsection*.501}%
+\contentsline {subsubsection}{\code {class LayersSection(PanelSection)}}{117}{subsubsection*.502}%
+\contentsline {subsubsection}{\code {LayersSection.header(self)}}{117}{subsubsection*.503}%
+\contentsline {subsubsection}{\code {LayersSection.draw(self)}}{118}{subsubsection*.504}%
+\contentsline {subsubsection}{\code {LayersSection._draw_list(self)}}{118}{subsubsection*.505}%
+\contentsline {subsubsection}{\code {class TransformSection(PanelSection)}}{118}{subsubsection*.506}%
+\contentsline {subsubsection}{\code {TransformSection.is_visible(self)}}{118}{subsubsection*.507}%
+\contentsline {subsubsection}{\code {TransformSection.draw(self)}}{119}{subsubsection*.508}%
+\contentsline {subsubsection}{\code {TransformSection._draw_level(self, t)}}{119}{subsubsection*.509}%
+\contentsline {subsubsection}{\code {class SelectionSection(PanelSection)}}{119}{subsubsection*.510}%
+\contentsline {subsubsection}{\code {SelectionSection.draw(self)}}{120}{subsubsection*.511}%
+\contentsline {subsubsection}{\code {class ViewSection(PanelSection)}}{120}{subsubsection*.512}%
+\contentsline {subsubsection}{\code {ViewSection.draw(self)}}{120}{subsubsection*.513}%
+\contentsline {subsection}{\numberline {5.10}\code {splat_editor/ui/world_sections.py}}{120}{subsection.5.10}%
+\contentsline {paragraph}{Mô tả đầu file và cách dùng.}{120}{paragraph*.514}%
+\contentsline {subsubsection}{\code {class ModeSection(PanelSection)}}{121}{subsubsection*.515}%
+\contentsline {subsubsection}{\code {ModeSection.draw(self)}}{121}{subsubsection*.516}%
+\contentsline {subsubsection}{\code {class LightingSection(PanelSection)}}{121}{subsubsection*.517}%
+\contentsline {subsubsection}{\code {LightingSection.draw(self)}}{121}{subsubsection*.518}%
+\contentsline {subsubsection}{\code {LightingSection._draw_sun(self, lighting)}}{122}{subsubsection*.519}%
+\contentsline {subsubsection}{\code {LightingSection._draw_lights(self, lighting)}}{122}{subsubsection*.520}%
+\contentsline {subsection}{\numberline {5.11}\code {splat_editor/ui/status_bar.py}}{122}{subsection.5.11}%
+\contentsline {paragraph}{Mô tả đầu file và cách dùng.}{122}{paragraph*.521}%
+\contentsline {subsubsection}{\code {class StatusBar}}{123}{subsubsection*.522}%
+\contentsline {subsubsection}{\code {StatusBar.__init__(self, app)}}{123}{subsubsection*.523}%
+\contentsline {subsubsection}{\code {StatusBar.height(self)}}{123}{subsubsection*.524}%
+\contentsline {subsubsection}{\code {StatusBar.draw(self, rect)}}{123}{subsubsection*.525}%
+\contentsline {subsubsection}{\code {StatusBar._fit(text, width)}}{123}{subsubsection*.526}%
+\contentsline {subsection}{\numberline {5.12}\code {splat_editor/ui/viewport_overlay.py}}{124}{subsection.5.12}%
+\contentsline {paragraph}{Mô tả đầu file và cách dùng.}{124}{paragraph*.527}%
+\contentsline {subsubsection}{\code {class ViewportOverlay}}{124}{subsubsection*.528}%
+\contentsline {subsubsection}{\code {ViewportOverlay.__init__(self, app)}}{124}{subsubsection*.529}%
+\contentsline {subsubsection}{\code {ViewportOverlay.draw(self, rect)}}{124}{subsubsection*.530}%
+\contentsline {subsubsection}{\code {ViewportOverlay._draw_empty_hint(self, rect)}}{124}{subsubsection*.531}%
+\contentsline {subsubsection}{\code {ViewportOverlay._draw_brush_hint(self, rect)}}{125}{subsubsection*.532}%
+\contentsline {subsubsection}{\code {ViewportOverlay._draw_brush_cursor(self, rect)}}{125}{subsubsection*.533}%
+\contentsline {subsubsection}{\code {ViewportOverlay._draw_survival(self, rect)}}{125}{subsubsection*.534}%
+\contentsline {subsubsection}{\code {ViewportOverlay._draw_coords(self, rect)}}{125}{subsubsection*.535}%
+\contentsline {subsubsection}{\code {ViewportOverlay._draw_clock(self, rect, lighting)}}{125}{subsubsection*.536}%
+\contentsline {subsection}{\numberline {5.13}\code {splat_editor/ui/shortcuts_window.py}}{126}{subsection.5.13}%
+\contentsline {paragraph}{Mô tả đầu file và cách dùng.}{126}{paragraph*.537}%
+\contentsline {subsubsection}{\code {class ShortcutsWindow}}{126}{subsubsection*.538}%
+\contentsline {subsubsection}{\code {ShortcutsWindow.__init__(self, actions)}}{126}{subsubsection*.539}%
+\contentsline {subsubsection}{\code {ShortcutsWindow.toggle(self)}}{126}{subsubsection*.540}%
+\contentsline {subsubsection}{\code {ShortcutsWindow.draw(self)}}{126}{subsubsection*.541}%
+\contentsline {subsubsection}{\code {ShortcutsWindow._table(self, title, rows)}}{127}{subsubsection*.542}%
+\contentsline {subsection}{\numberline {5.14}\code {splat_editor/ui/widgets.py}}{127}{subsection.5.14}%
+\contentsline {paragraph}{Mô tả đầu file và cách dùng.}{127}{paragraph*.543}%
+\contentsline {subsubsection}{\code {full_width_button(label)}}{127}{subsubsection*.544}%
+\contentsline {subsubsection}{\code {button_row(labels)}}{127}{subsubsection*.545}%
+\contentsline {subsubsection}{\code {danger_button(label)}}{128}{subsubsection*.546}%
+\contentsline {subsubsection}{\code {tooltip(text)}}{128}{subsubsection*.547}%
+\contentsline {subsubsection}{\code {color_u32(rgba)}}{128}{subsubsection*.548}%
+\contentsline {subsection}{\numberline {5.15}\code {splat_editor/ui/file_dialog.py}}{128}{subsection.5.15}%
+\contentsline {paragraph}{Mô tả đầu file và cách dùng.}{128}{paragraph*.549}%
+\contentsline {subsubsection}{\code {class FileDialog}}{128}{subsubsection*.550}%
+\contentsline {subsubsection}{\code {FileDialog._run(cls, ask, **options)}}{128}{subsubsection*.551}%
+\contentsline {subsubsection}{\code {FileDialog.open_file(cls)}}{129}{subsubsection*.552}%
+\contentsline {subsubsection}{\code {FileDialog.open_files(cls)}}{129}{subsubsection*.553}%
+\contentsline {subsubsection}{\code {FileDialog.save_file(cls, initial='scene.ply')}}{129}{subsubsection*.554}%
+\contentsline {section}{\numberline {6}Thư mục render/shaders: vertex và fragment shader}{130}{section.6}%
+\contentsline {subsection}{\numberline {6.1}\code {splat_prep.vert}}{131}{subsection.6.1}%
+\contentsline {subsubsection}{Cơ sở toán: EWA Splatting, chiếu ellipsoid 3D thành ellipse 2D}{131}{subsubsection*.555}%
+\contentsline {paragraph}{Hiệp phương sai 3D.}{131}{paragraph*.556}%
+\contentsline {paragraph}{Jacobian của phép chiếu.}{131}{paragraph*.557}%
+\contentsline {paragraph}{Hiệp phương sai 2D.}{131}{paragraph*.558}%
+\contentsline {paragraph}{Trị riêng và vector riêng của ma trận 2x2.}{131}{paragraph*.559}%
+\contentsline {paragraph}{Kích thước hình vuông (billboard).}{131}{paragraph*.560}%
+\contentsline {subsubsection}{Cơ sở toán: Ánh sáng Phong và bóng đổ}{131}{subsubsection*.561}%
+\contentsline {paragraph}{Pháp tuyến gaussian.}{131}{paragraph*.562}%
+\contentsline {paragraph}{Mô hình Phong.}{132}{paragraph*.563}%
+\contentsline {paragraph}{Đèn điểm: suy giảm.}{132}{paragraph*.564}%
+\contentsline {subsubsection}{Khai báo đầu vào, uniform và biến ra}{132}{subsubsection*.565}%
+\contentsline {subsubsection}{Hàm tiện ích: half-float, đóng gói màu, hệ số SH}{132}{subsubsection*.566}%
+\contentsline {subsubsection}{Màu theo hướng nhìn: shColor}{133}{subsubsection*.567}%
+\contentsline {subsubsection}{Bóng đổ: shadowFactor}{133}{subsubsection*.568}%
+\contentsline {subsubsection}{Chiếu sáng Phong: shade}{134}{subsubsection*.569}%
+\contentsline {subsubsection}{Hàm cull}{134}{subsubsection*.570}%
+\contentsline {subsubsection}{main (1): đọc dữ liệu, loại bỏ, ma trận layer}{134}{subsubsection*.571}%
+\contentsline {subsubsection}{main (2): hiệp phương sai 3D rồi 2D (EWA)}{135}{subsubsection*.572}%
+\contentsline {subsubsection}{main (3): trị riêng, trục ellipse, màu và đầu ra}{135}{subsubsection*.573}%
+\contentsline {subsection}{\numberline {6.2}\code {splat.vert}}{136}{subsection.6.2}%
+\contentsline {subsubsection}{Toàn bộ shader}{136}{subsubsection*.574}%
+\contentsline {subsubsection}{Cơ sở toán: hiển thị gaussian (pass 2, đỉnh)}{137}{subsubsection*.575}%
+\contentsline {subsection}{\numberline {6.3}\code {splat.frag}}{137}{subsection.6.3}%
+\contentsline {subsubsection}{Toàn bộ shader}{137}{subsubsection*.576}%
+\contentsline {subsubsection}{Cơ sở toán: fragment và trộn alpha ``over''}{137}{subsubsection*.577}%
+\contentsline {paragraph}{Fragment (\code {splat.frag}).}{137}{paragraph*.578}%
+\contentsline {paragraph}{Trộn ``over'' (\code {glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA)}).}{137}{paragraph*.579}%
+\contentsline {subsection}{\numberline {6.4}\code {shadow.vert}}{137}{subsection.6.4}%
+\contentsline {subsubsection}{Toàn bộ shader}{137}{subsubsection*.580}%
+\contentsline {subsection}{\numberline {6.5}\code {shadow.frag}}{138}{subsection.6.5}%
+\contentsline {subsubsection}{Toàn bộ shader}{138}{subsubsection*.581}%
+\contentsline {subsection}{\numberline {6.6}\code {grid.vert}}{138}{subsection.6.6}%
+\contentsline {subsubsection}{Toàn bộ shader}{138}{subsubsection*.582}%
+\contentsline {subsubsection}{Cơ sở toán: tam giác phủ toàn màn hình}{139}{subsubsection*.583}%
+\contentsline {subsection}{\numberline {6.7}\code {grid.frag}}{139}{subsection.6.7}%
+\contentsline {subsubsection}{Uniform và hàm gridLine}{139}{subsubsection*.584}%
+\contentsline {subsubsection}{Bắn tia và giao với mặt sàn}{139}{subsubsection*.585}%
+\contentsline {subsubsection}{Đường lưới, trục tọa độ, mờ dần}{139}{subsubsection*.586}%
+\contentsline {subsubsection}{Cơ sở toán: lưới sàn}{140}{subsubsection*.587}%
+\contentsline {subsection}{\numberline {6.8}\code {light_gizmo.vert}}{140}{subsection.6.8}%
+\contentsline {subsubsection}{Toàn bộ shader}{140}{subsubsection*.588}%
+\contentsline {subsubsection}{Cơ sở toán: quả cầu đèn}{140}{subsubsection*.589}%
+\contentsline {subsection}{\numberline {6.9}\code {light_gizmo.frag}}{141}{subsection.6.9}%
+\contentsline {subsubsection}{Toàn bộ shader}{141}{subsubsection*.590}%
+\contentsline {subsection}{\numberline {6.10}\code {firefly.vert}}{141}{subsection.6.10}%
+\contentsline {subsubsection}{Toàn bộ shader}{141}{subsubsection*.591}%
+\contentsline {subsubsection}{Cơ sở toán: đom đóm}{142}{subsubsection*.592}%
+\contentsline {subsection}{\numberline {6.11}\code {firefly.frag}}{142}{subsection.6.11}%
+\contentsline {subsubsection}{Toàn bộ shader}{142}{subsubsection*.593}%
+\contentsline {subsection}{\numberline {6.12}\code {avatar.vert}}{142}{subsection.6.12}%
+\contentsline {subsubsection}{Toàn bộ shader}{142}{subsubsection*.594}%
+\contentsline {subsection}{\numberline {6.13}\code {avatar.frag}}{143}{subsection.6.13}%
+\contentsline {subsubsection}{Toàn bộ shader}{143}{subsubsection*.595}%
+\contentsline {section}{\numberline {7}Bảng tra nhanh: công thức và file}{144}{section.7}%

@@ -1,0 +1,23 @@
+%%FRAG s:anim
+%%BEFORE: \subsubsection*{Khai báo mức module (dòng 19--31)}
+\subsubsection{Cơ sở toán: Hoạt họa nhân vật}\label{s:anim}
+Các công thức dưới đây được cài đặt trong \code{core/avatar_pose.py}; việc vẽ 6 khối bằng các ma trận này nằm ở \code{render/avatar\_renderer.py}.
+\begin{itemize}
+\item Bộ lọc tiến về mục tiêu: $\mathrm{approach}(v,t,\mathrm{rate},dt)=v+(t-v)\min(1,dt\cdot\mathrm{rate})$ (cùng dạng quán tính camera bay).
+\item \textbf{Nhịp đi:} $\mathrm{walked}=\mathrm{distance}/\mathrm{height}$; $\mathrm{phase}\mathrel{+}=\mathrm{walked}\cdot\mathrm{STRIDE}\cdot1.75$ (pha tỉ lệ \textbf{quãng đường}, không phải thời gian, nên chân không trượt); $\mathrm{swing}=\sin(\mathrm{phase})\cdot60^\circ\cdot\mathrm{amount}$; chân trái $+\mathrm{swing}$, chân phải $-\mathrm{swing}$, tay ngược pha (đối xứng chéo).
+\item Biên độ mục tiêu $=\min(1,\mathrm{speed}/(4.3/1.75))$.
+\item \textbf{Thở:} $\mathrm{idle}=2.2\sin(1.13t)+0.8\sin(1.91t)$ (hai tần số không công ước nên không lặp cứng).
+\item \textbf{Cử chỉ:} zombie $-85^\circ+3\sin(2.4t)$; cheer $\pm(158+6\sin7t)$; wave $142+20\sin9t$; pha trộn tuyến tính \code{_mix_pair}.
+\item Ngồi: chân $-90^\circ$, hạ thân 10 đơn vị skin; $\mathrm{stance}=1-0.48\,\mathrm{sit}-0.12\,\mathrm{crouch}$.
+\end{itemize}
+
+\paragraph{Cây phân cấp (\code{limb_matrices}).}
+\begin{align*}
+\mathrm{root}&=T(\mathrm{feet})\,R_y(\mathrm{facing}+180^\circ)\,S(\mathrm{scale})\,T(0,-\mathrm{drop},0)\\
+\mathrm{upper}&=\mathrm{root}\cdot T(0,12,0)\,R_x(\mathrm{lean})\,T(0,-12,0)\quad(\text{xoay quanh hông})\\
+\mathrm{leg}&=\mathrm{root}\cdot T(0,12,0)\,R_x(a)\,T(0,-12,0)\\
+\mathrm{arm}&=\mathrm{upper}\cdot T(p_x,24,0)\,R_z(a_1)\,R_x(a_0)\,T(-p_x,-24,0)\quad(\text{quanh vai, }p_x=\pm6)\\
+\mathrm{head}&=\mathrm{upper}\cdot T(0,24,0)\,R_y(\mathrm{yaw})\,R_x(\mathrm{pitch})\,T(0,-24,0)\quad(\text{quanh cổ})
+\end{align*}
+Mẫu chung: $M_{\mathrm{con}}=M_{\mathrm{cha}}\cdot T(p)\,R\,T(-p)$ (xoay quanh điểm $p$: dời $p$ về gốc, xoay, dời lại). $\mathrm{scale}=\mathrm{chiều\ cao}/32$. Ma trận quay trục \code{_rot(axis, deg)} điền $c,-s,s,c$ vào cặp chỉ số $(1,2)$ cho $X$, $(2,0)$ cho $Y$, $(0,1)$ cho $Z$.
+%%END

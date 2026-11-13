@@ -1,0 +1,76 @@
+%%FRAG math3d_quat_cam
+%%BEFORE: \subsubsection*{Khai báo mức module (dòng 16--18)}
+\subsubsection{Cơ sở toán: Quaternion}\label{s:quat}
+Quaternion đơn vị $q=(w,x,y,z)$ biểu diễn phép quay góc $\theta$ quanh trục $n$: $w=\cos\frac\theta2$, $(x,y,z)=\sin\frac\theta2\,n$. Dùng quaternion vì không bị gimbal, nhân gọn và dễ chuẩn hóa.
+
+\paragraph{Quaternion sang ma trận (\code{quat\_to\_matrix}, giống hệt trong \code{splat\_prep.vert}).}
+\[
+R=\begin{bmatrix}
+1-2(y^2+z^2) & 2(xy-wz) & 2(xz+wy)\\
+2(xy+wz) & 1-2(x^2+z^2) & 2(yz-wx)\\
+2(xz-wy) & 2(yz+wx) & 1-2(x^2+y^2)
+\end{bmatrix}
+\]
+Trong GLSL, \code{mat3(...)} điền theo \textbf{cột}, nên các số liệt kê trong shader là cột của cùng ma trận này.
+
+\paragraph{Ma trận sang quaternion (\code{matrix\_to\_quat}, phương pháp Shepperd).}
+Tránh chia cho số gần 0 bằng cách chọn nhánh theo phần tử lớn nhất.
+\begin{itemize}
+\item $\mathrm{trace}=R_{00}+R_{11}+R_{22}>0$: $s=2\sqrt{\mathrm{trace}+1}$, $w=s/4$, $x=(R_{21}-R_{12})/s$, $y=(R_{02}-R_{20})/s$, $z=(R_{10}-R_{01})/s$.
+\item Ngược lại, chọn nhánh theo $R_{00}$, $R_{11}$ hoặc $R_{22}$ lớn nhất: $s=2\sqrt{1+R_{ii}-R_{jj}-R_{kk}}$, phần tử $i=s/4$, các phần tử còn lại $=(R_{ij}\pm R_{ji})/s$.
+\end{itemize}
+
+\paragraph{Nhân quaternion (\code{quat\_mul}, tích Hamilton).}
+\begin{align*}
+w&=a_wb_w-a_xb_x-a_yb_y-a_zb_z, & x&=a_wb_x+a_xb_w+a_yb_z-a_zb_y,\\
+y&=a_wb_y-a_xb_z+a_yb_w+a_zb_x, & z&=a_wb_z+a_xb_y-a_yb_x+a_zb_w.
+\end{align*}
+$a\otimes b$ là quay $b$ trước rồi $a$ (giống $R_aR_b$).
+
+\paragraph{Lượng tử hóa quaternion lên GPU (\code{splat\_renderer.pack}, \code{splat\_prep.vert}).}
+Mỗi thành phần thuộc $[-1,1]$ được lưu 8 bit: $u=\mathrm{clip}(\mathrm{round}(q\cdot127)+128,1,255)$. Shader giải bằng $q=\mathrm{normalize}((u-128)/127)$, chuẩn hóa lại để bù sai số.
+
+\subsubsection{Cơ sở toán: Camera và phép chiếu}\label{s:cam}
+Các ma trận camera dưới đây nằm trong \code{core/math3d.py}; phần camera quỹ đạo \code{OrbitCamera} (\code{render/camera.py}) được trình bày ở mục \ref{s:cam-orbit}.
+
+\paragraph{Ma trận nhìn (\code{look\_at(e, target, up)}).}
+\[
+f=\frac{\mathrm{target}-e}{\|\cdot\|},\quad r=\frac{f\times \mathrm{up}}{\|\cdot\|},\quad u=r\times f,\quad
+V=\begin{bmatrix} r^{\top} & -r\!\cdot\! e\\ u^{\top} & -u\!\cdot\! e\\ -f^{\top} & f\!\cdot\! e\\ 0\;0\;0 & 1\end{bmatrix}.
+\]
+Cột 3 là $-(Re)$: đưa mắt về gốc rồi xoay hệ trục camera về $(x,y,z)=(\text{phải},\text{lên},-\text{trước})$. Khối $3\times3$ trái trên gọi là $W$ (trực giao).
+
+\paragraph{Phép chiếu phối cảnh (\code{perspective(fov, a, n, f)}).}
+Với $k=1/\tan(\mathrm{fov}/2)$:
+\[
+P=\begin{bmatrix}k/a&0&0&0\\0&k&0&0\\0&0&\frac{f+n}{n-f}&\frac{2fn}{n-f}\\0&0&-1&0\end{bmatrix}
+\]
+\begin{itemize}
+\item $\mathrm{clip}=Pv$, $c_w=-v_z$ (độ sâu dương). $\mathrm{NDC}=\mathrm{clip}_{xyz}/c_w\in[-1,1]$ (\textbf{chia phối cảnh}, vật xa nhỏ đi).
+\item Hàng 3: $z_{ndc}=\dfrac{(f+n)v_z+2fn}{(n-f)(-v_z)}$ ánh xạ $v_z=-n\mapsto-1$ và $v_z=-f\mapsto+1$. Quan hệ này phi tuyến, độ phân giải tập trung gần camera.
+\item Camera dùng \code{near = distance*0.001}, \code{far = near*1e6} (\code{camera.projection\_matrix}).
+\end{itemize}
+
+\paragraph{Phép chiếu trực giao (\code{orthographic(h, n, f)}).}
+$x'=x/h$, $y'=y/h$, $z'=-\dfrac{2z}{f-n}-\dfrac{f+n}{f-n}$. Hộp $[-h,h]^2\times[n,f]$ ánh xạ vào $[-1,1]^3$. Dùng cho \textbf{bản đồ bóng} mặt trời (tia song song, không chia phối cảnh). Hàm này bị định nghĩa trùng hai lần trong file, bản sau ghi đè bản trước, cùng công thức.
+
+\paragraph{Ví dụ số (\code{report/project3d\_table.tex}).}
+$p_w=(0.5,1,0.5)\to v=Vp=(0.109,0.293,-2.536)\to \mathrm{clip}=Pv=(0.197,0.709,2.341,2.536)$, $c_w=2.536\to\mathrm{NDC}=(0.078,0.279,0.923)\to$ pixel $(215.5,108.1)$ theo mục \ref{s:viewport}.
+%%END
+
+%%FRAG camera_orbit
+%%BEFORE: \subsubsection*{Khai báo mức module (dòng 16--20)}
+\subsubsection{Cơ sở toán: Camera quỹ đạo}\label{s:cam-orbit}
+Các ma trận \code{look\_at}, \code{perspective}, \code{orthographic} được giải thích ở mục \ref{s:cam} (file \code{core/math3d.py}). Dưới đây là toán của \code{OrbitCamera}.
+\begin{itemize}
+\item \textbf{Vị trí mắt} (tọa độ cầu): $e=t+d\,(\cos\varphi\sin\theta,\;\sin\varphi,\;\cos\varphi\cos\theta)$ với $\theta$ là yaw, $\varphi$ là pitch, $d$ là distance (\code{position}).
+\item Pitch kẹp $\pm1.55$ rad ($\approx\pm88.8^\circ$) để $f\times\mathrm{up}$ không suy biến (\code{PITCH\_LIMIT}).
+\item \code{orbit}: yaw $-=dx\cdot0.005$, pitch $+=dy\cdot0.005$ (rad/pixel).
+\item \textbf{Pan} (\code{pan}): chiều cao nhìn thấy tại khoảng cách $d$ là $2d\tan(\mathrm{fov}/2)$, trải trên $H$ pixel, nên $\mathrm{units\_per\_pixel}=2d\tan(\mathrm{fov}/2)/H$. Khi đó $\mathrm{target}\mathrel{+}=(-dx\cdot\mathrm{right}+dy\cdot\mathrm{up})\cdot\mathrm{units\_per\_pixel}$, với right, up là hàng 0 và 1 của $V$.
+\item \textbf{Look} (\code{look}): giữ mắt cố định, đổi yaw/pitch, rồi \code{target = eye - (position\_moi - target)} để mắt không dịch.
+\item \textbf{Bay} (\code{fly}): hướng ngang $=\mathrm{forward}\cdot(-\sin\theta,0,-\cos\theta)+\mathrm{right}\cdot(\cos\theta,0,-\sin\theta)$, chuẩn hóa (đi chéo không nhanh hơn), $y=\mathrm{up}$. Vận tốc mong muốn $v^*=\text{hướng}\cdot\text{tốc độ}\cdot(2.5\text{ nếu chạy})$. \textbf{Lọc mũ:} $v\leftarrow v+(v^*-v)\min(10\Delta t,1)$; $\mathrm{target}\mathrel{+}=v\Delta t$ (tích phân Euler). Dừng hẳn khi $|v|<10^{-3}\cdot\text{tốc độ}$.
+\item \textbf{Frame} (\code{frame}): tâm là median các điểm; bán kính $R$ là phân vị 90\% khoảng cách tới tâm (bỏ nhiễu); $d=1.3R/\sin(\mathrm{fov}/2)$ (hình cầu bán kính $R$ vừa khung dọc: $R=d\sin(\mathrm{fov}/2)$); tốc độ bay $=0.5R$.
+\item \textbf{Ngôi thứ ba:} mode 1: $\mathrm{cam}=\mathrm{eye}-\mathrm{forward}\cdot D$; mode 2: $\mathrm{cam}=\mathrm{eye}+\mathrm{forward}\cdot D$ nhìn ngược lại. $D$ co lại nếu tia mắt$\to$camera chạm voxel (\code{segment\_blocked}, mục \ref{s:phys}).
+\item $\mathrm{forward}()=(\mathrm{target}-\mathrm{position})/\mathrm{distance}$.
+\end{itemize}
+%%END
