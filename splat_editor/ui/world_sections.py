@@ -120,7 +120,6 @@ class LightingSection(PanelSection):
                                          self.app.drag_speed(), format="%.3f")
         if changed:
             light.position[:] = pos
-            light.resting = False
         _, light.intensity = imgui.slider_float("Intensity", light.intensity, 0.0, 10.0, "%.2f")
         _, light.range = imgui.slider_float("Range", light.range, physics.height * 0.5, physics.height * 40.0,
                                             "%.3f", imgui.SliderFlags_.logarithmic)

@@ -5,7 +5,6 @@
 - Bóng đổ của mặt trời bằng shadow mapping (bản đồ độ sâu nhìn từ mặt trời, vẽ ở SplatRenderer).
 - Mặt trời chuyển động theo thời gian; chu kỳ ngày đêm là một máy trạng thái (NIGHT -> DAWN -> DAY -> DUSK)
   điều khiển màu bầu trời và tự bật / tắt các khối đèn.
-- Khối đèn chịu trọng lực: thả xuống thì rơi, nảy nhẹ rồi nằm yên trên bề mặt của file ply.
 
 Không có OpenGL ở đây: Lighting chỉ giữ trạng thái và đổi ra tham số (params) cho renderer.
 """
@@ -15,7 +14,7 @@ lighting = Lighting()
 lighting.set_bounds(center, radius)         # kích thước cảnh (để đặt tầm đèn, bản đồ bóng)
 lighting.add_sun()                          # bật mặt trời (và bật hệ thống ánh sáng)
 light = lighting.add_light(position)        # thêm một khối đèn, trả về None nếu đã đủ 8
-lighting.update(dt, physics)                # mỗi khung hình: thời gian, máy trạng thái, khối đèn rơi
+lighting.update(dt)                         # mỗi khung hình: thời gian, máy trạng thái ngày đêm
 params = lighting.params()                  # dict cho SplatRenderer.set_lighting / LightRenderer
 """
 
@@ -73,9 +72,6 @@ class PointLight:
     intensity: float = 3.0
     on: bool = True
     auto_night: bool = False     # tự bật lúc hoàng hôn, tắt lúc bình minh (máy trạng thái ngày đêm)
-    falls: bool = False          # đèn đứng yên tại chỗ đặt, không chịu trọng lực
-    vel_y: float = 0.0
-    resting: bool = False
     name: str = "Light"
 
 
@@ -183,15 +179,13 @@ class Lighting:
         return _mix(sky, (0.85, 0.45, 0.32), 0.55 * twilight)
 
     # ------------------------------------------------------------------ cập nhật theo thời gian
-    def update(self, dt, physics=None):
-        """Tiến thời gian, chạy máy trạng thái ngày đêm và vật lý của khối đèn."""
+    def update(self, dt):
+        """Tiến thời gian và chạy máy trạng thái ngày đêm."""
         if self.animate and self.sun_on:
             self.hour = (self.hour + dt * 24.0 / max(self.day_length, 1.0)) % 24.0
         phase = self.cycle.update(self.hour)
         if phase is not None and self.sun_on:
             self._on_enter(phase)
-        if physics is not None:
-            self._update_lights(dt, physics)
 
     def _on_enter(self, phase):
         if phase in (DayPhase.DUSK, DayPhase.NIGHT):
@@ -205,29 +199,6 @@ class Lighting:
         else:
             changed = []
         self.events.append(f"{phase.value}" + (f": {len(changed)} auto light(s) switched" if changed else ""))
-
-    def _update_lights(self, dt, physics):
-        dt = min(dt, 0.05)
-        g = physics.gravity
-        rest = physics.height * 0.12                # khối đèn nằm cách mặt đất một chút
-        for light in self.lights:
-            if not light.falls or light.resting:
-                continue
-            x, y, z = light.position
-            light.vel_y -= g * dt
-            new_y = y + light.vel_y * dt
-            ground = physics.drop_height(x, z, y, radius=physics.height * 0.05) if physics.ready else None
-            floor = ground if ground is not None else (physics.world.min_y if physics.ready else None)
-            if floor is None:
-                light.vel_y = 0.0                   # chưa có bản đồ va chạm: đứng yên chờ
-                continue
-            if new_y <= floor + rest:
-                new_y = floor + rest
-                if ground is not None and abs(light.vel_y) > 0.6 * physics.height:
-                    light.vel_y = -light.vel_y * 0.35   # nảy lên
-                else:
-                    light.vel_y, light.resting = 0.0, True
-            light.position[1] = new_y
 
     # ------------------------------------------------------------------ bản đồ bóng
     def shadow_setup(self):

@@ -1,10 +1,10 @@
 # Fdb version 4
-["xdvipdfmx"] 1794500613.18875 "main_vi.xdv" "main_vi.pdf" "main_vi" 1794500630.98861 0
-  "main_vi.xdv" 1794500612.77674 244608 97f085b7cb2a32db26f7fe032d01baeb "xelatex"
+["xdvipdfmx"] 1794554523.88484 "main_vi.xdv" "main_vi.pdf" "main_vi" 1794554541.9198 0
+  "main_vi.xdv" 1794554523.48527 298848 ba34b473cf44849cce055532b9e73e32 "xelatex"
   (generated)
   "main_vi.pdf"
   (rewritten before read)
-["xelatex"] 1794500610.9188 "main_vi.tex" "main_vi.xdv" "main_vi" 1794500630.96616 0
+["xelatex"] 1794554521.54417 "main_vi.tex" "main_vi.xdv" "main_vi" 1794554541.8969 0
   "C:/Users/kelly/AppData/Local/MiKTeX/miktex/data/le/xetex/xelatex.fmt" 1792572223.27402 27176674 bb140bc90770b00da53f83e020756299 ""
   "C:/Users/kelly/AppData/Local/Programs/MiKTeX/fonts/tfm/adobe/zapfding/pzdr.tfm" 1136747054 1528 f853c4d1b4e0550255e02831fdc8496f ""
   "C:/Users/kelly/AppData/Local/Programs/MiKTeX/fonts/tfm/public/cm/cmmi5.tfm" 1136765053 1508 3b32edd0d68f6498a5a375e78f9edc5e ""
@@ -159,6 +159,7 @@
   "figures/csv_head.png" 1794242851.84411 57655 d9be3fae32939c9025e47574cd7018e2 ""
   "figures/csv_tail.png" 1794242851.82143 51013 8d4656ad11f6911b196de136e2531c20 ""
   "figures/example_ellipsoid.png" 1794244931.68353 470463 9f4f0113e61c780ad6f4aee4c4af2977 ""
+  "figures/skinzom.png" 1794553322.25153 2726 c349204de08b13a4ccc0a6b9bd4c84c5 ""
   "figures/t4-dawn.png" 1794417846.09339 1404257 fc99c17e8b72e756335e461cf7576012 ""
   "figures/t4-day.png" 1794417846.01909 1587195 1c59d491d6172efbe74f17b8f1b4b742 ""
   "figures/t4-dusk.png" 1794417846.14285 1536432 3ebcb060a02edc43b0880f26eb01eea3 ""
@@ -166,9 +167,9 @@
   "figures/t4-night.png" 1794417846.0447 1436412 305d83159b8dc04f8d1d92705a8c4ae0 ""
   "figures/t4-zombie-day.png" 1794417846.07017 1716953 6e07787ac013b33146f7b824ffd0345b ""
   "figures/viewer.png" 1794212530.88828 763578 d5eee1307c70ee544158988fdee74d2a ""
-  "main_vi.aux" 1794500612.76624 13298 1e598424123b5535714552656a8ab58b "xelatex"
-  "main_vi.out" 1794500612.77524 3586 35497e57871cb5bdd2900ae64a14d7e2 "xelatex"
-  "main_vi.tex" 1794500607.03467 38281 a88bc8032cdca9ab0256fac7405f4316 ""
+  "main_vi.aux" 1794554523.47367 16374 b62643140ca2c814d666bf18bfe73aa2 "xelatex"
+  "main_vi.out" 1794554523.48227 6669 52552ccdf9ab989b824f58c5841fb7e5 "xelatex"
+  "main_vi.tex" 1794554495.13014 45974 96cf18e7ac87d3f6d3e2fde2ce65d89a ""
   (generated)
   "main_vi.aux"
   "main_vi.log"

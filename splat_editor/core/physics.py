@@ -1,5 +1,5 @@
 """Vật lý cho file ply (T5): va chạm voxel dựng từ tâm gaussian, người chơi kiểu Minecraft sinh tồn
-(trọng lực, nhảy, leo bậc, trượt dọc tường) và vật rơi (khối đèn).
+(trọng lực, nhảy, leo bậc, trượt dọc tường).
 
 Gaussian không có mặt phẳng / thể tích rõ ràng nên ta rời rạc hoá thành lưới voxel: ô nào có đủ
 gaussian "rắn" (đủ đục, chưa xoá) thì là đặc. Mỗi ô đặc được mã hoá thành một số nguyên 64 bit

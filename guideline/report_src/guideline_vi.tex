@@ -126,7 +126,7 @@ Song song là camera, cọ, vật lý, ánh sáng, hoạt họa. Mỗi khung hì
 
 \VerbatimInput[firstline=1,lastline=11,firstnumber=1,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/__main__.py}
 \subsection{\texorpdfstring{\code{splat_editor/app.py}}{splat_editor/app.py}}
-{\footnotesize 509 dòng}\par
+{\footnotesize 506 dòng}\par
 \textbf{Vai trò.} \code{Application} ghép mọi thành phần (cửa sổ, ImGui, Editor, Viewport, Physics, Lighting, các bảng giao diện) và chạy vòng lặp chính.
 Đây là nơi duy nhất biết \textbf{tất cả} các tầng; các tầng còn lại không import \code{app}. Mỗi khung hình: \code{poll_events} $\to$ \code{input.update}
 $\to$ \code{update_world} $\to$ dựng ImGui $\to$ \code{viewport.sync} $\to$ \code{viewport.render} $\to$ \code{gui.draw} $\to$ \code{swap_buffers}.
@@ -196,8 +196,8 @@ Các phương thức: \code{__init__}, \code{_create_actions}, \code{open_file},
 {\footnotesize\textit{Dòng 232--236}}\par
 \VerbatimInput[firstline=232,lastline=236,firstnumber=232,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/app.py}
 \subsubsection{\texorpdfstring{\code{Application.add_light(self)}}{Application.add_light}}
-{\footnotesize\textit{Dòng 238--250}}\par
-\VerbatimInput[firstline=238,lastline=250,firstnumber=238,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/app.py}
+{\footnotesize\textit{Dòng 238--249}}\par
+\VerbatimInput[firstline=238,lastline=249,firstnumber=238,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/app.py}
 \subsubsection{\texorpdfstring{\code{Application.pick_light(self, x, y)}}{Application.pick_light}}
 {\footnotesize\textit{Dòng 252--280}}\par
 \textbf{Mô tả trong mã nguồn.} Click trong cảnh 3D: chọn khối đèn gần con trỏ nhất (và không bị cảnh che); click ra ngoài: bỏ chọn.
@@ -240,30 +240,30 @@ Các phương thức: \code{__init__}, \code{_create_actions}, \code{open_file},
 
 \VerbatimInput[firstline=382,lastline=418,firstnumber=382,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/app.py}
 \subsubsection{\texorpdfstring{\code{Application.update_world(self, dt)}}{Application.update_world}}
-{\footnotesize\textit{Dòng 420--439}}\par
-\textbf{Mô tả trong mã nguồn.} Mỗi khung hình: bản đồ va chạm (luồng nền), thời gian trong ngày, khối đèn rơi.
+{\footnotesize\textit{Dòng 420--436}}\par
+\textbf{Mô tả trong mã nguồn.} Mỗi khung hình: bản đồ va chạm (luồng nền), thời gian trong ngày.
 
-\VerbatimInput[firstline=420,lastline=439,firstnumber=420,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/app.py}
+\VerbatimInput[firstline=420,lastline=436,firstnumber=420,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/app.py}
 \subsubsection{\texorpdfstring{\code{Application.toggle_grid(self)}}{Application.toggle_grid}}
+{\footnotesize\textit{Dòng 438--439}}\par
+\VerbatimInput[firstline=438,lastline=439,firstnumber=438,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/app.py}
+\subsubsection{\texorpdfstring{\code{Application.toggle_sh(self)}}{Application.toggle_sh}}
 {\footnotesize\textit{Dòng 441--442}}\par
 \VerbatimInput[firstline=441,lastline=442,firstnumber=441,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/app.py}
-\subsubsection{\texorpdfstring{\code{Application.toggle_sh(self)}}{Application.toggle_sh}}
-{\footnotesize\textit{Dòng 444--445}}\par
-\VerbatimInput[firstline=444,lastline=445,firstnumber=444,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/app.py}
 \subsubsection{\texorpdfstring{\code{Application.set_flip(self, flip)}}{Application.set_flip}}
-{\footnotesize\textit{Dòng 447--450}}\par
-\VerbatimInput[firstline=447,lastline=450,firstnumber=447,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/app.py}
+{\footnotesize\textit{Dòng 444--447}}\par
+\VerbatimInput[firstline=444,lastline=447,firstnumber=444,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/app.py}
 \subsubsection{\texorpdfstring{\code{Application.exit_brush(self)}}{Application.exit_brush}}
-{\footnotesize\textit{Dòng 452--454}}\par
-\VerbatimInput[firstline=452,lastline=454,firstnumber=452,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/app.py}
+{\footnotesize\textit{Dòng 449--451}}\par
+\VerbatimInput[firstline=449,lastline=451,firstnumber=449,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/app.py}
 \subsubsection{\texorpdfstring{\code{Application.shortcuts_window_toggle(self)}}{Application.shortcuts_window_toggle}}
-{\footnotesize\textit{Dòng 456--457}}\par
-\VerbatimInput[firstline=456,lastline=457,firstnumber=456,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/app.py}
+{\footnotesize\textit{Dòng 453--454}}\par
+\VerbatimInput[firstline=453,lastline=454,firstnumber=453,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/app.py}
 \subsubsection{\texorpdfstring{\code{Application.paint(self, x, y)}}{Application.paint}}
-{\footnotesize\textit{Dòng 459--462}}\par
-\VerbatimInput[firstline=459,lastline=462,firstnumber=459,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/app.py}
+{\footnotesize\textit{Dòng 456--459}}\par
+\VerbatimInput[firstline=456,lastline=459,firstnumber=456,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/app.py}
 \subsubsection{\texorpdfstring{\code{Application.drag_speed(self)}}{Application.drag_speed}}
-{\footnotesize\textit{Dòng 464--466}}\par
+{\footnotesize\textit{Dòng 461--463}}\par
 \textbf{Mô tả trong mã nguồn.} Tốc độ kéo thanh trượt vị trí, tỉ lệ theo khoảng cách camera.
 
 \textbf{Giải thích.} Công thức cốt lõi của hàm này:
@@ -272,18 +272,18 @@ Các phương thức: \code{__init__}, \code{_create_actions}, \code{open_file},
 \]
 
 
-\VerbatimInput[firstline=464,lastline=466,firstnumber=464,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/app.py}
+\VerbatimInput[firstline=461,lastline=463,firstnumber=461,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/app.py}
 \subsubsection{\texorpdfstring{\code{Application._draw_gui(self)}}{Application._draw_gui}}
-{\footnotesize\textit{Dòng 469--476}}\par
-\VerbatimInput[firstline=469,lastline=476,firstnumber=469,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/app.py}
+{\footnotesize\textit{Dòng 466--473}}\par
+\VerbatimInput[firstline=466,lastline=473,firstnumber=466,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/app.py}
 \subsubsection{\texorpdfstring{\code{Application.run(self)}}{Application.run}}
-{\footnotesize\textit{Dòng 478--500}}\par
+{\footnotesize\textit{Dòng 475--497}}\par
 \textbf{Giải thích.} \textbf{Vòng lặp chính.} Đọc ngược từ trên xuống dưới chính là thứ tự một khung hình: sự kiện $\to$ cập nhật camera/thế giới $\to$ dựng ImGui $\to$ đồng bộ GPU $\to$ vẽ cảnh $\to$ vẽ ImGui $\to$ hiển thị.
 
-\VerbatimInput[firstline=478,lastline=500,firstnumber=478,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/app.py}
+\VerbatimInput[firstline=475,lastline=497,firstnumber=475,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/app.py}
 \subsubsection{\texorpdfstring{\code{main(argv=None)}}{main}}
-{\footnotesize\textit{Dòng 503--509}}\par
-\VerbatimInput[firstline=503,lastline=509,firstnumber=503,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/app.py}
+{\footnotesize\textit{Dòng 500--506}}\par
+\VerbatimInput[firstline=500,lastline=506,firstnumber=500,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/app.py}
 
 \clearpage
 \section{Thư mục core: logic thuần}\label{ch:core}
@@ -1167,12 +1167,12 @@ $\lambda$ tìm bằng chia đôi 40 vòng.
 
 \VerbatimInput[firstline=175,lastline=208,firstnumber=175,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lod.py}
 \subsection{\texorpdfstring{\code{splat_editor/core/lighting.py}}{splat_editor/core/lighting.py}}
-{\footnotesize 276 dòng}\par
+{\footnotesize 247 dòng}\par
 \textbf{Vai trò.} Trạng thái ánh sáng: ambient, một mặt trời, tối đa 8 khối đèn điểm, chu kỳ ngày--đêm dạng máy trạng thái và bản đồ bóng. Không có OpenGL:
 \code{Lighting.params()} đổi trạng thái thành một \code{dict} để renderer gửi vào shader. Toán học: xem mục \textit{Cơ sở toán} ngay bên dưới (\S\ref{s:phong}).
 
 \paragraph{Mô tả đầu file và cách dùng.} Phần chú thích đầu file do tác giả viết, nêu ý tưởng và ví dụ sử dụng:
-\VerbatimInput[firstline=1,lastline=21,firstnumber=1,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.2}{7.2}\selectfont]{../../splat_editor/core/lighting.py}
+\VerbatimInput[firstline=1,lastline=20,firstnumber=1,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.2}{7.2}\selectfont]{../../splat_editor/core/lighting.py}
 %% ---- merged math: s:sun
 \subsubsection{Cơ sở toán: Mặt trời, ngày--đêm và bản đồ bóng}\label{s:sun}
 Phần này gồm quỹ đạo mặt trời (\code{Lighting.sun_direction}), máy trạng thái \code{DayCycle} và thiết lập bản đồ bóng (\code{Lighting.shadow_setup}). Phần dùng bản đồ bóng trong shader (\code{shadowFactor}, \code{shadow.vert}) xem mục \ref{s:phong} (\code{splat_prep.vert}) và \code{shadow.vert}. Mô hình Phong và pháp tuyến gaussian cũng nằm ở mục \ref{s:phong}.
@@ -1207,10 +1207,10 @@ Mốc bắt đầu: DAWN 5h, DAY 7h, DUSK 17h, NIGHT 19h. \code{phase_for(h)}: $
 \end{itemize}
 
 \subsubsection*{Khai báo mức module (dòng 22--30)}
-\VerbatimInput[firstline=22,lastline=30,firstnumber=22,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lighting.py}
+\VerbatimInput[firstline=21,lastline=29,firstnumber=21,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lighting.py}
 \subsubsection{\texorpdfstring{\code{class DayPhase(Enum)}}{DayPhase}}
-{\footnotesize\textit{Dòng 33--37}}\par
-\VerbatimInput[firstline=33,lastline=37,firstnumber=33,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lighting.py}
+{\footnotesize\textit{Dòng 32--36}}\par
+\VerbatimInput[firstline=32,lastline=36,firstnumber=32,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lighting.py}
 \subsubsection{\texorpdfstring{\code{class DayCycle}}{DayCycle}}
 {\footnotesize\textit{Dòng 40--65}}\par
 \textbf{Mô tả trong mã nguồn.} Máy trạng thái ngày đêm. Mỗi trạng thái bắt đầu ở một giờ cố định; chuyển trạng thái khi giờ chạm mốc của trạng thái kế tiếp (hoặc nhảy thẳng tới trạng thái đúng nếu kéo thanh trượt giờ).
@@ -1225,55 +1225,55 @@ Mốc bắt đầu: DAWN 5h, DAY 7h, DUSK 17h, NIGHT 19h. \code{phase_for(h)}: $
 
 Các phương thức: \code{__init__}, \code{phase_for}, \code{update}.
 
-\VerbatimInput[firstline=40,lastline=46,firstnumber=40,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lighting.py}
+\VerbatimInput[firstline=39,lastline=45,firstnumber=39,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lighting.py}
 \subsubsection{\texorpdfstring{\code{DayCycle.__init__(self, hour=10.0)}}{DayCycle.__init__}}
-{\footnotesize\textit{Dòng 48--49}}\par
-\VerbatimInput[firstline=48,lastline=49,firstnumber=48,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lighting.py}
+{\footnotesize\textit{Dòng 47--48}}\par
+\VerbatimInput[firstline=47,lastline=48,firstnumber=47,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lighting.py}
 \subsubsection{\texorpdfstring{\code{DayCycle.phase_for(cls, hour)}}{DayCycle.phase_for}}
-{\footnotesize\textit{Dòng 51--57}}\par
-\VerbatimInput[firstline=51,lastline=57,firstnumber=51,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lighting.py}
+{\footnotesize\textit{Dòng 50--56}}\par
+\VerbatimInput[firstline=50,lastline=56,firstnumber=50,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lighting.py}
 \subsubsection{\texorpdfstring{\code{DayCycle.update(self, hour)}}{DayCycle.update}}
-{\footnotesize\textit{Dòng 59--65}}\par
+{\footnotesize\textit{Dòng 58--64}}\par
 \textbf{Mô tả trong mã nguồn.} Trả về trạng thái mới nếu vừa chuyển, ngược lại None (sự kiện on\_enter).
 
-\VerbatimInput[firstline=59,lastline=65,firstnumber=59,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lighting.py}
+\VerbatimInput[firstline=58,lastline=64,firstnumber=58,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lighting.py}
 \subsubsection{\texorpdfstring{\code{class PointLight}}{PointLight}}
-{\footnotesize\textit{Dòng 68--79}}\par
-\VerbatimInput[firstline=68,lastline=79,firstnumber=68,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lighting.py}
+{\footnotesize\textit{Dòng 67--75}}\par
+\VerbatimInput[firstline=67,lastline=75,firstnumber=67,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lighting.py}
 \subsubsection{\texorpdfstring{\code{_smooth(edge0, edge1, x)}}{_smooth}}
-{\footnotesize\textit{Dòng 82--84}}\par
-\VerbatimInput[firstline=82,lastline=84,firstnumber=82,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lighting.py}
+{\footnotesize\textit{Dòng 78--80}}\par
+\VerbatimInput[firstline=78,lastline=80,firstnumber=78,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lighting.py}
 \subsubsection{\texorpdfstring{\code{_mix(a, b, t)}}{_mix}}
-{\footnotesize\textit{Dòng 87--88}}\par
-\VerbatimInput[firstline=87,lastline=88,firstnumber=87,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lighting.py}
+{\footnotesize\textit{Dòng 83--84}}\par
+\VerbatimInput[firstline=83,lastline=84,firstnumber=83,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lighting.py}
 \subsubsection{\texorpdfstring{\code{class Lighting}}{Lighting}}
 {\footnotesize\textit{Dòng 91--276}}\par
-Các phương thức: \code{__init__}, \code{set_bounds}, \code{add_sun}, \code{remove_sun}, \code{add_light}, \code{remove_light}, \code{active_light}, \code{sun_direction}, \code{daylight}, \code{sun_color}, \code{sun_color_for_gizmo}, \code{ambient_color}, \code{sky_color}, \code{update}, \code{_on_enter}, \code{_update_lights}, \code{shadow_setup}, \code{point_lights}, \code{params}.
+Các phương thức: \code{__init__}, \code{set_bounds}, \code{add_sun}, \code{remove_sun}, \code{add_light}, \code{remove_light}, \code{active_light}, \code{sun_direction}, \code{daylight}, \code{sun_color}, \code{sun_color_for_gizmo}, \code{ambient_color}, \code{sky_color}, \code{update}, \code{_on_enter}, \code{shadow_setup}, \code{point_lights}, \code{params}.
 
-\VerbatimInput[firstline=91,lastline=92,firstnumber=91,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lighting.py}
+\VerbatimInput[firstline=87,lastline=88,firstnumber=87,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lighting.py}
 \subsubsection{\texorpdfstring{\code{Lighting.__init__(self)}}{Lighting.__init__}}
-{\footnotesize\textit{Dòng 94--116}}\par
-\VerbatimInput[firstline=94,lastline=116,firstnumber=94,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lighting.py}
+{\footnotesize\textit{Dòng 90--112}}\par
+\VerbatimInput[firstline=90,lastline=112,firstnumber=90,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lighting.py}
 \subsubsection{\texorpdfstring{\code{Lighting.set_bounds(self, center, radius)}}{Lighting.set_bounds}}
-{\footnotesize\textit{Dòng 119--121}}\par
-\VerbatimInput[firstline=119,lastline=121,firstnumber=119,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lighting.py}
+{\footnotesize\textit{Dòng 115--117}}\par
+\VerbatimInput[firstline=115,lastline=117,firstnumber=115,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lighting.py}
 \subsubsection{\texorpdfstring{\code{Lighting.add_sun(self)}}{Lighting.add_sun}}
-{\footnotesize\textit{Dòng 123--124}}\par
-\VerbatimInput[firstline=123,lastline=124,firstnumber=123,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lighting.py}
+{\footnotesize\textit{Dòng 119--120}}\par
+\VerbatimInput[firstline=119,lastline=120,firstnumber=119,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lighting.py}
 \subsubsection{\texorpdfstring{\code{Lighting.remove_sun(self)}}{Lighting.remove_sun}}
-{\footnotesize\textit{Dòng 126--127}}\par
-\VerbatimInput[firstline=126,lastline=127,firstnumber=126,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lighting.py}
+{\footnotesize\textit{Dòng 122--123}}\par
+\VerbatimInput[firstline=122,lastline=123,firstnumber=122,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lighting.py}
 \subsubsection{\texorpdfstring{\code{Lighting.add_light(self, position, light_range=None)}}{Lighting.add_light}}
-{\footnotesize\textit{Dòng 129--137}}\par
-\VerbatimInput[firstline=129,lastline=137,firstnumber=129,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lighting.py}
+{\footnotesize\textit{Dòng 125--133}}\par
+\VerbatimInput[firstline=125,lastline=133,firstnumber=125,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lighting.py}
 \subsubsection{\texorpdfstring{\code{Lighting.remove_light(self, index)}}{Lighting.remove_light}}
-{\footnotesize\textit{Dòng 139--143}}\par
-\VerbatimInput[firstline=139,lastline=143,firstnumber=139,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lighting.py}
+{\footnotesize\textit{Dòng 135--139}}\par
+\VerbatimInput[firstline=135,lastline=139,firstnumber=135,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lighting.py}
 \subsubsection{\texorpdfstring{\code{Lighting.active_light(self)}}{Lighting.active_light}}
-{\footnotesize\textit{Dòng 145--147}}\par
-\VerbatimInput[firstline=145,lastline=147,firstnumber=145,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lighting.py}
+{\footnotesize\textit{Dòng 141--143}}\par
+\VerbatimInput[firstline=141,lastline=143,firstnumber=141,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lighting.py}
 \subsubsection{\texorpdfstring{\code{Lighting.sun_direction(self)}}{Lighting.sun_direction}}
-{\footnotesize\textit{Dòng 150--156}}\par
+{\footnotesize\textit{Dòng 146--152}}\par
 \textbf{Mô tả trong mã nguồn.} Vector đơn vị từ cảnh hướng về mặt trời. Giờ 6: mọc, 12: trên cao nhất, 18: lặn.
 
 \textbf{Giải thích.} Tọa độ cầu $\to$ Descartes: góc giờ $\tfrac{hour-6}{12}\pi$, độ cao $\sin(angle)\cdot65^\circ$. Giờ 6 mọc, 12 ở đỉnh, 18 lặn.
@@ -1285,25 +1285,25 @@ Các phương thức: \code{__init__}, \code{set_bounds}, \code{add_sun}, \code{
 \]
 
 
-\VerbatimInput[firstline=150,lastline=156,firstnumber=150,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lighting.py}
+\VerbatimInput[firstline=146,lastline=152,firstnumber=146,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lighting.py}
 \subsubsection{\texorpdfstring{\code{Lighting.daylight(self)}}{Lighting.daylight}}
-{\footnotesize\textit{Dòng 158--160}}\par
+{\footnotesize\textit{Dòng 154--156}}\par
 \textbf{Mô tả trong mã nguồn.} 0 (đêm) .. 1 (ban ngày), mượt quanh lúc mặt trời qua đường chân trời.
 
-\VerbatimInput[firstline=158,lastline=160,firstnumber=158,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lighting.py}
+\VerbatimInput[firstline=154,lastline=156,firstnumber=154,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lighting.py}
 \subsubsection{\texorpdfstring{\code{Lighting.sun_color(self)}}{Lighting.sun_color}}
-{\footnotesize\textit{Dòng 162--166}}\par
-\VerbatimInput[firstline=162,lastline=166,firstnumber=162,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lighting.py}
+{\footnotesize\textit{Dòng 158--162}}\par
+\VerbatimInput[firstline=158,lastline=162,firstnumber=158,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lighting.py}
 \subsubsection{\texorpdfstring{\code{Lighting.sun_color_for_gizmo(self)}}{Lighting.sun_color_for_gizmo}}
-{\footnotesize\textit{Dòng 168--170}}\par
+{\footnotesize\textit{Dòng 164--166}}\par
 \textbf{Mô tả trong mã nguồn.} Màu quả cầu mặt trời (luôn sáng rõ, đỏ cam khi gần đường chân trời).
 
-\VerbatimInput[firstline=168,lastline=170,firstnumber=168,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lighting.py}
+\VerbatimInput[firstline=164,lastline=166,firstnumber=164,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lighting.py}
 \subsubsection{\texorpdfstring{\code{Lighting.ambient_color(self)}}{Lighting.ambient_color}}
-{\footnotesize\textit{Dòng 172--177}}\par
-\VerbatimInput[firstline=172,lastline=177,firstnumber=172,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lighting.py}
+{\footnotesize\textit{Dòng 168--173}}\par
+\VerbatimInput[firstline=168,lastline=173,firstnumber=168,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lighting.py}
 \subsubsection{\texorpdfstring{\code{Lighting.sky_color(self)}}{Lighting.sky_color}}
-{\footnotesize\textit{Dòng 179--183}}\par
+{\footnotesize\textit{Dòng 175--179}}\par
 \textbf{Giải thích.} Màu trời: trộn đêm/ngày theo \code{daylight}, rồi thêm màu cam hoàng hôn với trọng số Gauss quanh đường chân trời.
 
 \textbf{Công thức.}
@@ -1314,12 +1314,12 @@ c_{sky}=\mathrm{mix}(c_{night},c_{day},\mathrm{daylight})+0.55\,e^{-(s/0.18)^2}\
 $\mathrm{smoothstep}(a,b,x)=t^2(3-2t)$, $t=\mathrm{clip}\big(\tfrac{x-a}{b-a},0,1\big)$.
 
 
-\VerbatimInput[firstline=179,lastline=183,firstnumber=179,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lighting.py}
-\subsubsection{\texorpdfstring{\code{Lighting.update(self, dt, physics=None)}}{Lighting.update}}
-{\footnotesize\textit{Dòng 186--194}}\par
-\textbf{Mô tả trong mã nguồn.} Tiến thời gian, chạy máy trạng thái ngày đêm và vật lý của khối đèn.
+\VerbatimInput[firstline=175,lastline=179,firstnumber=175,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lighting.py}
+\subsubsection{\texorpdfstring{\code{Lighting.update(self, dt)}}{Lighting.update}}
+{\footnotesize\textit{Dòng 184--188}}\par
+\textbf{Mô tả trong mã nguồn.} Tiến thời gian, chạy máy trạng thái ngày đêm.
 
-\textbf{Giải thích.} Mỗi khung hình: tăng giờ ($24/day\_length$ giờ mỗi giây), chạy máy trạng thái và vật lý khối đèn.
+\textbf{Giải thích.} Mỗi khung hình: tăng giờ ($24/day\_length$ giờ mỗi giây), chạy máy trạng thái ngày đêm.
 
 \textbf{Công thức.}
 \[
@@ -1327,24 +1327,12 @@ h\leftarrow(h+\Delta t\cdot24/T_{day})\bmod24,\qquad T_{day}=36\ \mathrm{s}\ \Ri
 \]
 
 
-\VerbatimInput[firstline=186,lastline=194,firstnumber=186,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lighting.py}
+\VerbatimInput[firstline=184,lastline=188,firstnumber=184,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lighting.py}
 \subsubsection{\texorpdfstring{\code{Lighting._on_enter(self, phase)}}{Lighting._on_enter}}
-{\footnotesize\textit{Dòng 196--207}}\par
-\VerbatimInput[firstline=196,lastline=207,firstnumber=196,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lighting.py}
-\subsubsection{\texorpdfstring{\code{Lighting._update_lights(self, dt, physics)}}{Lighting._update_lights}}
-{\footnotesize\textit{Dòng 209--230}}\par
-\textbf{Giải thích.} Khối đèn rơi bằng tích phân Euler; chạm đất mà tốc độ lớn hơn $0.6H$ thì nảy với hệ số phục hồi $0.35$, ngược lại nằm yên.
-
-\textbf{Công thức.}
-\[
-v_y\leftarrow v_y-g\,\Delta t,\quad y\leftarrow y+v_y\Delta t,\qquad
-\text{chạm đất: }|v|>0.6H\Rightarrow v\leftarrow-0.35\,v
-\]
-
-
-\VerbatimInput[firstline=209,lastline=230,firstnumber=209,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lighting.py}
+{\footnotesize\textit{Dòng 190--201}}\par
+\VerbatimInput[firstline=190,lastline=201,firstnumber=190,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lighting.py}
 \subsubsection{\texorpdfstring{\code{Lighting.shadow_setup(self)}}{Lighting.shadow_setup}}
-{\footnotesize\textit{Dòng 233--242}}\par
+{\footnotesize\textit{Dòng 204--213}}\par
 \textbf{Mô tả trong mã nguồn.} (ma trận ánh sáng, kích thước texel theo thế giới, độ lệch độ sâu) cho bản đồ bóng trực giao.
 
 \textbf{Giải thích.} Dựng ma trận ánh sáng cho bản đồ bóng trực giao: bán kính $r=1.1\times$bán kính cảnh, mắt đèn $=$ tâm $+d\cdot2r$; trả về $(VP,\ texel,\ bias)$.
@@ -1358,20 +1346,20 @@ r=1.1\,R_{scene},\quad e=c+\hat d\cdot2r,\quad VP=\mathrm{Ortho}(r,\,0.01r,\,4r)
 \]
 
 
-\VerbatimInput[firstline=233,lastline=242,firstnumber=233,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lighting.py}
+\VerbatimInput[firstline=204,lastline=213,firstnumber=204,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lighting.py}
 \subsubsection{\texorpdfstring{\code{Lighting.point_lights(self)}}{Lighting.point_lights}}
-{\footnotesize\textit{Dòng 245--246}}\par
-\VerbatimInput[firstline=245,lastline=246,firstnumber=245,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lighting.py}
+{\footnotesize\textit{Dòng 216--217}}\par
+\VerbatimInput[firstline=216,lastline=217,firstnumber=216,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lighting.py}
 \subsubsection{\texorpdfstring{\code{Lighting.params(self)}}{Lighting.params}}
-{\footnotesize\textit{Dòng 248--276}}\par
+{\footnotesize\textit{Dòng 219--247}}\par
 \textbf{Mô tả trong mã nguồn.} Trạng thái ánh sáng dạng dict cho renderer; `signature` đổi khi cần tính lại màu gaussian.
 
 \textbf{Giải thích.} Đóng gói trạng thái thành \code{dict} cho renderer. Trường \code{signature} đổi khi phải tính lại màu của mọi gaussian (pass 1).
 
-\VerbatimInput[firstline=248,lastline=276,firstnumber=248,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lighting.py}
+\VerbatimInput[firstline=219,lastline=247,firstnumber=219,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/core/lighting.py}
 \subsection{\texorpdfstring{\code{splat_editor/core/physics.py}}{splat_editor/core/physics.py}}
 {\footnotesize 320 dòng}\par
-\textbf{Vai trò.} Vật lý cho chế độ sinh tồn: voxel hóa tâm gaussian thành bản đồ va chạm, người chơi (trọng lực, nhảy, leo bậc, trượt tường) và vật rơi.
+\textbf{Vai trò.} Vật lý cho chế độ sinh tồn: voxel hóa tâm gaussian thành bản đồ va chạm, người chơi (trọng lực, nhảy, leo bậc, trượt tường).
 Truy vấn cột dùng khóa 63 bit và \code{np.searchsorted} nên rất rẻ. Toán học: xem mục \textit{Cơ sở toán} ngay bên dưới (\S\ref{s:phys}).
 
 \paragraph{Mô tả đầu file và cách dùng.} Phần chú thích đầu file do tác giả viết, nêu ý tưởng và ví dụ sử dụng:
@@ -1396,7 +1384,6 @@ Kích thước tỉ lệ với chiều cao $H$ (2.74): mắt $0.92H$, bán kính
 \item \textbf{Nhảy:} $v_y=\sqrt{2g\,h_{\mathrm{nhảy}}}$ (từ $v^2=2gh$).
 \item \textbf{Euler:} $v_y\leftarrow v_y-g\Delta t$, $y\leftarrow y+v_y\Delta t$ ($\Delta t$ kẹp $\le0.05$); chạm đất khi $v_y\le0\ \land\ y_{\mathrm{mới}}\le\mathrm{ground}$.
 \item \textbf{Làm mượt mắt:} $\mathrm{eye}_y\mathrel{+}=(\mathrm{target}-\mathrm{eye}_y)\min(18\Delta t,1)$ (lọc mũ, che bậc thang).
-\item \textbf{Đèn rơi} (\code{Lighting._update_lights}, trong file \code{lighting.py}): cùng Euler; khi chạm đất nếu $|v|>0.6H$ thì \textbf{nảy}: $v=-0.35v$ (hệ số phục hồi 0.35), ngược lại nằm yên.
 \end{itemize}
 
 \subsubsection*{Khai báo mức module (dòng 23--31)}
@@ -3170,7 +3157,7 @@ Các phương thức: \code{draw}.
 {\footnotesize\textit{Dòng 236--248}}\par
 \VerbatimInput[firstline=236,lastline=248,firstnumber=236,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/ui/sections.py}
 \subsection{\texorpdfstring{\code{splat_editor/ui/world_sections.py}}{splat_editor/ui/world_sections.py}}
-{\footnotesize 134 dòng}\par
+{\footnotesize 133 dòng}\par
 \textbf{Vai trò.} Hai mục của bảng trái cho ánh sáng và sinh tồn: \code{ModeSection} (chế độ sáng tạo/sinh tồn) và \code{LightingSection} (mặt trời, đèn, bóng).
 
 \paragraph{Mô tả đầu file và cách dùng.} Phần chú thích đầu file do tác giả viết, nêu ý tưởng và ví dụ sử dụng:
@@ -3197,8 +3184,8 @@ Các phương thức: \code{draw}, \code{_draw_sun}, \code{_draw_lights}.
 {\footnotesize\textit{Dòng 88--99}}\par
 \VerbatimInput[firstline=88,lastline=99,firstnumber=88,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/ui/world_sections.py}
 \subsubsection{\texorpdfstring{\code{LightingSection._draw_lights(self, lighting)}}{LightingSection._draw_lights}}
-{\footnotesize\textit{Dòng 101--134}}\par
-\VerbatimInput[firstline=101,lastline=134,firstnumber=101,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/ui/world_sections.py}
+{\footnotesize\textit{Dòng 101--133}}\par
+\VerbatimInput[firstline=101,lastline=133,firstnumber=101,numbers=left,numbersep=3pt,frame=lines,framesep=2pt,rulecolor=\color{gray!60},breaklines=true,fontsize=\fontsize{6.6}{7.6}\selectfont]{../../splat_editor/ui/world_sections.py}
 \subsection{\texorpdfstring{\code{splat_editor/ui/status_bar.py}}{splat_editor/ui/status_bar.py}}
 {\footnotesize 53 dòng}\par
 \textbf{Vai trò.} Thanh trạng thái dưới cùng: thông báo gần nhất bên trái, thống kê bên phải.

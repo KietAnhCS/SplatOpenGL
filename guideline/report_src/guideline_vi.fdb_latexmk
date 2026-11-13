@@ -1,20 +1,20 @@
 # Fdb version 4
-["xdvipdfmx"] 1794546674.06294 "guideline_vi.xdv" "guideline_vi.pdf" "guideline_vi" 1794546674.59034 0
-  "guideline_vi.xdv" 1794546673.50909 4301336 4ccc2ba592da6805d4ed69dc7b69a3d3 "xelatex"
+["xdvipdfmx"] 1794553991.47823 "guideline_vi.xdv" "guideline_vi.pdf" "guideline_vi" 1794553991.99572 0
+  "guideline_vi.xdv" 1794553990.90724 4279052 f0475f2322808f83db6796806ca98187 "xelatex"
   (generated)
   "guideline_vi.pdf"
   (rewritten before read)
-["xelatex"] 1794546667.42899 "guideline_vi.tex" "guideline_vi.xdv" "guideline_vi" 1794546674.57199 0
+["xelatex"] 1794553984.99055 "guideline_vi.tex" "guideline_vi.xdv" "guideline_vi" 1794553991.97832 0
   "../../main.py" 1794055227.9222 380 d935eec834579dfc9b4bb7cc25809327 ""
   "../../splat_editor/__main__.py" 1794502743.43431 257 c29680de53b130f8150808aa5dd16fb0 ""
-  "../../splat_editor/app.py" 1794502748.76934 25888 cd16f491ea160105f6dd10fca0bf2c28 ""
+  "../../splat_editor/app.py" 1794553951.80281 25636 10af828091ce00559e7a4b440ee289cb ""
   "../../splat_editor/core/avatar_pose.py" 1794502869.60334 8473 faed3f39626d74ed50a765936ae0f36f ""
   "../../splat_editor/core/history.py" 1794502876.39712 2422 633142f58e2d811a8b5081bd44ce0a5a ""
   "../../splat_editor/core/layer.py" 1794502883.29164 9293 34c318cbf373339c229a95cacc82ea13 ""
-  "../../splat_editor/core/lighting.py" 1794502887.91724 12555 9f32c7235e223e79f0a927e930748ac8 ""
+  "../../splat_editor/core/lighting.py" 1794553821.73029 10983 231d15c3f5b4209baf89e061e5deb2e5 ""
   "../../splat_editor/core/lod.py" 1794502892.88855 11594 c565337d15cfeb5d4ed67514fb25c0d9 ""
   "../../splat_editor/core/math3d.py" 1794502897.9464 5463 980a04a2e1e037b477a2b7df037f9e17 ""
-  "../../splat_editor/core/physics.py" 1794502903.28521 14482 bf2a13095750a0bda939bbd91099bf54 ""
+  "../../splat_editor/core/physics.py" 1794553951.80381 14452 74849950a4d945017bf5f1f4496a5236 ""
   "../../splat_editor/core/rect.py" 1794502908.56431 1106 0d81c20f6184f5707e5dfab0d25d44bf ""
   "../../splat_editor/core/scene.py" 1794502912.85708 8495 e715f7eb0d8125d5c3f3520abf489d20 ""
   "../../splat_editor/core/sh.py" 1794502917.52655 6720 2ca555afd7fbc5e581e54441b53592f7 ""
@@ -59,7 +59,7 @@
   "../../splat_editor/ui/viewport_overlay.py" 1794502699.90884 5341 806fee0935f55ff173c1be382d6b7e6f ""
   "../../splat_editor/ui/widgets.py" 1794502713.51306 1718 1b243ea4a0fc29da94e0ab890c0d04ec ""
   "../../splat_editor/ui/window.py" 1794502720.56116 1920 97617907d5309d9dea01f76843db09f5 ""
-  "../../splat_editor/ui/world_sections.py" 1794502726.72312 6727 144463c4327d61870d2f78cb5a3266ff ""
+  "../../splat_editor/ui/world_sections.py" 1794553821.77271 6692 d3d7c96ba32f3bca69b8e426ed144b90 ""
   "C:/Users/kelly/AppData/Local/MiKTeX/miktex/data/le/xetex/xelatex.fmt" 1792572223.27402 27176674 bb140bc90770b00da53f83e020756299 ""
   "C:/Users/kelly/AppData/Local/Programs/MiKTeX/fonts/tfm/adobe/zapfding/pzdr.tfm" 1136747054 1528 f853c4d1b4e0550255e02831fdc8496f ""
   "C:/Users/kelly/AppData/Local/Programs/MiKTeX/fonts/tfm/public/cm/cmmi5.tfm" 1136765053 1508 3b32edd0d68f6498a5a375e78f9edc5e ""
@@ -133,10 +133,10 @@
   "C:/Users/kelly/AppData/Local/Programs/MiKTeX/tex/latex/upquote/upquote.sty" 1335534756 1088 c352a232e0e0bfae98e68b206e4febe5 ""
   "C:/Users/kelly/AppData/Local/Programs/MiKTeX/tex/latex/url/url.sty" 1388490452 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
   "C:/Users/kelly/AppData/Local/Programs/MiKTeX/tex/latex/xcolor/xcolor.sty" 1729265222 55384 b454dec21c2d9f45ec0b793f0995b992 ""
-  "guideline_vi.aux" 1794546673.48769 97082 cb7eedceec30e0d0140164658a4356bf "xelatex"
-  "guideline_vi.out" 1794546673.50108 11659 d3938e7dea4d70e8bae245ad9051dbf6 "xelatex"
-  "guideline_vi.tex" 1794546660.21829 359534 cdadbd469e98a3aa179de042e3ad3ff1 ""
-  "guideline_vi.toc" 1794546673.50909 63286 a7bda3037b2713388389c5561f7ec261 "xelatex"
+  "guideline_vi.aux" 1794553990.88353 96919 1620b5992bed2a672ae4f8725f0702bd "xelatex"
+  "guideline_vi.out" 1794553990.89804 11659 d3938e7dea4d70e8bae245ad9051dbf6 "xelatex"
+  "guideline_vi.tex" 1794553972.8784 362265 448eba88583e053bd0c35cf3d23eedd2 ""
+  "guideline_vi.toc" 1794553990.90724 63165 98c8941e6efd30ebd1519608fb0af12a "xelatex"
   "merge_parts/part_10_table.tex" 1794546660.21928 2761 c2e7b1fcc6c28894dd84df2aed4ee4e0 ""
   (generated)
   "guideline_vi.aux"

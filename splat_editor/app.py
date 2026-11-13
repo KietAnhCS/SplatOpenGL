@@ -247,7 +247,7 @@ class Application:
         if light is None:
             self.editor.set_status(f"At most {MAX_LIGHTS} light blocks")
         else:
-            self.editor.set_status(f"{light.name} added: it falls onto the surface below")
+            self.editor.set_status(f"{light.name} added")
 
     def pick_light(self, x, y):
         """Click trong cảnh 3D: chọn khối đèn gần con trỏ nhất (và không bị cảnh che); click ra ngoài: bỏ chọn."""
@@ -418,21 +418,18 @@ class Application:
             current + (distance - current) * min(dt * 6.0, 1.0)
 
     def update_world(self, dt):
-        """Mỗi khung hình: bản đồ va chạm (luồng nền), thời gian trong ngày, khối đèn rơi."""
+        """Mỗi khung hình: bản đồ va chạm (luồng nền), thời gian trong ngày."""
         editor = self.editor
         versions = (editor.geometry_version, editor.transform_version, editor.deleted_version)
         if versions != self._world_versions:
             self._world_versions = versions
             self._update_bounds()
             self.physics.invalidate()
-            for light in self.lighting.lights:
-                light.resting = False
-        lights_fall = any(l.falls and not l.resting for l in self.lighting.lights)
         # cần bản đồ để cảnh che mặt trời và các khối đèn
         sun_visible = self.lighting.enabled and (self.lighting.sun_on or bool(self.lighting.lights))
-        self.physics.ensure_world(editor.scene, self.mode == "survival" or lights_fall or sun_visible)
+        self.physics.ensure_world(editor.scene, self.mode == "survival" or sun_visible)
         self.viewport.occluder = self.physics
-        self.lighting.update(dt, self.physics)
+        self.lighting.update(dt)
         while self.lighting.events:
             editor.set_status(self.lighting.events.pop(0))
         self.viewport.clock += dt

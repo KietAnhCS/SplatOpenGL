@@ -292,7 +292,16 @@ Hình~\ref{fig:rs} cho hai ma trận này. Hình~\ref{fig:ellipsoid} vẽ kết 
 \section{T1: Phép biến đổi và mô hình phân cấp}
 \label{chap:t1}
 %====================================================================
-\textbf{Layer.} Mỗi file \code{.ply} là một layer. Layer có vector tịnh tiến $\mathbf{t}$, ba góc Euler và hệ số co giãn $s$. Chúng tạo thành ma trận $\mathbf{M}$. Ma trận này đưa gaussian từ không gian file sang thế giới:
+Chương này có ba phần. Hai phần đầu di chuyển cả một layer, phần cuối di chuyển một mô hình phân cấp.
+\begin{itemize}\itemsep0pt
+\item \textbf{Phần 1, biến đổi layer.} Đưa gaussian của một file \code{.ply} vào thế giới.
+\item \textbf{Phần 2, quay quanh một điểm.} Quay layer quanh một tâm tùy chọn.
+\item \textbf{Phần 3, bộ xương nhân vật.} Dựng ma trận của nhân vật từ một cây khớp.
+\end{itemize}
+
+\subsection{Phần 1: Biến đổi layer}
+\label{sec:layers}
+Mỗi file \code{.ply} là một layer. Layer có vector tịnh tiến $\mathbf{t}$, ba góc Euler và hệ số co giãn $s$. Chúng tạo thành ma trận $\mathbf{M}$. Ma trận này đưa gaussian từ không gian file sang thế giới:
 \begin{equation}
 \mathbf{p}_w=s\mathbf{A}\mathbf{p}_f+\mathbf{t},\qquad
 \Sig_w=s^{2}\mathbf{A}\,\Sig_f\,\mathbf{A}^{\top}.
@@ -300,12 +309,13 @@ Hình~\ref{fig:rs} cho hai ma trận này. Hình~\ref{fig:ellipsoid} vẽ kết 
 \end{equation}
 Ở đây $\mathbf{A}=\mathbf{R}_z\mathbf{R}_y\mathbf{R}_x\mathbf{F}$. $\mathbf{F}=\mathrm{diag}(-1,-1,1)$ là phép lật tùy chọn cho file COLMAP có trục $Y$ hướng xuống. Dữ liệu gaussian không đổi. Chỉ $\mathbf{M}$ thay đổi. Vì vậy di chuyển, xoay hoặc co giãn một layer diễn ra tức thì. Khi lưu, chương trình ghi phép biến đổi vào từng gaussian. Nó cũng xoay các hệ số SH để màu theo hướng nhìn vẫn đúng.
 
-\textbf{Quay quanh một điểm.} Layer có thể quay quanh điểm $\mathbf{c}$ bằng ma trận $\symbf{\Delta}$:
+\subsection{Phần 2: Quay quanh một điểm}
+Layer có thể quay quanh điểm $\mathbf{c}$ bằng ma trận $\symbf{\Delta}$:
 \begin{equation}
 \mathbf{R}'=\symbf{\Delta}\mathbf{R},\qquad \mathbf{t}'=\symbf{\Delta}(\mathbf{t}-\mathbf{c})+\mathbf{c}.
 \end{equation}
 
-\subsection{Bộ xương nhân vật}
+\subsection{Phần 3: Bộ xương nhân vật}
 \label{sec:skeleton}
 Nhân vật hiện ra khi bấm \code{F5}. Nó có sáu hộp: đầu, thân, hai tay và hai chân. Mỗi hộp có một ma trận riêng. Ma trận này là tích các ma trận khớp từ gốc xuống (Hình~\ref{fig:skeleton}). Mỗi khớp quay quanh một điểm $\mathbf{p}$:
 \begin{equation}
@@ -337,12 +347,12 @@ Chân là con của gốc. Tay và đầu là con của thân, nên chúng nghi�
 %====================================================================
 Một gaussian đi qua bốn bước để thành pixel trên màn hình \cite{zwicker2002ewa}. Mỗi bước là một ô trong Hình~\ref{fig:ewa}, đọc từ trái sang phải.
 \begin{itemize}\itemsep0pt
-\item \textbf{Bước 1, phép biến đổi nhìn} (\emph{viewing transformation}). Đưa gaussian từ không gian vật thể về không gian camera.
-\item \textbf{Bước 2, phép chiếu} (\emph{projective mapping}). Biến ellipsoid 3D thành ellipse 2D.
-\item \textbf{Bước 3, tô màu và trộn} (\emph{shading and integration}). Tính độ đục của từng pixel và trộn các gaussian với nhau.
-\item \textbf{Bước 4, phép biến đổi vùng nhìn} (\emph{viewport transformation}). Đặt kết quả vào vùng nhìn của cửa sổ.
+\item \textbf{Phần 1, phép biến đổi nhìn} (\emph{viewing transformation}). Đưa gaussian từ không gian vật thể về không gian camera.
+\item \textbf{Phần 2, phép chiếu} (\emph{projective mapping}). Biến ellipsoid 3D thành ellipse 2D.
+\item \textbf{Phần 3, tô màu và trộn} (\emph{shading and integration}). Tính độ đục của từng pixel và trộn các gaussian với nhau.
+\item \textbf{Phần 4, phép biến đổi vùng nhìn} (\emph{viewport transformation}). Đặt kết quả vào vùng nhìn của cửa sổ.
 \end{itemize}
-Bốn mục dưới đây đi theo đúng thứ tự này. Mục cuối nói về camera, vì camera cho đầu vào của bước 1.
+Năm phần dưới đây đi theo đúng thứ tự này.
 \begin{figure}[H]
 \centering
 \includegraphics[width=\columnwidth]{figures/1 (3).png}
@@ -350,7 +360,7 @@ Bốn mục dưới đây đi theo đúng thứ tự này. Mục cuối nói v�
 \label{fig:ewa}
 \end{figure}
 
-\subsection{Bước 1: Phép biến đổi nhìn}
+\subsection{Phần 1: Phép biến đổi nhìn}
 \label{sec:cam}
 Bước này đổi hệ tọa độ. Sau bước này, camera nằm ở gốc tọa độ và nhìn dọc theo trục $-z$. Hàm \code{look\_at} tạo ba trục camera từ vị trí mắt $\mathbf{e}$ và điểm nhìn: phải $\mathbf{r}$, lên $\mathbf{u}$ và trước $\mathbf{f}$. Ma trận nhìn là
 \begin{equation}
@@ -363,7 +373,7 @@ Bước này đổi hệ tọa độ. Sau bước này, camera nằm ở gốc t
 \end{equation}
 Tâm gaussian được nhân với $\mathbf{V}$. Kết quả là tâm trong không gian camera $(v_x,v_y,v_z)$. Hình dạng của gaussian chỉ bị quay. Gọi $\mathbf{W}$ là phần quay của $\mathbf{V}$, tức khối $3\times3$ trên trái: $\mathbf{W}=\begin{pmatrix}\mathbf{r}&\mathbf{u}&-\mathbf{f}\end{pmatrix}^{\top}$. Ellipsoid \eqref{eq:cov3d} trong không gian camera là $\mathbf{W}\,\Sig\,\mathbf{W}^{\top}$.
 
-\subsection{Bước 2: Phép chiếu}
+\subsection{Phần 2: Phép chiếu}
 \label{sec:ewa}
 Bước này đưa không gian camera lên mặt phẳng ảnh.
 
@@ -397,7 +407,7 @@ Bước này đưa không gian camera lên mặt phẳng ảnh.
 \end{equation}
 Hai bán trục của ellipse tỉ lệ với $\sqrt{\lambda_1}$ và $\sqrt{\lambda_2}$. Shader vẽ mỗi gaussian thành một hình vuông phủ tối đa 3 độ lệch chuẩn. Nó bỏ các gaussian có tâm ở sau camera hoặc ngoài màn hình quá $1{,}3$ lần.
 
-\subsection{Bước 3: Tô màu và trộn alpha}
+\subsection{Phần 3: Tô màu và trộn alpha}
 \label{sec:blend}
 Bước này cho mỗi pixel một màu. Với mỗi pixel của hình vuông, fragment shader tính khoảng cách $r$ đến tâm ellipse, đo bằng độ lệch chuẩn. Độ đục có dạng hình chuông:
 \begin{equation}
@@ -411,7 +421,7 @@ Các gaussian được vẽ từ xa đến gần và trộn với nhau:
 \end{equation}
 Ở đây $\mathbf{C}_{i-1}$ là màu đã tích lũy trước splat thứ $i$. Kết quả phụ thuộc thứ tự, nên phải sắp xếp theo độ sâu. Chương trình đổi độ sâu sang 16 bit và sắp xếp bằng NumPy trong một luồng nền. Khi chưa sắp xếp xong, nó vẽ tạm bằng thứ tự của lần sắp xếp trước. Depth test được tắt, vì gaussian trong suốt không được che mất gaussian phía sau.
 
-\subsection{Bước 4: Phép biến đổi vùng nhìn}
+\subsection{Phần 4: Phép biến đổi vùng nhìn}
 \label{sec:viewport}
 Bước cuối đổi tọa độ chuẩn hóa $(n_x,n_y)$ của bước 2 sang pixel. Vùng nhìn có kích thước $W\times H$ và góc $(x_0,y_0)$:
 \begin{equation}
@@ -420,7 +430,7 @@ x_{px}=x_0+\tfrac{n_x+1}{2}W,\qquad y_{px}=y_0+\tfrac{1-n_y}{2}H.
 \end{equation}
 OpenGL tự làm bước này khi vẽ. Chương trình cũng dùng công thức này để biết một gaussian nằm ở pixel nào, ví dụ khi chọn bằng cọ (Mục~\ref{chap:t6}).
 
-\subsection{Ba loại camera}
+\subsection{Phần 5: Ba loại camera}
 \textbf{Camera quỹ đạo.} Camera luôn nhìn vào điểm $\mathbf{t}$. Vị trí của nó dùng góc yaw $\theta$, góc pitch $\phi$ và khoảng cách $d$:
 \begin{equation}
 \mathbf{e}=\mathbf{t}+d\,(\cos\phi\sin\theta,\ \sin\phi,\ \cos\phi\cos\theta).
@@ -441,19 +451,66 @@ Pitch bị giới hạn ở khoảng $\pm89^{\circ}$ để camera không lật.
 \section{T3: Ánh xạ texture}
 \label{chap:t3}
 %====================================================================
-Chương trình dùng texture theo ba cách.
+Chương trình dùng texture theo ba cách. Mỗi cách là một mục con bên dưới.
+\begin{itemize}\itemsep0pt
+\item \textbf{Phần 1, skin nhân vật.} Phủ ảnh lên mô hình hộp của nhân vật.
+\item \textbf{Phần 2, dữ liệu dưới dạng texture.} Lưu các gaussian trong texture buffer.
+\item \textbf{Phần 3, nhân thủ tục.} Tính độ đục gaussian trong shader, không cần ảnh.
+\end{itemize}
 
-\textbf{(1) Skin của nhân vật.} Skin là một ảnh $64\times64$, trải theo kiểu chữ thập của Minecraft. Hàm \code{load\_png} tự viết đọc ảnh này. Bộ lọc \code{GL\_NEAREST} giữ các pixel sắc nét. Mỗi mặt hộp có 4 đỉnh riêng. UV của một đỉnh là vị trí pixel chia cho 64. Mỗi hộp được vẽ hai lần: lớp nền và lớp áo. Fragment shader bỏ các pixel trong suốt của lớp áo.
+\subsection{Phần 1: Skin của nhân vật}
+Skin là một ảnh $64\times64$, trải theo kiểu chữ thập của Minecraft. Hàm \code{load\_png} tự viết đọc ảnh này. Bộ lọc \code{GL\_NEAREST} giữ các pixel sắc nét. Mỗi mặt hộp có 4 đỉnh riêng. UV của một đỉnh là vị trí pixel chia cho 64. Mỗi hộp được vẽ hai lần: lớp nền và lớp áo. Fragment shader bỏ các pixel trong suốt của lớp áo.
 
-\textbf{(2) Dữ liệu dưới dạng texture.} Hàng triệu gaussian nằm trong các \emph{texture buffer}. Shader đọc chúng bằng \code{texelFetch}. Có bốn buffer: dữ liệu gaussian, trạng thái chọn/xóa, hệ số SH và ma trận layer. Khi trạng thái hoặc ma trận layer thay đổi, chương trình chỉ ghi lại một buffer nhỏ. Nó không tải lại cả cảnh.
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.45\columnwidth]{figures/skinzom.png}
+\caption{Skin $64\times64$ của nhân vật (trải chữ thập kiểu Minecraft). Mỗi hộp (đầu, thân, tay, chân) có một hình chữ thập riêng, lớp áo (mũ, áo, tay áo) có một hình khác.}
+\label{fig:skin}
+\end{figure}
 
-\textbf{(3) Nhân gaussian thủ tục.} Độ đục $a=\alpha e^{-r^2/2}$ \eqref{eq:gauss} được tính ngay trong fragment shader. Không cần ảnh nào. Shadow map (Mục~\ref{chap:t4}) cũng là một texture.
+\textbf{Hình học của mặt.} Một hộp có gốc $(o_x,o_y)$ trên skin và kích thước $(w,h,d)$. Tâm hộp là $\mathbf{c}$, lớp áo được phồng thêm $\delta$ ($\delta=0$ cho lớp nền, $0{,}25$ cho thân và tay chân, $0{,}5$ cho mũ). Một góc của mặt là $\mathbf{p}=\mathbf{c}+\big(s_x(\tfrac w2+\delta),\,s_y(\tfrac h2+\delta),\,s_z(\tfrac d2+\delta)\big)$ với $s_x,s_y,s_z\in\{-1,+1\}$. 
+
+\textbf{Hình chữ nhật pixel của mỗi mặt.} Mỗi mặt lấy một hình chữ nhật pixel $(r_x,r_y,r_w,r_h)$ từ hình chữ thập:
+\begin{equation}
+\begin{aligned}
+\text{trước }(+Z)&:(o_x{+}d,\;o_y{+}d,\;w,\;h),\\
+\text{sau }(-Z)&:(o_x{+}2d{+}w,\;o_y{+}d,\;w,\;h),\\
+\text{phải }(+X)&:(o_x,\;o_y{+}d,\;d,\;h),\\
+\text{trái }(-X)&:(o_x{+}d{+}w,\;o_y{+}d,\;d,\;h),\\
+\text{trên }(+Y)&:(o_x{+}d,\;o_y,\;w,\;d),\\
+\text{dưới }(-Y)&:(o_x{+}d{+}w,\;o_y,\;w,\;d).
+\end{aligned}
+\label{eq:skin-rect}
+\end{equation}
+\textbf{UV của các góc.} Bốn góc của mặt (trái-trên, phải-trên, phải-dưới, trái-dưới) nhận
+\begin{equation}
+\begin{gathered}
+(u,v)=\Big(\frac{r_x+k\,r_w}{64},\;\frac{r_y+l\,r_h}{64}\Big),\\
+(k,l)\in\{(0,0),(1,0),(1,1),(0,1)\}.
+\end{gathered}
+\label{eq:skin-uv}
+\end{equation}
+\textbf{Lấy mẫu.} Khi vẽ, sampler trả về texel $\big(\lfloor 64u\rfloor,\lfloor 64v\rfloor\big)$ do dùng \code{GL\_NEAREST}.
+
+\subsection{Phần 2: Dữ liệu dưới dạng texture}
+Hàng triệu gaussian nằm trong các \emph{texture buffer}. Shader đọc chúng bằng \code{texelFetch}. Có bốn buffer: dữ liệu gaussian, trạng thái chọn/xóa, hệ số SH và ma trận layer. Khi trạng thái hoặc ma trận layer thay đổi, chương trình chỉ ghi lại một buffer nhỏ. Nó không tải lại cả cảnh.
+
+\subsection{Phần 3: Nhân gaussian thủ tục}
+Độ đục $a=\alpha e^{-r^2/2}$ \eqref{eq:gauss} được tính ngay trong fragment shader. Không cần ảnh nào. Shadow map (Mục~\ref{chap:t4}) cũng là một texture.
 
 %====================================================================
 \section{T4: Ánh sáng và bóng đổ}
 \label{chap:t4}
 %====================================================================
-\subsection{Màu phụ thuộc hướng nhìn}
+Màu cuối của một gaussian được tạo qua bốn phần.
+\begin{itemize}\itemsep0pt
+\item \textbf{Phần 1, màu phụ thuộc hướng nhìn.} Đọc màu gốc từ các hệ số SH.
+\item \textbf{Phần 2, chiếu sáng Phong.} Cộng ánh sáng môi trường, khuếch tán và phản chiếu.
+\item \textbf{Phần 3, mặt trời.} Di chuyển mặt trời và màu trời theo giờ.
+\item \textbf{Phần 4, bóng đổ.} Kiểm tra từng gaussian với shadow map.
+\end{itemize}
+
+\subsection{Phần 1: Màu phụ thuộc hướng nhìn}
 \label{sec:sh}
 Màu của một gaussian thay đổi theo hướng nhìn $\mathbf{d}$. 3DGS lưu điều này bằng các hệ số điều hòa cầu (SH) \cite{kerbl2023gaussian}:
 \begin{equation}
@@ -469,7 +526,7 @@ Màu của một gaussian thay đổi theo hướng nhìn $\mathbf{d}$. 3DGS lư
 \label{fig:sh}
 \end{figure}
 
-\subsection{Chiếu sáng Phong và bóng đổ}
+\subsection{Phần 2: Chiếu sáng Phong}
 Ánh sáng được tính một lần cho mỗi gaussian. Pháp tuyến $\mathbf{n}$ là trục ngắn nhất của ellipsoid, lật về phía camera. Màu cuối dùng mô hình Phong \cite{phong1975}. Mô hình có ba phần (Hình~\ref{fig:phong}). Gọi $\mathbf{c}$ là màu của gaussian.
 
 \textbf{Ambient.} Ánh sáng môi trường $\mathbf{L}_a$ chiếu đều lên mọi gaussian:
@@ -509,9 +566,11 @@ $S_j$ là hệ số bóng đổ của mặt trời, hoặc độ suy giảm theo
 \label{fig:phong}
 \end{figure}
 
-\textbf{Mặt trời.} Hướng mặt trời tính từ giờ $h$ trong ngày. Mặt trời mọc lúc 6 giờ, cao nhất lúc 12 giờ và lặn lúc 18 giờ. Màu trời và ánh sáng môi trường đổi dần giữa ngày và đêm. Chúng hơi cam lúc hoàng hôn (Hình~\ref{fig:t4}).
+\subsection{Phần 3: Mặt trời}
+Hướng mặt trời tính từ giờ $h$ trong ngày. Mặt trời mọc lúc 6 giờ, cao nhất lúc 12 giờ và lặn lúc 18 giờ. Màu trời và ánh sáng môi trường đổi dần giữa ngày và đêm. Chúng hơi cam lúc hoàng hôn (Hình~\ref{fig:t4}).
 
-\textbf{Bóng đổ.} Chương trình vẽ tâm các gaussian đặc thành điểm vào một depth map $2048^2$ nhìn từ mặt trời \cite{williams1978}. Mỗi gaussian được chiếu vào map này để so độ sâu. Nếu có vật gần mặt trời hơn, gaussian nằm trong bóng. Chương trình lấy trung bình $3\times3$ mẫu để làm mềm cạnh bóng (PCF \cite{reeves1987}):
+\subsection{Phần 4: Bóng đổ}
+Chương trình vẽ tâm các gaussian đặc thành điểm vào một depth map $2048^2$ nhìn từ mặt trời \cite{williams1978}. Mỗi gaussian được chiếu vào map này để so độ sâu. Nếu có vật gần mặt trời hơn, gaussian nằm trong bóng. Chương trình lấy trung bình $3\times3$ mẫu để làm mềm cạnh bóng (PCF \cite{reeves1987}):
 \begin{equation}
 S=\frac19\sum_{i,j=-1}^{1}\big[\,z_s-b\le D_s(u_s+i\tau,\,v_s+j\tau)\,\big].
 \label{eq:pcf}
@@ -522,11 +581,28 @@ S=\frac19\sum_{i,j=-1}^{1}\big[\,z_s-b\le D_s(u_s+i\tau,\,v_s+j\tau)\,\big].
 \section{T5: Hoạt họa và mô phỏng}
 \label{chap:t5}
 %====================================================================
-Mọi chuyển động đều nhân với thời gian khung hình $\Delta t$. Nhờ vậy tốc độ ít phụ thuộc vào máy.
+Mọi chuyển động đều nhân với thời gian khung hình $\Delta t$. Nhờ vậy tốc độ ít phụ thuộc vào máy. Có bốn phần, theo thứ tự trong một khung hình.
+\begin{itemize}\itemsep0pt
+\item \textbf{Phần 1, chu kỳ ngày--đêm.} Chạy đồng hồ và di chuyển mặt trời.
+\item \textbf{Phần 2, va chạm voxel.} Biến các gaussian thành voxel đặc.
+\item \textbf{Phần 3, người chơi.} Đi, nhảy và rơi trên các voxel.
+\item \textbf{Phần 4, hoạt họa nhân vật.} Tính góc các khớp của nhân vật.
+\end{itemize}
 
-\textbf{Chu kỳ ngày--đêm.} Đây là một máy trạng thái có 4 trạng thái: NIGHT $\to$ DAWN $\to$ DAY $\to$ DUSK. Đồng hồ tự chạy. Đèn đặt ``bật vào ban đêm'' sẽ bật lúc hoàng hôn và tắt lúc bình minh.
+\subsection{Phần 1: Chu kỳ ngày--đêm}
+Đây là một máy trạng thái có 4 trạng thái: NIGHT $\to$ DAWN $\to$ DAY $\to$ DUSK. Đồng hồ tự chạy. Đèn đặt ``bật vào ban đêm'' sẽ bật lúc hoàng hôn và tắt lúc bình minh. Các trạng thái bắt đầu lúc 5 giờ (DAWN), 7 giờ (DAY), 17 giờ (DUSK) và 19 giờ (NIGHT). Một ngày dài $T_{day}=36$ giây, nên mỗi khung hình giờ tăng $\Delta h = 24\,\Delta t/T_{day}$. Vị trí mặt trời phụ thuộc vào giờ:
+\begin{equation}
+\begin{gathered}
+\theta=\frac{h-6}{12}\pi,\qquad
+\epsilon=65^{\circ}\sin\theta,\
+\mathbf{s}=\big(\cos\epsilon\cos\phi,\;\sin\epsilon,\;\cos\epsilon\sin\phi\big),
+\end{gathered}
+\label{eq:sun}
+\end{equation}
+trong đó $\phi=\phi_0+\theta-\pi/2$ và $\phi_0$ là góc phương vị của mặt trời. Mặt trời mọc lúc 6 giờ, cao nhất lúc 12 giờ và lặn lúc 18 giờ. Hệ số ánh sáng ngày là $D=\operatorname{smoothstep}(-0{,}08,\,0{,}3,\,s_y)$. Màu môi trường và màu bầu trời được trộn giữa giá trị ban đêm và ban ngày theo $D$, bầu trời có thêm sắc cam gần đường chân trời.
 
-\textbf{Va chạm với voxel.} Gaussian không có bề mặt rõ ràng, nên khó tính va chạm trực tiếp. Chương trình chia không gian thành các voxel cạnh $v$. Voxel có đủ gaussian là voxel đặc. Mỗi voxel đặc được lưu thành một số nguyên 64 bit:
+\subsection{Phần 2: Va chạm với voxel}
+Gaussian không có bề mặt rõ ràng, nên khó tính va chạm trực tiếp. Chương trình chia không gian thành các voxel cạnh $v$. Voxel có đủ gaussian là voxel đặc. Mỗi voxel đặc được lưu thành một số nguyên 64 bit:
 \begin{equation}
 \mathbf{c} = \left\lfloor \frac{\mathbf{p}-\mathbf{o}}{v} \right\rfloor,
 \qquad
@@ -552,33 +628,69 @@ Các khóa được sắp xếp. Vì $c_y$ nằm ở các bit thấp, các ô c�
 \label{fig:t5}
 \end{figure}
 
-\textbf{Người chơi.} Hình~\ref{fig:t5} tóm tắt một khung hình. Người chơi là một hình trụ. Khi gặp tường, người chơi trượt dọc theo tường. Người chơi leo được bậc thấp và nhảy được. Khi không đứng trên đất, chương trình tích phân theo Euler:
+\subsection{Phần 3: Người chơi}
+Hình~\ref{fig:t5} tóm tắt một khung hình. Người chơi là một hình trụ. Khi gặp tường, người chơi trượt dọc theo tường. Người chơi leo được bậc thấp và nhảy được.
+
+\textbf{Trọng lực.} Khi không đứng trên đất, chương trình tích phân theo Euler:
 \begin{equation}
 v_y \leftarrow v_y - g\,\Delta t,
 \qquad
 y \leftarrow y + v_y\,\Delta t.
 \label{eq:euler}
 \end{equation}
-Mọi kích thước và tốc độ tỉ lệ theo chiều cao người chơi $H$. Lý do là cảnh 3DGS không có đơn vị cố định.
+\textbf{Tỉ lệ và cú nhảy.} Mọi kích thước và tốc độ tỉ lệ theo chiều cao người chơi $H$. Lý do là cảnh 3DGS không có đơn vị cố định. Các hằng số là: cạnh voxel $v=H/8$, bán kính người chơi $0{,}14H$, chiều cao bậc $0{,}35H$, trọng lực $g=12H$, tốc độ đi $2{,}5H$ mỗi giây (chạy nhanh $\times1{,}7$, đi chậm $\times0{,}4$). Cú nhảy đạt độ cao $0{,}75H$, nên vận tốc lúc bật lên là
+\begin{equation}
+v_0=\sqrt{2\,g\,(0{,}75H)}.
+\label{eq:jump}
+\end{equation}
+\textbf{Làm mượt mắt.} Độ cao mắt được làm mượt khi người chơi đứng trên đất, để bề mặt gaussian gồ ghề không làm rung camera.
 
-\textbf{Hoạt họa nhân vật.} Khi đi, tay và chân đung đưa theo hàm $\sin$ của quãng đường đã đi. Các tư thế khác (ngồi, cúi, vẫy tay) chuyển mượt bằng cùng bộ lọc như \eqref{eq:fly}. Bộ lọc này tránh các cú giật.
+\subsection{Phần 4: Hoạt họa nhân vật}
+Chương trình chỉ tính góc các khớp (đơn vị độ); renderer dựng ma trận. Gọi $d$ là quãng đường đi được trong khung hình này, tính theo chiều cao người. Pha của bước đi tăng theo quãng đường chứ không theo thời gian, nên chân không bị trượt trên đất:
+\begin{equation}
+\psi\leftarrow\psi+1{,}75\cdot2\,d,\qquad
+\theta_{chân}=\pm A\,a\,\sin\psi,\quad
+\theta_{tay}=\mp A\,a\,\sin\psi,
+\label{eq:gait}
+\end{equation}
+với $A=60^{\circ}$. Chân và tay đối diện chuyển động cùng nhau.
+
+\textbf{Trộn trạng thái.} Biên độ $a\in[0,1]$ bám theo tốc độ bằng bộ lọc $x\leftarrow x+(x^{*}-x)\min(1,k\,\Delta t)$ \eqref{eq:fly}, với $k=8$. Cùng bộ lọc này, với $k=7$, trộn các trạng thái khác: ngồi (chân $-90^{\circ}$, thân hạ xuống), cúi (thân nghiêng $28^{\circ}$) và các cử chỉ vẫy tay, zombie, cổ vũ. Hai tư thế được trộn tuyến tính, $\theta=(1-w)\theta_a+w\,\theta_b$, nên cử chỉ hiện ra và mất đi mượt. Khi đứng yên, một số hạng $\sin$ nhỏ làm tay lắc nhẹ để giả lập nhịp thở.
+
+\textbf{Ma trận khớp.} Mỗi chi là một phép quay quanh khớp của nó: $\mathbf{M}=\mathbf{T}(\mathbf{j})\,\mathbf{R}(\theta)\,\mathbf{T}(-\mathbf{j})$, nhân sau ma trận của khối cha, ví dụ tay nhân sau thân.
 
 %====================================================================
 \section{T6: Tương tác và giao diện}
 \label{chap:t6}
 %====================================================================
-\textbf{Xử lý sự kiện.} Sự kiện chuột và bàn phím đến ImGui trước. Nếu ImGui không dùng, chúng đến camera, cọ chọn và các phím tắt.
+Tương tác có bốn phần, từ đầu vào đến màn hình.
+\begin{itemize}\itemsep0pt
+\item \textbf{Phần 1, xử lý sự kiện.} Quyết định ai nhận mỗi sự kiện chuột hoặc phím.
+\item \textbf{Phần 2, chọn bằng cọ.} Chọn gaussian bằng cách tô lên màn hình.
+\item \textbf{Phần 3, xóa mềm và hoàn tác.} Xóa vùng chọn và khôi phục.
+\item \textbf{Phần 4, giao diện.} Bảng điều khiển, HUD và phím tắt.
+\end{itemize}
 
-\textbf{Chọn bằng cọ.} Nhấn \code{B} để bật cọ. Tô lên màn hình để chọn gaussian. Chúng chuyển sang màu vàng. Tâm mỗi gaussian được chiếu thành pixel $\mathbf{p}$ (Mục~\ref{sec:cam}). Một nét vẽ từ $\mathbf{a}$ đến $\mathbf{b}$ là một capsule bán kính $r$. Gaussian được chọn nếu
+\subsection{Phần 1: Xử lý sự kiện}
+Sự kiện chuột và bàn phím đến ImGui trước. Nếu ImGui không dùng, chúng đến camera, cọ chọn và các phím tắt.
+
+\subsection{Phần 2: Chọn bằng cọ}
+Nhấn \code{B} để bật cọ. Tô lên màn hình để chọn gaussian. Chúng chuyển sang màu vàng. Tâm mỗi gaussian được chiếu thành pixel $\mathbf{p}$ (Mục~\ref{sec:cam}). 
+
+\textbf{Kiểm tra capsule.} Một nét vẽ từ $\mathbf{a}$ đến $\mathbf{b}$ là một capsule bán kính $r$. Gaussian được chọn nếu
 \begin{equation}
 \lVert\mathbf{p}-\mathbf{a}-\tau(\mathbf{b}-\mathbf{a})\rVert\le r,\quad \tau=\operatorname{clip}\tfrac{(\mathbf{p}-\mathbf{a})\cdot(\mathbf{b}-\mathbf{a})}{\lVert\mathbf{b}-\mathbf{a}\rVert^2}\in[0,1].
 \label{eq:capsule}
 \end{equation}
-Tức là khoảng cách từ $\mathbf{p}$ đến đoạn $\mathbf{ab}$ không quá $r$. Cọ chỉ xét tâm gaussian và không kiểm tra độ sâu. Vì vậy nó chọn xuyên qua cảnh, giống SuperSplat \cite{supersplat}. Để nhanh, cọ loại cả khối 1024 gaussian khi hộp bao của khối nằm ngoài nét vẽ.
+Tức là khoảng cách từ $\mathbf{p}$ đến đoạn $\mathbf{ab}$ không quá $r$. 
 
-\textbf{Xóa mềm và hoàn tác.} Mỗi gaussian có một byte trạng thái trên GPU với hai bit: \emph{đã chọn} và \emph{đã xóa}. Lệnh \code{Delete} chỉ bật bit ``đã xóa''. Shader bỏ qua các gaussian này. Dữ liệu gốc không đổi. Mỗi lần xóa là một lệnh trong \code{History} (mẫu Command \cite{gamma1994design}, tối đa 20 bước). \code{Ctrl+Z} khôi phục lệnh cuối.
+\textbf{Tính chất.} Cọ chỉ xét tâm gaussian và không kiểm tra độ sâu. Vì vậy nó chọn xuyên qua cảnh, giống SuperSplat \cite{supersplat}. Để nhanh, cọ loại cả khối 1024 gaussian khi hộp bao của khối nằm ngoài nét vẽ.
 
-\textbf{Giao diện.} Bảng ImGui bên trái điều khiển layer, phép biến đổi, vùng chọn, chế độ camera và ánh sáng. HUD hiển thị tâm ngắm, đồng hồ, vị trí và vòng tròn cọ. Bảng~\ref{tab:keys} liệt kê các phím chính.
+\subsection{Phần 3: Xóa mềm và hoàn tác}
+Mỗi gaussian có một byte trạng thái trên GPU với hai bit: \emph{đã chọn} và \emph{đã xóa}. Lệnh \code{Delete} chỉ bật bit ``đã xóa''. Shader bỏ qua các gaussian này. Dữ liệu gốc không đổi. Mỗi lần xóa là một lệnh trong \code{History} (mẫu Command \cite{gamma1994design}, tối đa 20 bước). \code{Ctrl+Z} khôi phục lệnh cuối.
+
+\subsection{Phần 4: Giao diện}
+Bảng ImGui bên trái điều khiển layer, phép biến đổi, vùng chọn, chế độ camera và ánh sáng. HUD hiển thị tâm ngắm, đồng hồ, vị trí và vòng tròn cọ. Bảng~\ref{tab:keys} liệt kê các phím chính.
 \begin{table}[H]
 \centering
 \caption{Các phím điều khiển chính.}

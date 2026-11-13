@@ -1,4 +1,4 @@
-PWD C:\Users\kelly\OneDrive\Desktop\GS\supersplatOpenGL\report-vn
+PWD C:\Users\kelly\OneDrive\Desktop\SplatOpenGL\report
 INPUT C:\Users\kelly\AppData\Local\MiKTeX\miktex\data\le\xetex\xelatex.fmt
 INPUT main_vi.tex
 OUTPUT main_vi.log
@@ -325,6 +325,9 @@ INPUT .\figures\t4-dusk.png
 INPUT .\figures\1 (3).png
 INPUT .\figures\1 (3).png
 INPUT .\figures\1 (3).png
+INPUT .\figures\skinzom.png
+INPUT .\figures\skinzom.png
+INPUT .\figures\skinzom.png
 INPUT .\figures\1 (1).png
 INPUT .\figures\1 (1).png
 INPUT .\figures\1 (1).png

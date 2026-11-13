@@ -282,7 +282,16 @@ Fig.~\ref{fig:rs} gives the two matrices. Fig.~\ref{fig:ellipsoid} draws the res
 \section{T1: Transformations and hierarchical models}
 \label{chap:t1}
 %====================================================================
-\textbf{Layers.} Each \code{.ply} file is a layer. A layer has a translation vector $\mathbf{t}$, three Euler angles and a scale factor $s$. They form the matrix $\mathbf{M}$. This matrix takes a gaussian from file space to world space:
+This chapter has three parts. The first two move a whole layer, the last one moves a hierarchical model.
+\begin{itemize}\itemsep0pt
+\item \textbf{Part 1, layer transformation.} Put a gaussian of a \code{.ply} file into the world.
+\item \textbf{Part 2, rotation about a point.} Rotate a layer around a chosen centre.
+\item \textbf{Part 3, character skeleton.} Build the matrices of the character from a hierarchy of joints.
+\end{itemize}
+
+\subsection{Part 1: Layer transformation}
+\label{sec:layers}
+Each \code{.ply} file is a layer. A layer has a translation vector $\mathbf{t}$, three Euler angles and a scale factor $s$. They form the matrix $\mathbf{M}$. This matrix takes a gaussian from file space to world space:
 \begin{equation}
 \mathbf{p}_w=s\mathbf{A}\mathbf{p}_f+\mathbf{t},\qquad
 \Sig_w=s^{2}\mathbf{A}\,\Sig_f\,\mathbf{A}^{\top}.
@@ -290,12 +299,13 @@ Fig.~\ref{fig:rs} gives the two matrices. Fig.~\ref{fig:ellipsoid} draws the res
 \end{equation}
 Here $\mathbf{A}=\mathbf{R}_z\mathbf{R}_y\mathbf{R}_x\mathbf{F}$. $\mathbf{F}=\mathrm{diag}(-1,-1,1)$ is an optional flip for COLMAP files, whose $Y$ axis points down. The gaussian data does not change. Only $\mathbf{M}$ changes. So moving, rotating or scaling a layer is instant. On save, the program writes the transform into every gaussian. It also rotates the SH coefficients so the view-dependent colour stays correct.
 
-\textbf{Rotation about a point.} A layer can rotate about a point $\mathbf{c}$ with a matrix $\symbf{\Delta}$:
+\subsection{Part 2: Rotation about a point}
+A layer can rotate about a point $\mathbf{c}$ with a matrix $\symbf{\Delta}$:
 \begin{equation}
 \mathbf{R}'=\symbf{\Delta}\mathbf{R},\qquad \mathbf{t}'=\symbf{\Delta}(\mathbf{t}-\mathbf{c})+\mathbf{c}.
 \end{equation}
 
-\subsection{The character skeleton}
+\subsection{Part 3: Character skeleton}
 \label{sec:skeleton}
 The character appears when you press \code{F5}. It has six boxes: head, body, two arms and two legs. Each box has its own matrix. This matrix is the product of the joint matrices from the root down (Fig.~\ref{fig:skeleton}). Each joint rotates about a point $\mathbf{p}$:
 \begin{equation}
@@ -326,12 +336,13 @@ The legs are children of the root. The arms and head are children of the body, s
 %====================================================================
 A gaussian goes through four steps to become pixels on the screen \cite{zwicker2002ewa}. Each step is one box in Fig.~\ref{fig:ewa}, read from left to right.
 \begin{itemize}\itemsep0pt
-\item \textbf{Step 1, viewing transformation.} Move the gaussian from object space to camera space.
-\item \textbf{Step 2, projective mapping.} Turn the 3D ellipsoid into a 2D ellipse.
-\item \textbf{Step 3, shading and integration.} Compute the opacity of each pixel and blend the gaussians together.
-\item \textbf{Step 4, viewport transformation.} Place the result in the viewport of the window.
+\item \textbf{Part 1, viewing transformation.} Move the gaussian from object space to camera space.
+\item \textbf{Part 2, projective mapping.} Turn the 3D ellipsoid into a 2D ellipse.
+\item \textbf{Part 3, shading and integration.} Compute the opacity of each pixel and blend the gaussians together.
+\item \textbf{Part 4, viewport transformation.} Place the result in the viewport of the window.
+\item \textbf{Part 5, three cameras.} The camera gives the input of part 1.
 \end{itemize}
-The four subsections below follow this order. The last subsection is about the cameras, because the camera gives the input of step 1.
+The five parts below follow this order.
 \begin{figure}[H]
 \centering
 \includegraphics[width=\columnwidth]{figures/1 (3).png}
@@ -339,7 +350,7 @@ The four subsections below follow this order. The last subsection is about the c
 \label{fig:ewa}
 \end{figure}
 
-\subsection{Step 1: Viewing transformation}
+\subsection{Part 1: Viewing transformation}
 \label{sec:cam}
 This step changes the coordinate system. After it, the camera is at the origin and looks along the $-z$ axis. The \code{look\_at} function builds three camera axes from the eye position $\mathbf{e}$ and the target: right $\mathbf{r}$, up $\mathbf{u}$ and forward $\mathbf{f}$. The view matrix is
 \begin{equation}
@@ -352,7 +363,7 @@ This step changes the coordinate system. After it, the camera is at the origin a
 \end{equation}
 The centre of the gaussian is multiplied by $\mathbf{V}$. The result is the centre in camera space $(v_x,v_y,v_z)$. The shape of the gaussian is only rotated. Let $\mathbf{W}$ be the rotation part of $\mathbf{V}$, that is its top-left $3\times3$ block: $\mathbf{W}=\begin{pmatrix}\mathbf{r}&\mathbf{u}&-\mathbf{f}\end{pmatrix}^{\top}$. The ellipsoid \eqref{eq:cov3d} in camera space is $\mathbf{W}\,\Sig\,\mathbf{W}^{\top}$.
 
-\subsection{Step 2: Projective mapping}
+\subsection{Part 2: Projective mapping}
 \label{sec:ewa}
 This step takes camera space to the image plane.
 
@@ -386,7 +397,7 @@ Here $\Sig$ is the 3D covariance \eqref{eq:cov3d}. $\mathbf{W}$ is the rotation 
 \end{equation}
 The two semi-axes of the ellipse are proportional to $\sqrt{\lambda_1}$ and $\sqrt{\lambda_2}$. The shader draws each gaussian as a quad covering at most 3 standard deviations. It drops gaussians whose centre is behind the camera or more than $1.3$ times outside the screen.
 
-\subsection{Step 3: Shading and alpha blending}
+\subsection{Part 3: Shading and alpha blending}
 \label{sec:blend}
 This step gives each pixel a colour. For each pixel of the quad, the fragment shader finds the distance $r$ to the centre of the ellipse, measured in standard deviations. The opacity has a bell shape:
 \begin{equation}
@@ -400,7 +411,7 @@ The gaussians are drawn from far to near and blended:
 \end{equation}
 Here $\mathbf{C}_{i-1}$ is the colour accumulated before splat $i$. The result depends on the order, so we must sort by depth. The program converts depth to 16 bits and sorts it with NumPy in a background thread. Until the sort is done, it draws with the order of the previous sort. The depth test is turned off, because a transparent gaussian must not hide the gaussians behind it.
 
-\subsection{Step 4: Viewport transformation}
+\subsection{Part 4: Viewport transformation}
 \label{sec:viewport}
 The last step converts the normalised coordinates $(n_x,n_y)$ of step 2 to pixels. The viewport has size $W\times H$ and corner $(x_0,y_0)$:
 \begin{equation}
@@ -409,7 +420,7 @@ x_{px}=x_0+\tfrac{n_x+1}{2}W,\qquad y_{px}=y_0+\tfrac{1-n_y}{2}H.
 \end{equation}
 OpenGL does this step itself when drawing. The program also uses this formula to know which pixel a gaussian is on, for example in brush selection (Section~\ref{chap:t6}).
 
-\subsection{Three cameras}
+\subsection{Part 5: Three cameras}
 \textbf{Orbit camera.} The camera always looks at a point $\mathbf{t}$. Its position uses a yaw angle $\theta$, a pitch angle $\phi$ and a distance $d$:
 \begin{equation}
 \mathbf{e}=\mathbf{t}+d\,(\cos\phi\sin\theta,\ \sin\phi,\ \cos\phi\cos\theta).
@@ -431,19 +442,66 @@ The pitch is limited to about $\pm89^{\circ}$ so the camera does not flip.
 \section{T3: Texture mapping}
 \label{chap:t3}
 %====================================================================
-The program uses textures in three ways.
+The program uses textures in three ways. Each way is one subsection below.
+\begin{itemize}\itemsep0pt
+\item \textbf{Part 1, character skin.} Paint the box model of the character with an image.
+\item \textbf{Part 2, data as textures.} Store the gaussians in texture buffers.
+\item \textbf{Part 3, procedural kernel.} Compute the gaussian opacity in the shader, with no image.
+\end{itemize}
 
-\textbf{(1) The character skin.} The skin is a $64\times64$ image in the Minecraft cross layout. My own \code{load\_png} function reads it. The \code{GL\_NEAREST} filter keeps the pixels sharp. Each box face has its own 4 vertices. The UV of a vertex is its pixel position divided by 64. Each box is drawn twice: a base layer and an overlay layer. The fragment shader discards the transparent pixels of the overlay.
+\subsection{Part 1: Character skin}
+The skin is a $64\times64$ image in the Minecraft cross layout. My own \code{load\_png} function reads it. The \code{GL\_NEAREST} filter keeps the pixels sharp. Each box face has its own 4 vertices. The UV of a vertex is its pixel position divided by 64. Each box is drawn twice: a base layer and an overlay layer. The fragment shader discards the transparent pixels of the overlay.
 
-\textbf{(2) Data as textures.} The millions of gaussians live in \emph{texture buffers}. The shader reads them with \code{texelFetch}. There are four buffers: gaussian data, selected/deleted state, SH coefficients and layer matrices. When the state or a layer matrix changes, the program rewrites only one small buffer. It does not upload the whole scene again.
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.45\columnwidth]{figures/skinzom.png}
+\caption{The $64\times64$ skin used for the character (Minecraft cross layout). Each box (head, body, arms, legs) owns one cross, and the overlay (hat, jacket, sleeves) has another.}
+\label{fig:skin}
+\end{figure}
 
-\textbf{(3) Procedural gaussian kernel.} The opacity $a=\alpha e^{-r^2/2}$ \eqref{eq:gauss} is computed directly in the fragment shader. No image is needed. The shadow map (Section~\ref{chap:t4}) is also a texture.
+\textbf{Face geometry.} A box has origin $(o_x,o_y)$ in the skin and size $(w,h,d)$. Its centre is $\mathbf{c}$ and its overlay layer is inflated by $\delta$ ($\delta=0$ for the base, $0.25$ for body and limbs, $0.5$ for the hat). A corner of a face is $\mathbf{p}=\mathbf{c}+\big(s_x(\tfrac w2+\delta),\,s_y(\tfrac h2+\delta),\,s_z(\tfrac d2+\delta)\big)$ with $s_x,s_y,s_z\in\{-1,+1\}$. 
+
+\textbf{Pixel rectangle of each face.} Each face takes a pixel rectangle $(r_x,r_y,r_w,r_h)$ from the cross:
+\begin{equation}
+\begin{aligned}
+\text{front }(+Z)&:(o_x{+}d,\;o_y{+}d,\;w,\;h),\\
+\text{back }(-Z)&:(o_x{+}2d{+}w,\;o_y{+}d,\;w,\;h),\\
+\text{right }(+X)&:(o_x,\;o_y{+}d,\;d,\;h),\\
+\text{left }(-X)&:(o_x{+}d{+}w,\;o_y{+}d,\;d,\;h),\\
+\text{top }(+Y)&:(o_x{+}d,\;o_y,\;w,\;d),\\
+\text{bottom }(-Y)&:(o_x{+}d{+}w,\;o_y,\;w,\;d).
+\end{aligned}
+\label{eq:skin-rect}
+\end{equation}
+\textbf{UV of the corners.} The four corners of the face (top-left, top-right, bottom-right, bottom-left) get
+\begin{equation}
+\begin{gathered}
+(u,v)=\Big(\frac{r_x+k\,r_w}{64},\;\frac{r_y+l\,r_h}{64}\Big),\\
+(k,l)\in\{(0,0),(1,0),(1,1),(0,1)\}.
+\end{gathered}
+\label{eq:skin-uv}
+\end{equation}
+\textbf{Sampling.} At draw time the sampler returns the texel $\big(\lfloor 64u\rfloor,\lfloor 64v\rfloor\big)$ because of \code{GL\_NEAREST}.
+
+\subsection{Part 2: Data as textures}
+The millions of gaussians live in \emph{texture buffers}. The shader reads them with \code{texelFetch}. There are four buffers: gaussian data, selected/deleted state, SH coefficients and layer matrices. When the state or a layer matrix changes, the program rewrites only one small buffer. It does not upload the whole scene again.
+
+\subsection{Part 3: Procedural gaussian kernel}
+The opacity $a=\alpha e^{-r^2/2}$ \eqref{eq:gauss} is computed directly in the fragment shader. No image is needed. The shadow map (Section~\ref{chap:t4}) is also a texture.
 
 %====================================================================
 \section{T4: Lighting and shadows}
 \label{chap:t4}
 %====================================================================
-\subsection{View-dependent colour}
+The final colour of a gaussian is made in four parts.
+\begin{itemize}\itemsep0pt
+\item \textbf{Part 1, view-dependent colour.} Read the base colour from the SH coefficients.
+\item \textbf{Part 2, Phong lighting.} Add ambient, diffuse and specular light.
+\item \textbf{Part 3, the sun.} Move the sun and the sky colour with the hour.
+\item \textbf{Part 4, shadows.} Test each gaussian against a shadow map.
+\end{itemize}
+
+\subsection{Part 1: View-dependent colour}
 \label{sec:sh}
 The colour of a gaussian changes with the view direction $\mathbf{d}$. 3DGS stores this with spherical harmonics (SH) coefficients \cite{kerbl2023gaussian}:
 \begin{equation}
@@ -459,7 +517,7 @@ Here $\mathbf{c}_0$ is the base colour, $\mathbf{h}_k$ are the coefficients in t
 \label{fig:sh}
 \end{figure}
 
-\subsection{Phong lighting and shadows}
+\subsection{Part 2: Phong lighting}
 Lighting is computed once per gaussian. The normal $\mathbf{n}$ is the shortest axis of the ellipsoid, flipped towards the camera. The final colour uses the Phong model \cite{phong1975}. It has three parts (Fig.~\ref{fig:phong}). Let $\mathbf{c}$ be the colour of the gaussian.
 
 \textbf{Ambient.} The ambient light $\mathbf{L}_a$ reaches every gaussian equally:
@@ -500,9 +558,11 @@ $S_j$ is the shadow factor of the sun, or the distance falloff of a point light.
 \end{figure}
 
 
-\textbf{The sun.} The sun direction is computed from the hour $h$ of the day. The sun rises at 6, is highest at 12 and sets at 18. The sky colour and the ambient light change gradually between day and night. They are slightly orange at dusk (Fig.~\ref{fig:t4}).
+\subsection{Part 3: The sun}
+The sun direction is computed from the hour $h$ of the day. The sun rises at 6, is highest at 12 and sets at 18. The sky colour and the ambient light change gradually between day and night. They are slightly orange at dusk (Fig.~\ref{fig:t4}).
 
-\textbf{Shadows.} The program draws the centres of the solid gaussians as points into a $2048^2$ depth map seen from the sun \cite{williams1978}. Each gaussian is projected into this map to compare depths. If something is closer to the sun, the gaussian is in shadow. The program averages $3\times3$ samples to soften the shadow edge (PCF \cite{reeves1987}):
+\subsection{Part 4: Shadows}
+The program draws the centres of the solid gaussians as points into a $2048^2$ depth map seen from the sun \cite{williams1978}. Each gaussian is projected into this map to compare depths. If something is closer to the sun, the gaussian is in shadow. The program averages $3\times3$ samples to soften the shadow edge (PCF \cite{reeves1987}):
 \begin{equation}
 S=\frac19\sum_{i,j=-1}^{1}\big[\,z_s-b\le D_s(u_s+i\tau,\,v_s+j\tau)\,\big].
 \label{eq:pcf}
@@ -513,11 +573,28 @@ Here $(u_s,v_s,z_s)$ are the coordinates of the gaussian in the map, $D_s$ is th
 \section{T5: Animation and simulation}
 \label{chap:t5}
 %====================================================================
-Every motion is multiplied by the frame time $\Delta t$. So the speed depends little on the machine.
+Every motion is multiplied by the frame time $\Delta t$. So the speed depends little on the machine. There are four parts, in the order of one frame.
+\begin{itemize}\itemsep0pt
+\item \textbf{Part 1, day--night cycle.} Advance the clock and move the sun.
+\item \textbf{Part 2, voxel collision.} Turn the gaussians into solid voxels.
+\item \textbf{Part 3, the player.} Walk, jump and fall on the voxels.
+\item \textbf{Part 4, character animation.} Compute the joint angles of the character.
+\end{itemize}
 
-\textbf{Day--night cycle.} This is a state machine with 4 states: NIGHT $\to$ DAWN $\to$ DAY $\to$ DUSK. The clock runs by itself. Lights set to ``on at night'' turn on at dusk and off at dawn.
+\subsection{Part 1: Day--night cycle}
+This is a state machine with 4 states: NIGHT $\to$ DAWN $\to$ DAY $\to$ DUSK. The clock runs by itself. Lights set to ``on at night'' turn on at dusk and off at dawn. The states start at hour 5 (DAWN), 7 (DAY), 17 (DUSK) and 19 (NIGHT). One day lasts $T_{day}=36$ s, so the hour advances by $\Delta h = 24\,\Delta t/T_{day}$ each frame. The sun position follows the hour:
+\begin{equation}
+\begin{gathered}
+\theta=\frac{h-6}{12}\pi,\qquad
+\epsilon=65^{\circ}\sin\theta,\
+\mathbf{s}=\big(\cos\epsilon\cos\phi,\;\sin\epsilon,\;\cos\epsilon\sin\phi\big),
+\end{gathered}
+\label{eq:sun}
+\end{equation}
+where $\phi=\phi_0+\theta-\pi/2$ and $\phi_0$ is the sun azimuth. The sun rises at 6, is highest at 12 and sets at 18. The daylight factor is $D=\operatorname{smoothstep}(-0.08,\,0.3,\,s_y)$. The ambient colour and the sky colour are mixed between a night value and a day value with $D$, and the sky gets an orange tint near the horizon.
 
-\textbf{Collision with voxels.} A gaussian has no clear surface, so direct collision is hard. The program divides space into voxels of edge $v$. A voxel with enough gaussians is solid. Each solid voxel is stored as one 64-bit integer:
+\subsection{Part 2: Collision with voxels}
+A gaussian has no clear surface, so direct collision is hard. The program divides space into voxels of edge $v$. A voxel with enough gaussians is solid. Each solid voxel is stored as one 64-bit integer:
 \begin{equation}
 \mathbf{c} = \left\lfloor \frac{\mathbf{p}-\mathbf{o}}{v} \right\rfloor,
 \qquad
@@ -543,33 +620,69 @@ The keys are sorted. Because $c_y$ is in the low bits, the cells of one column s
 \label{fig:t5}
 \end{figure}
 
-\textbf{The player.} Fig.~\ref{fig:t5} summarises one frame. The player is a cylinder. At a wall, the player slides along it. The player can climb a low step and can jump. When not on the ground, the program integrates with Euler steps:
+\subsection{Part 3: The player}
+Fig.~\ref{fig:t5} summarises one frame. The player is a cylinder. At a wall, the player slides along it. The player can climb a low step and can jump.
+
+\textbf{Gravity.} When not on the ground, the program integrates with Euler steps:
 \begin{equation}
 v_y \leftarrow v_y - g\,\Delta t,
 \qquad
 y \leftarrow y + v_y\,\Delta t.
 \label{eq:euler}
 \end{equation}
-All sizes and speeds scale with the player height $H$. The reason is that a 3DGS scene has no fixed unit.
+\textbf{Scale and jump.} All sizes and speeds scale with the player height $H$. The reason is that a 3DGS scene has no fixed unit. The constants are: voxel edge $v=H/8$, player radius $0.14H$, step height $0.35H$, gravity $g=12H$, walking speed $2.5H$ per second (sprint $\times1.7$, sneak $\times0.4$). A jump reaches the height $0.75H$, so the take-off speed is
+\begin{equation}
+v_0=\sqrt{2\,g\,(0.75H)}.
+\label{eq:jump}
+\end{equation}
+\textbf{Eye smoothing.} The eye height is smoothed while the player stands on the ground, so the rough gaussian surface does not shake the camera.
 
-\textbf{Character animation.} When walking, the arms and legs swing with the $\sin$ of the distance walked. Other poses (sit, bow, wave) change smoothly with the same filter as \eqref{eq:fly}. This filter avoids sudden jumps.
+\subsection{Part 4: Character animation}
+Only the joint angles are computed (in degrees); the renderer builds the matrices. Let $d$ be the distance walked in this frame, in units of the player height. The gait phase grows with the distance, not with time, so the legs never slide on the ground:
+\begin{equation}
+\psi\leftarrow\psi+1.75\cdot2\,d,\qquad
+\theta_{leg}=\pm A\,a\,\sin\psi,\quad
+\theta_{arm}=\mp A\,a\,\sin\psi,
+\label{eq:gait}
+\end{equation}
+with $A=60^{\circ}$. The leg and the opposite arm move together.
+
+\textbf{Blending states.} The amplitude $a\in[0,1]$ follows the speed with the filter $x\leftarrow x+(x^{*}-x)\min(1,k\,\Delta t)$ \eqref{eq:fly}, with $k=8$. The same filter, with $k=7$, blends the other states: sit (legs $-90^{\circ}$, body lowered), crouch (body leaning $28^{\circ}$) and the gestures wave, zombie and cheer. Two poses are mixed linearly, $\theta=(1-w)\theta_a+w\,\theta_b$, so a gesture fades in and out. When standing, a small $\sin$ term moves the arms to imitate breathing.
+
+\textbf{Joint matrices.} Each limb is a rotation about its joint: $\mathbf{M}=\mathbf{T}(\mathbf{j})\,\mathbf{R}(\theta)\,\mathbf{T}(-\mathbf{j})$ applied after the parent matrix, for example the arm after the torso.
 
 %====================================================================
 \section{T6: Interaction and GUI}
 \label{chap:t6}
 %====================================================================
-\textbf{Event handling.} Mouse and keyboard events go to ImGui first. If ImGui does not use them, they go to the camera, the selection brush and the shortcuts.
+The interaction has four parts, from the input to the screen.
+\begin{itemize}\itemsep0pt
+\item \textbf{Part 1, event handling.} Decide who receives each mouse or keyboard event.
+\item \textbf{Part 2, brush selection.} Select gaussians by painting on the screen.
+\item \textbf{Part 3, soft delete and undo.} Delete the selection and restore it.
+\item \textbf{Part 4, interface.} Panel, HUD and shortcuts.
+\end{itemize}
 
-\textbf{Brush selection.} Press \code{B} to turn on the brush. Paint on the screen to select gaussians. They turn yellow. The centre of each gaussian is projected to a pixel $\mathbf{p}$ (Section~\ref{sec:cam}). A stroke from $\mathbf{a}$ to $\mathbf{b}$ is a capsule of radius $r$. A gaussian is selected if
+\subsection{Part 1: Event handling}
+Mouse and keyboard events go to ImGui first. If ImGui does not use them, they go to the camera, the selection brush and the shortcuts.
+
+\subsection{Part 2: Brush selection}
+Press \code{B} to turn on the brush. Paint on the screen to select gaussians. They turn yellow. The centre of each gaussian is projected to a pixel $\mathbf{p}$ (Section~\ref{sec:cam}). 
+
+\textbf{Capsule test.} A stroke from $\mathbf{a}$ to $\mathbf{b}$ is a capsule of radius $r$. A gaussian is selected if
 \begin{equation}
 \lVert\mathbf{p}-\mathbf{a}-\tau(\mathbf{b}-\mathbf{a})\rVert\le r,\quad \tau=\operatorname{clip}\tfrac{(\mathbf{p}-\mathbf{a})\cdot(\mathbf{b}-\mathbf{a})}{\lVert\mathbf{b}-\mathbf{a}\rVert^2}\in[0,1].
 \label{eq:capsule}
 \end{equation}
-That is, the distance from $\mathbf{p}$ to the segment $\mathbf{ab}$ is at most $r$. The brush tests only the gaussian centre and does not test depth. So it selects through the scene, like SuperSplat \cite{supersplat}. For speed, the brush rejects a whole block of 1024 gaussians when the bounding box of the block is outside the stroke.
+That is, the distance from $\mathbf{p}$ to the segment $\mathbf{ab}$ is at most $r$. 
 
-\textbf{Soft delete and undo.} Each gaussian has one state byte on the GPU with two bits: \emph{selected} and \emph{deleted}. The \code{Delete} command only sets the ``deleted'' bit. The shader skips these gaussians. The original data does not change. Each delete is one command in \code{History} (Command pattern \cite{gamma1994design}, at most 20 steps). \code{Ctrl+Z} restores the last command.
+\textbf{Properties.} The brush tests only the gaussian centre and does not test depth. So it selects through the scene, like SuperSplat \cite{supersplat}. For speed, the brush rejects a whole block of 1024 gaussians when the bounding box of the block is outside the stroke.
 
-\textbf{Interface.} The ImGui panel on the left controls layers, transforms, selection, camera mode and lighting. The HUD shows the crosshair, the clock, the position and the brush circle. Table~\ref{tab:keys} lists the main keys.
+\subsection{Part 3: Soft delete and undo}
+Each gaussian has one state byte on the GPU with two bits: \emph{selected} and \emph{deleted}. The \code{Delete} command only sets the ``deleted'' bit. The shader skips these gaussians. The original data does not change. Each delete is one command in \code{History} (Command pattern \cite{gamma1994design}, at most 20 steps). \code{Ctrl+Z} restores the last command.
+
+\subsection{Part 4: Interface}
+The ImGui panel on the left controls layers, transforms, selection, camera mode and lighting. The HUD shows the crosshair, the clock, the position and the brush circle. Table~\ref{tab:keys} lists the main keys.
 \begin{table}[H]
 \centering
 \caption{Main controls.}

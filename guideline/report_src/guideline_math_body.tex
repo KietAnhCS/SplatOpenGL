@@ -388,7 +388,6 @@ Kích thước tỉ lệ với chiều cao $H$ (2.74): mắt $0.92H$, bán kính
 \item \textbf{Nhảy:} $v_y=\sqrt{2g\,h_{\mathrm{nhảy}}}$ (từ $v^2=2gh$).
 \item \textbf{Euler:} $v_y\leftarrow v_y-g\Delta t$, $y\leftarrow y+v_y\Delta t$ ($\Delta t$ kẹp $\le0.05$); chạm đất khi $v_y\le0\ \land\ y_{\mathrm{mới}}\le\mathrm{ground}$.
 \item \textbf{Làm mượt mắt:} $\mathrm{eye}_y\mathrel{+}=(\mathrm{target}-\mathrm{eye}_y)\min(18\Delta t,1)$ (lọc mũ, che bậc thang).
-\item \textbf{Đèn rơi} (\code{Lighting._update_lights}): cùng Euler; khi chạm đất nếu $|v|>0.6H$ thì \textbf{nảy}: $v=-0.35v$ (hệ số phục hồi 0.35), ngược lại nằm yên.
 \end{itemize}
 
 %====================================================================
