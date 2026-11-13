@@ -25,6 +25,7 @@ from .shader import ShaderProgram
 SKIN_PATH = Path(__file__).parent / "textures" / "skinzom.png"
 LIMB_INFLATE = 0.25      # lớp áo của thân / tay / chân phồng hơn lớp nền nửa điểm ảnh (như Minecraft)
 HAT_INFLATE = 0.5        # mũ trên đầu phồng gấp đôi
+SKIN_SIZE = 64.0         # ảnh skin 64x64 điểm ảnh (chia toạ độ pixel cho số này ra UV 0..1)
 
 # 4 góc mỗi mặt (dấu +/-1 trên x, y, z), thứ tự: trái-trên, phải-trên, phải-dưới, trái-dưới của ô skin.
 # Mặt: trước (+Z), sau (-Z), phải (+X), trái (-X), trên (+Y), dưới (-Y).
@@ -103,21 +104,30 @@ def load_png(path):
 
 
 def _uv_region(face, ox, oy, w, h, d):
-    """Ô skin của một mặt hộp theo kiểu trải chữ thập của Minecraft: (x, y, rộng, cao)."""
-    return ((ox + d, oy + d, w, h), (ox + 2 * d + w, oy + d, w, h), (ox, oy + d, d, h),
-            (ox + d + w, oy + d, d, h), (ox + d, oy, w, d), (ox + d + w, oy, w, d))[face]
+    """Ô skin của một mặt hộp theo kiểu trải chữ thập của Minecraft: (x, y, rộng, cao).
+
+    (ox, oy): góc trên trái của hộp trong ảnh skin; w, h, d: rộng, cao, sâu của hộp.
+    Thứ tự `face`: 0 trước (+Z), 1 sau (-Z), 2 phải (+X), 3 trái (-X), 4 trên (+Y), 5 dưới (-Y).
+    """
+    return ((ox + d, oy + d, w, h),              # 0: +Z
+            (ox + 2 * d + w, oy + d, w, h),      # 1: -Z
+            (ox, oy + d, d, h),                  # 2: +X
+            (ox + d + w, oy + d, d, h),          # 3: -X
+            (ox + d, oy, w, d),                  # 4: +Y
+            (ox + d + w, oy, w, d))[face]        # 5: -Y
 
 
 def _box(ox, oy, centre, size, inflate):
     """Đỉnh (x, y, z, nx, ny, nz, u, v) của một hộp: 6 mặt x 4 đỉnh."""
     (cx, cy, cz), (w, h, d) = centre, size
-    hx, hy, hz = w / 2 + inflate, h / 2 + inflate, d / 2 + inflate
+    hx, hy, hz = w / 2 + inflate, h / 2 + inflate, d / 2 + inflate    # nửa kích thước (đã phồng)
     vertices = []
     for face in range(6):
         rx, ry, rw, rh = _uv_region(face, ox, oy, w, h, d)
-        uvs = ((rx, ry), (rx + rw, ry), (rx + rw, ry + rh), (rx, ry + rh))
+        uvs = ((rx, ry), (rx + rw, ry), (rx + rw, ry + rh), (rx, ry + rh))   # 4 góc ô skin
+        # sx, sy, sz là dấu +1/-1: đỉnh = tâm +/- nửa kích thước theo từng trục
         for (sx, sy, sz), (u, v) in zip(_FACES[face], uvs):
-            vertices.append((cx + sx * hx, cy + sy * hy, cz + sz * hz, *_NORMALS[face], u / 64.0, v / 64.0))
+            vertices.append((cx + sx * hx, cy + sy * hy, cz + sz * hz, *_NORMALS[face], u / SKIN_SIZE, v / SKIN_SIZE))
     return vertices
 
 

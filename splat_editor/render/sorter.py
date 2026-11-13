@@ -123,18 +123,25 @@ class DepthSorter:
         depth_rows: ma trận model-view 4x4, hoặc [(số phần tử, hàng z)] cho từng đoạn liên tiếp."""
         if not isinstance(depth_rows, list):
             depth_rows = [(len(positions), np.asarray(depth_rows, np.float64)[2])]
-        # trong không gian camera, camera nhìn theo -z nên z càng âm càng xa
+        # Bước 1: tính độ sâu z (trong không gian camera) của từng tâm gaussian.
+        # Camera nhìn theo -z nên z càng âm thì càng xa.
         depth = np.empty(len(positions), np.float32)
         start = 0
-        for count, row in depth_rows:
+        for count, row in depth_rows:                 # mỗi lớp có một hàng z riêng
             row = row.astype(np.float32)
             depth[start:start + count] = positions[start:start + count] @ row[:3] + row[3]
             start += count
+
+        # Bước 2: bỏ gaussian nằm sau camera (z >= 0).
         visible = np.flatnonzero(depth < 0)
         depth = depth[visible]
         if len(depth) == 0:
             return np.zeros(0, np.uint32)
-        lo, hi = float(depth.min()), float(depth.max())
-        scale = 65535.0 / (hi - lo) if hi > lo else 0.0
-        key = ((depth - lo) * scale).astype(np.uint16)
-        return visible[np.argsort(key, kind='stable')].astype(np.uint32)
+
+        # Bước 3: nén độ sâu về số nguyên 16 bit (0..65535) để numpy sắp xếp bằng radix sort, rất nhanh.
+        far_z, near_z = float(depth.min()), float(depth.max())   # z âm nhất = xa nhất
+        scale = 65535.0 / (near_z - far_z) if near_z > far_z else 0.0
+        depth_key = ((depth - far_z) * scale).astype(np.uint16)
+
+        # Bước 4: sắp xếp tăng dần theo key: z âm nhất (xa nhất) đứng đầu -> vẽ trước, gần nhất vẽ sau.
+        return visible[np.argsort(depth_key, kind='stable')].astype(np.uint32)

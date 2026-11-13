@@ -23,7 +23,8 @@ import numpy as np
 GESTURES = ("wave", "zombie", "cheer")
 
 SWING_ANGLE = 60.0      # góc vung tối đa của tay / chân khi chạy
-STRIDE = 2.0            # radian nhịp bước mỗi đơn vị skin... đã chuẩn hoá theo chiều cao (xem update)
+STRIDE = 2.0            # radian pha của nhịp bước cho mỗi "chiều cao người" đi được (xem update)
+GAIT_SCALE = 1.75       # hệ số chỉnh nhịp bước cho khớp với bản Java gốc
 FULL_SPEED = 4.3        # chiều cao người mỗi giây tương ứng bước tối đa (khối/giây trong Java)
 BLEND = 8.0             # độ nhạy khi bật / tắt biên độ vung
 POSE_BLEND = 7.0        # độ nhạy chuyển giữa các tư thế (ngồi, cúi, cử chỉ)
@@ -32,6 +33,7 @@ CROUCH_LEAN = 28.0      # cúi người về phía trước (độ)
 
 
 def _approach(value, target, rate, dt):
+    """Đưa `value` tiến dần về `target` (làm mượt): mỗi khung hình đi một phần của khoảng còn lại."""
     return value + (target - value) * min(1.0, dt * rate)
 
 
@@ -68,9 +70,9 @@ class AvatarPose:
             return
         walked = distance / max(height, 1e-9)                 # đơn vị: chiều cao người
         speed = walked / dt
-        target = min(1.0, speed / (FULL_SPEED / 1.75))
+        target = min(1.0, speed / (FULL_SPEED / GAIT_SCALE))     # biên độ vung muốn đạt (0..1)
         self.amount = _approach(self.amount, target, BLEND, dt)
-        self.phase += walked * STRIDE * 1.75
+        self.phase += walked * STRIDE * GAIT_SCALE               # đi càng xa, pha càng tăng
         self.time += dt
         self.sit = _approach(self.sit, 1.0 if self.sitting else 0.0, POSE_BLEND, dt)
         self.crouch = _approach(self.crouch, 1.0 if crouching and not self.sitting else 0.0, POSE_BLEND, dt)
@@ -125,6 +127,7 @@ class AvatarPose:
 
 
 def _mix_pair(a, b, k):
+    """Trộn hai cặp góc: k = 0 giữ a, k = 1 thành b."""
     return [a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k]
 
 

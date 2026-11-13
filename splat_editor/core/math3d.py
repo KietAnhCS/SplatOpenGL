@@ -21,22 +21,17 @@ import numpy as np
 # ----------------------------------------------------------------------------- ma trận camera
 
 def perspective(fov_y_deg, aspect, near, far):
-    f = 1.0 / math.tan(math.radians(fov_y_deg) / 2)
+    """Ma trận chiếu phối cảnh P (4x4): đưa toạ độ camera sang toạ độ clip.
+
+    fov_y_deg: góc nhìn theo chiều dọc (độ); aspect: rộng / cao; near, far: mặt phẳng gần / xa.
+    """
+    zoom = 1.0 / math.tan(math.radians(fov_y_deg) / 2)   # góc nhìn càng hẹp thì zoom càng lớn
     m = np.zeros((4, 4), np.float32)
-    m[0, 0] = f / aspect
-    m[1, 1] = f
-    m[2, 2] = (far + near) / (near - far)
+    m[0, 0] = zoom / aspect                              # co ngang theo tỉ lệ khung hình
+    m[1, 1] = zoom
+    m[2, 2] = (far + near) / (near - far)                # hai dòng này ánh xạ độ sâu về [-1, 1]
     m[2, 3] = 2 * far * near / (near - far)
-    m[3, 2] = -1
-    return m
-
-
-def orthographic(half_size, near, far):
-    """Phép chiếu trực giao đối xứng (dùng cho bản đồ bóng của mặt trời): hộp [-h,h]^2 x [near,far]."""
-    m = np.identity(4, np.float32)
-    m[0, 0] = m[1, 1] = 1.0 / half_size
-    m[2, 2] = -2.0 / (far - near)
-    m[2, 3] = -(far + near) / (far - near)
+    m[3, 2] = -1                                         # w_clip = -z_camera (để chia phối cảnh)
     return m
 
 
@@ -50,16 +45,19 @@ def orthographic(half_size, near, far):
 
 
 def look_at(eye, target, up):
+    """Ma trận nhìn V (4x4): đưa toạ độ thế giới sang toạ độ camera (camera đặt ở `eye`, nhìn về `target`)."""
+    # ba trục của camera: forward (hướng nhìn), right (sang phải), true_up (lên trên)
     forward = target - eye
     forward /= np.linalg.norm(forward)
     right = np.cross(forward, up)
     right /= np.linalg.norm(right)
     true_up = np.cross(right, forward)
+
     m = np.identity(4, np.float32)
-    m[0, :3] = right
+    m[0, :3] = right             # ba hàng right, true_up, -forward tạo thành phép xoay
     m[1, :3] = true_up
-    m[2, :3] = -forward
-    m[:3, 3] = -m[:3, :3] @ eye
+    m[2, :3] = -forward          # camera nhìn theo -z
+    m[:3, 3] = -m[:3, :3] @ eye  # dời gốc toạ độ về vị trí camera
     return m
 
 

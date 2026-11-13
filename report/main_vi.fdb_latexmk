@@ -1,14 +1,15 @@
 # Fdb version 4
-["xdvipdfmx"] 1794554523.88484 "main_vi.xdv" "main_vi.pdf" "main_vi" 1794554541.9198 0
-  "main_vi.xdv" 1794554523.48527 298848 ba34b473cf44849cce055532b9e73e32 "xelatex"
+["xdvipdfmx"] 1794566311.64808 "main_vi.xdv" "main_vi.pdf" "main_vi" 1794566329.64112 0
+  "main_vi.xdv" 1794566311.24252 545148 80bf129a02e27ce40efb4d7ee2f59db6 "xelatex"
   (generated)
   "main_vi.pdf"
   (rewritten before read)
-["xelatex"] 1794554521.54417 "main_vi.tex" "main_vi.xdv" "main_vi" 1794554541.8969 0
+["xelatex"] 1794566308.84295 "main_vi.tex" "main_vi.xdv" "main_vi" 1794566329.61733 0
   "C:/Users/kelly/AppData/Local/MiKTeX/miktex/data/le/xetex/xelatex.fmt" 1792572223.27402 27176674 bb140bc90770b00da53f83e020756299 ""
   "C:/Users/kelly/AppData/Local/Programs/MiKTeX/fonts/tfm/adobe/zapfding/pzdr.tfm" 1136747054 1528 f853c4d1b4e0550255e02831fdc8496f ""
   "C:/Users/kelly/AppData/Local/Programs/MiKTeX/fonts/tfm/public/cm/cmmi5.tfm" 1136765053 1508 3b32edd0d68f6498a5a375e78f9edc5e ""
   "C:/Users/kelly/AppData/Local/Programs/MiKTeX/fonts/tfm/public/cm/cmmi6.tfm" 1136765053 1512 f21f83efb36853c0b70002322c1ab3ad ""
+  "C:/Users/kelly/AppData/Local/Programs/MiKTeX/fonts/tfm/public/cm/cmmi7.tfm" 1136765053 1528 e2423ae06dc7dee599cceb79d1c9dc32 ""
   "C:/Users/kelly/AppData/Local/Programs/MiKTeX/fonts/tfm/public/cm/cmmi8.tfm" 1136765053 1520 eccf95517727cb11801f4f1aee3a21b4 ""
   "C:/Users/kelly/AppData/Local/Programs/MiKTeX/fonts/tfm/public/cm/cmmi9.tfm" 1136765053 1524 d89e2d087a9828407a196f428428ef4a ""
   "C:/Users/kelly/AppData/Local/Programs/MiKTeX/tex/generic/bigintcalc/bigintcalc.sty" 1576433602 40635 c40361e206be584d448876bba8a64a3b ""
@@ -95,6 +96,7 @@
   "C:/Users/kelly/AppData/Local/Programs/MiKTeX/tex/latex/extsizes/extarticle.cls" 947706120 20602 3112294ba237d94ce4a1502cfef3594f ""
   "C:/Users/kelly/AppData/Local/Programs/MiKTeX/tex/latex/extsizes/size9.clo" 944556180 6172 b9daf86befd6903b2699dddbd6fb97c1 ""
   "C:/Users/kelly/AppData/Local/Programs/MiKTeX/tex/latex/fancyhdr/fancyhdr.sty" 1740138435 31715 19e60610b63819fe670dfa1cd84a4e94 ""
+  "C:/Users/kelly/AppData/Local/Programs/MiKTeX/tex/latex/fancyvrb/fancyvrb.sty" 1787997614 43784 6f874a0506298e46b6858a3853603aeb ""
   "C:/Users/kelly/AppData/Local/Programs/MiKTeX/tex/latex/float/float.sty" 1469023953 6916 f35860e0302c70cb81cb70b0a7937693 ""
   "C:/Users/kelly/AppData/Local/Programs/MiKTeX/tex/latex/fontspec/fontspec-xetex.sty" 1759156201 164714 a0cc5579dc5aec4384653d8dd1b3832a ""
   "C:/Users/kelly/AppData/Local/Programs/MiKTeX/tex/latex/fontspec/fontspec.cfg" 1759156201 549 c4adac819276241fea8eb79c5ab7b99e ""
@@ -124,6 +126,7 @@
   "C:/Users/kelly/AppData/Local/Programs/MiKTeX/tex/latex/l3packages/xparse/xparse.sty" 1761203377 10176 c2fc1c663b3f3899ddac6e6ed3fb1d7e ""
   "C:/Users/kelly/AppData/Local/Programs/MiKTeX/tex/latex/listings/listings.cfg" 1763898348 1865 73df61e45e2dfdc239ef37ab16d87d6a ""
   "C:/Users/kelly/AppData/Local/Programs/MiKTeX/tex/latex/listings/listings.sty" 1763898348 81627 6a9c17f89f356724d1c9813b7025f0c1 ""
+  "C:/Users/kelly/AppData/Local/Programs/MiKTeX/tex/latex/listings/lstlang1.sty" 1763898348 206518 095934a0019dcba14af528744bf9b295 ""
   "C:/Users/kelly/AppData/Local/Programs/MiKTeX/tex/latex/listings/lstmisc.sty" 1763898348 77105 002e983b638eadbf04e580642335f689 ""
   "C:/Users/kelly/AppData/Local/Programs/MiKTeX/tex/latex/listings/lstpatch.sty" 1763898348 353 9024412f43e92cd5b21fe9ded82d0610 ""
   "C:/Users/kelly/AppData/Local/Programs/MiKTeX/tex/latex/microtype/microtype-xetex.def" 1772370317 28582 5b3d64bb402942e40230fb37f10ea7b9 ""
@@ -155,7 +158,6 @@
   "figures/1 (3).png" 1794496956.37044 80440 7d7849dbacd29e414195ff49abeadc09 ""
   "figures/1 (4).png" 1794497043.78762 118402 d09f91358ef52bad3820cf0a7df83eac ""
   "figures/1 (5).png" 1794497058.42288 55636 009b3ff5c0bda24272b5cdbb9ba8ed3d ""
-  "figures/1 (6).png" 1794497089.47018 149889 23e14193ffac295f4d65b2a9eb3e7f1b ""
   "figures/csv_head.png" 1794242851.84411 57655 d9be3fae32939c9025e47574cd7018e2 ""
   "figures/csv_tail.png" 1794242851.82143 51013 8d4656ad11f6911b196de136e2531c20 ""
   "figures/example_ellipsoid.png" 1794244931.68353 470463 9f4f0113e61c780ad6f4aee4c4af2977 ""
@@ -167,9 +169,9 @@
   "figures/t4-night.png" 1794417846.0447 1436412 305d83159b8dc04f8d1d92705a8c4ae0 ""
   "figures/t4-zombie-day.png" 1794417846.07017 1716953 6e07787ac013b33146f7b824ffd0345b ""
   "figures/viewer.png" 1794212530.88828 763578 d5eee1307c70ee544158988fdee74d2a ""
-  "main_vi.aux" 1794554523.47367 16374 b62643140ca2c814d666bf18bfe73aa2 "xelatex"
-  "main_vi.out" 1794554523.48227 6669 52552ccdf9ab989b824f58c5841fb7e5 "xelatex"
-  "main_vi.tex" 1794554495.13014 45974 96cf18e7ac87d3f6d3e2fde2ce65d89a ""
+  "main_vi.aux" 1794566311.23148 26061 d38e82ec5e786ed82cba764e6dc96e16 "xelatex"
+  "main_vi.out" 1794566311.24099 6794 285d11e1e86ba95c8ceebcb34b3d5d5c "xelatex"
+  "main_vi.tex" 1794566280.07425 66199 12198723904596671835f0838f4d7085 ""
   (generated)
   "main_vi.aux"
   "main_vi.log"

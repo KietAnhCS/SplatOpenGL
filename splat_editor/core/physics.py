@@ -26,8 +26,9 @@ import time
 
 import numpy as np
 
-_BITS = 21
-_MASK = (1 << _BITS) - 1
+_BITS = 21                  # mỗi toạ độ ô (ix, iy, iz) chiếm 21 bit trong khoá 63 bit
+_MASK = (1 << _BITS) - 1    # 21 bit toàn 1: giá trị lớn nhất của một toạ độ ô
+# 9 điểm quanh một tâm: chính giữa + 8 hướng cách nhau 45 độ (dùng để kiểm tra "thân" người chơi có bán kính)
 _RING = np.array([(0.0, 0.0)] + [(math.cos(a * math.pi / 4), math.sin(a * math.pi / 4)) for a in range(8)])
 
 
@@ -145,6 +146,11 @@ class Physics:
     EYE_RATIO = 0.92       # mắt cao bằng 92% chiều cao người
     VOXELS_PER_HEIGHT = 8  # cạnh voxel = chiều cao / 8
     DEFAULT_HEIGHT = 2.74  # chiều cao người chơi mặc định (đơn vị cảnh)
+    SPRINT_FACTOR = 1.7    # chạy nhanh: nhân tốc độ đi bộ
+    SNEAK_FACTOR = 0.4     # đi chậm (cúi): nhân tốc độ đi bộ
+    MAX_DT = 0.05          # giây; khung hình lâu hơn thì coi như 0.05 để không xuyên tường
+    HEAD_RATIO = 0.9       # phần thân (so với chiều cao) bị tường chặn; trên mức này là "đụng trần"
+    REBUILD_DELAY = 0.4    # giây phải chờ yên rồi mới dựng lại bản đồ va chạm
 
     def __init__(self):
         self.world = None
@@ -205,7 +211,7 @@ class Physics:
         """Gọi mỗi khung hình. Dựng bản đồ ở luồng nền nếu cần mà đang cũ."""
         if not needed or not self._dirty or self._building or scene.is_empty:
             return
-        if time.perf_counter() - self._dirty_since < 0.4:
+        if time.perf_counter() - self._dirty_since < self.REBUILD_DELAY:
             return
         positions, step = scene.solid_positions()
         voxel = self.height / self.VOXELS_PER_HEIGHT
@@ -256,15 +262,18 @@ class Physics:
             return False
         player, world, h = self.player, self.world, self.height
         flat = self.flat_ground
-        dt = min(dt, 0.05)
-        radius, step = self.radius_ratio * h, self.step_ratio * h
+        dt = min(dt, self.MAX_DT)
+        radius = self.radius_ratio * h      # bán kính thân người chơi
+        step = self.step_ratio * h          # bậc cao nhất bước lên được
         feet = player.feet
 
+        # ---- Bước 1: đổi phím W/S/A/D thành vector di chuyển (x, z) trong mặt phẳng ngang ----
         s, c = math.sin(yaw), math.cos(yaw)
         move = forward * np.array([-s, -c]) + right * np.array([c, -s])
         length = np.linalg.norm(move)
         if length > 0:
-            move = move / length * self.walk_speed * (1.7 if sprint else 0.4 if sneak else 1.0) * dt
+            speed = self.walk_speed * (self.SPRINT_FACTOR if sprint else self.SNEAK_FACTOR if sneak else 1.0)
+            move = move / length * speed * dt   # chia cho length: đi chéo không nhanh hơn đi thẳng
 
         def ring(x, z):
             return x + radius * _RING[:, 0], z + radius * _RING[:, 1]
@@ -273,7 +282,7 @@ class Physics:
             if flat:
                 return False
             xs, zs = ring(x, z)
-            return bool(world.blocked(xs, zs, feet[1] + step, feet[1] + 0.9 * h).any())
+            return bool(world.blocked(xs, zs, feet[1] + step, feet[1] + self.HEAD_RATIO * h).any())
 
         def ground_at(x, z, y_max):
             if flat:
@@ -282,6 +291,7 @@ class Physics:
             top = float(world.column_top(xs, zs, y_max).max())
             return max(top, world.floor_y)               # có sàn an toàn: đi ra khỏi cảnh cũng không rơi mãi
 
+        # ---- Bước 2: di chuyển ngang, thử đi thẳng; nếu vướng tường thì trượt dọc tường ----
         x, z = feet[0], feet[2]
         if length > 0:
             if not body_blocked(x + move[0], z + move[1]):
@@ -291,8 +301,9 @@ class Physics:
             elif not body_blocked(x, z + move[1]):
                 z += move[1]
 
+        # ---- Bước 3: chuyển động đứng (nhảy, trọng lực, bám đất) ----
         y = feet[1]
-        ground = ground_at(x, z, y + step)
+        ground = ground_at(x, z, y + step)          # độ cao mặt đất dưới chân
         if player.on_ground and jump:
             player.vel_y = math.sqrt(2.0 * self.gravity * self.jump_ratio * h)
             player.on_ground = False
@@ -309,7 +320,7 @@ class Physics:
             else:
                 if player.vel_y > 0 and not flat:        # đụng trần
                     xs, zs = ring(x, z)
-                    if world.blocked(xs, zs, y + 0.9 * h, new_y + h).any():
+                    if world.blocked(xs, zs, y + self.HEAD_RATIO * h, new_y + h).any():
                         player.vel_y, new_y = 0.0, y
                 y = new_y
         feet[:] = (x, y, z)

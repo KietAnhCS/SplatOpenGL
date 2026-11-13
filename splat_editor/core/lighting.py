@@ -27,6 +27,7 @@ import numpy as np
 from .math3d import look_at, orthographic
 
 MAX_LIGHTS = 8
+MAX_SUN_ELEVATION = 65.0    # độ cao tối đa của mặt trời lúc giữa trưa (độ)
 
 
 class DayPhase(Enum):
@@ -145,9 +146,9 @@ class Lighting:
     # ------------------------------------------------------------------ mặt trời / bầu trời
     def sun_direction(self):
         """Vector đơn vị từ cảnh hướng về mặt trời. Giờ 6: mọc, 12: trên cao nhất, 18: lặn."""
-        angle = (self.hour - 6.0) / 12.0 * math.pi
-        elevation = math.sin(angle) * math.radians(65.0)        # âm vào ban đêm
-        azimuth = math.radians(self.sun_azimuth) + (angle - math.pi / 2)
+        angle = (self.hour - 6.0) / 12.0 * math.pi                         # 6h -> 0, 12h -> pi/2, 18h -> pi
+        elevation = math.sin(angle) * math.radians(MAX_SUN_ELEVATION)      # độ cao so với chân trời, âm vào ban đêm
+        azimuth = math.radians(self.sun_azimuth) + (angle - math.pi / 2)   # hướng ngang; mặt trời quét từ đông sang tây
         return np.array([math.cos(elevation) * math.cos(azimuth), math.sin(elevation),
                          math.cos(elevation) * math.sin(azimuth)])
 
@@ -182,7 +183,8 @@ class Lighting:
     def update(self, dt):
         """Tiến thời gian và chạy máy trạng thái ngày đêm."""
         if self.animate and self.sun_on:
-            self.hour = (self.hour + dt * 24.0 / max(self.day_length, 1.0)) % 24.0
+            hours_per_second = 24.0 / max(self.day_length, 1.0)
+            self.hour = (self.hour + dt * hours_per_second) % 24.0     # quay vòng sau 24 giờ
         phase = self.cycle.update(self.hour)
         if phase is not None and self.sun_on:
             self._on_enter(phase)

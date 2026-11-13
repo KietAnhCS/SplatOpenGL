@@ -25,6 +25,7 @@ class OrbitCamera:
     PITCH_LIMIT = 1.55        # radian, tránh lật camera
     LOOK_SPEED = 0.003        # radian / pixel khi nhìn quanh (chuột phải)
     FLY_ACCEL = 10.0          # độ "bám" của vận tốc bay (lớn hơn: ít trôi hơn)
+    SPRINT_FACTOR = 2.5       # giữ Shift: bay nhanh gấp 2.5 lần
 
     def __init__(self):
         self.fov = 60.0   # độ, theo chiều dọc
@@ -42,6 +43,7 @@ class OrbitCamera:
 
     # ------------------------------------------------------------------ ma trận
     def position(self):
+        """Vị trí mắt camera: nằm trên mặt cầu bán kính `distance` quanh `target` (toạ độ cầu yaw/pitch)."""
         cp = math.cos(self.pitch)
         offset = np.array([cp * math.sin(self.yaw), math.sin(self.pitch), cp * math.cos(self.yaw)])
         return self.target + self.distance * offset
@@ -102,7 +104,7 @@ class OrbitCamera:
         if length > 0:
             direction /= length            # đi chéo không nhanh hơn đi thẳng
         direction[1] = up
-        wanted = direction * self.fly_speed * (2.5 if sprint else 1.0)
+        wanted = direction * self.fly_speed * (self.SPRINT_FACTOR if sprint else 1.0)   # vận tốc mong muốn
         self.velocity += (wanted - self.velocity) * min(self.FLY_ACCEL * dt, 1.0)
         if not wanted.any() and np.linalg.norm(self.velocity) < 1e-3 * self.fly_speed:
             self.velocity[:] = 0

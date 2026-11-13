@@ -121,6 +121,32 @@ vec3 shade(vec3 albedo, vec3 worldPos, vec3 n, vec3 v) {
     return albedo * diffuse + spec * uSpecular;
 }
 
+// Quaternion (w, x, y, z) -> ma trận xoay 3x3 R (GLSL điền mat3 theo từng cột)
+mat3 quatToMat3(vec4 q) {
+    float w = q.x, x = q.y, y = q.z, z = q.w;
+    return mat3(1.0 - 2.0 * (y * y + z * z), 2.0 * (x * y + w * z), 2.0 * (x * z - w * y),
+                2.0 * (x * y - w * z), 1.0 - 2.0 * (x * x + z * z), 2.0 * (y * z + w * x),
+                2.0 * (x * z + w * y), 2.0 * (y * z - w * x), 1.0 - 2.0 * (x * x + y * y));
+}
+
+// Hiệp phương sai 3D của gaussian: Sigma = R S S^T R^T (S = ma trận đường chéo chứa scale)
+mat3 covariance3D(mat3 R, vec3 scale) {
+    mat3 M = R * mat3(scale.x, 0.0, 0.0, 0.0, scale.y, 0.0, 0.0, 0.0, scale.z);
+    return M * transpose(M);
+}
+
+// Chiếu Sigma 3D xuống màn hình thành ellipse 2D (cov 2x2 nằm ở góc trên trái của mat3 kết quả).
+// viewPos: tâm gaussian trong không gian camera; linear: phần xoay/tỉ lệ của ma trận lớp.
+mat3 projectCovariance(mat3 sigma, vec3 viewPos, mat3 linear) {
+    // Jacobian J của phép chiếu phối cảnh tại tâm gaussian (xấp xỉ tuyến tính, GLSL: mat3 theo cột)
+    float vx = viewPos.x, vy = viewPos.y, vz = viewPos.z;
+    mat3 J = mat3(uFocal / -vz, 0.0, 0.0,
+                  0.0, uFocal / -vz, 0.0,
+                  uFocal * vx / (vz * vz), uFocal * vy / (vz * vz), 0.0);
+    mat3 T = J * mat3(uModelView) * linear;        // Sigma (toạ độ file) -> thế giới -> camera -> màn hình
+    return T * sigma * transpose(T);
+}
+
 void cull() {
     vCenterMajor = vec4(2.0, 2.0, 0.0, 0.0);   // hình vuông suy biến ngoài màn hình -> không tô pixel nào
     vMinorExtent = vec3(0.0);
@@ -131,7 +157,7 @@ void main() {
     int splat = int(aSplatIndex);
     uint state = texelFetch(uState, splat).r;
     // đã xoá: luồng sắp xếp đã bỏ, nhưng kết quả sắp xếp có thể đến trễ vài khung hình
-    if ((state & 2u) != 0u) { cull(); return; }
+    if ((state & 2u) != 0u) { cull(); return; }   // bit 2 = đã xoá
     uvec4 t0 = texelFetch(uData, splat * 2 + 0);   // tâm xyz (float), màu rg (half)
     uvec4 t1 = texelFetch(uData, splat * 2 + 1);   // màu b + alpha, scale xyz (half), quaternion (4 x snorm8)
 
@@ -155,23 +181,14 @@ void main() {
     // loại gaussian ở sau camera hoặc ngoài màn hình
     if (clipPos.w <= 0.0 || abs(ndc.x) > 1.3 || abs(ndc.y) > 1.3) { cull(); return; }
 
-    // Sigma = R S S^T R^T từ scale + quaternion (w, x, y, z)
+    // Giải nén scale (3 half float) và quaternion (4 byte, mỗi byte là snorm8) rồi dựng Sigma 3D
     vec3 scale = vec3(unpackHalf(t1.y), halfToFloat(t1.z & 65535u));
     vec4 q = normalize((vec4(uvec4(t1.w, t1.w >> 8u, t1.w >> 16u, t1.w >> 24u) & 255u) - 128.0) / 127.0);
-    float w = q.x, x = q.y, y = q.z, z = q.w;
-    mat3 R = mat3(1.0 - 2.0 * (y * y + z * z), 2.0 * (x * y + w * z), 2.0 * (x * z - w * y),
-                  2.0 * (x * y - w * z), 1.0 - 2.0 * (x * x + z * z), 2.0 * (y * z + w * x),
-                  2.0 * (x * z + w * y), 2.0 * (y * z - w * x), 1.0 - 2.0 * (x * x + y * y));
-    mat3 M = R * mat3(scale.x, 0.0, 0.0, 0.0, scale.y, 0.0, 0.0, 0.0, scale.z);
-    mat3 sigma = M * transpose(M);
+    mat3 R = quatToMat3(q);
+    mat3 sigma = covariance3D(R, scale);
 
-    // Jacobian của phép chiếu phối cảnh tại tâm gaussian (GLSL: mat3 theo cột)
-    float vx = viewPos.x, vy = viewPos.y, vz = viewPos.z;
-    mat3 J = mat3(uFocal / -vz, 0.0, 0.0,
-                  0.0, uFocal / -vz, 0.0,
-                  uFocal * vx / (vz * vz), uFocal * vy / (vz * vz), 0.0);
-    mat3 T = J * mat3(uModelView) * linear;        // Sigma (toạ độ file) -> thế giới -> camera -> màn hình
-    mat3 cov = T * sigma * transpose(T);
+    // Chiếu xuống màn hình -> ellipse 2D
+    mat3 cov = projectCovariance(sigma, viewPos.xyz, linear);
 
     // ellipse 2D (pixel); cộng 0.3 để gaussian không nhỏ hơn 1 pixel
     float a = cov[0][0] + 0.3;

@@ -60,6 +60,7 @@ class BrushTool:
     # ------------------------------------------------------------------ chiếu / kiểm tra
     @staticmethod
     def _to_screen(clip, viewport):
+        """Toạ độ clip (x, y, z, w) -> toạ độ pixel (x, y) trong khung nhìn; y pixel tính từ trên xuống."""
         left, top, width, height = viewport
         x = left + (clip[..., 0] / clip[..., 3] + 1) * 0.5 * width
         y = top + (1 - clip[..., 1] / clip[..., 3]) * 0.5 * height
@@ -70,9 +71,11 @@ class BrushTool:
         """Bình phương khoảng cách từ các điểm p (...,2) tới đoạn thẳng a -> b."""
         ab = b - a
         length2 = float(ab @ ab)
+        # t = vị trí điểm gần p nhất trên đoạn a->b (0 = tại a, 1 = tại b); kẹp để không vượt ra ngoài đoạn
         t = np.clip((p - a) @ ab / length2, 0, 1) if length2 > 0 else np.zeros(p.shape[:-1])
-        d = p - (a + t[..., None] * ab)
-        return (d * d).sum(axis=-1)
+        nearest = a + t[..., None] * ab
+        diff = p - nearest
+        return (diff * diff).sum(axis=-1)       # so sánh với radius * radius (khỏi phải lấy căn)
 
     def _candidate_chunks(self, lod, matrices, viewport, a, b):
         """(khối phải kiểm tra từng gaussian, khối nằm trọn trong nét cọ) theo hình chữ nhật bao

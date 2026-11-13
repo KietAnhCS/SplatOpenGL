@@ -16,6 +16,7 @@
 \usepackage{float}
 \usepackage{xtab}
 \usepackage{listings}
+\usepackage{fancyvrb}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning}
 \tikzset{
@@ -53,9 +54,18 @@
 \linespread{1.04}
 \raggedbottom
 
-\lstset{basicstyle=\ttfamily\fontsize{6.4}{7.4}\selectfont,breaklines=true,frame=single,
+\lstset{basicstyle=\ttfamily\fontsize{7.2}{8.4}\selectfont,breaklines=true,breakindent=1.5em,breakautoindent=true,postbreak={\mbox{\textcolor{gray}{$\hookrightarrow$}\space}},frame=single,
   rulecolor=\color{gray!55},backgroundcolor=\color{gray!5},xleftmargin=2pt,xrightmargin=2pt,
   framesep=2pt,aboveskip=1pt,belowskip=3pt,columns=fullflexible,keepspaces=true}
+\renewcommand{\lstlistingname}{Listing}
+\lstdefinelanguage{GLSL}{sensitive=true,comment=[l]{//},
+  morekeywords={uniform,in,out,flat,layout,void,if,else,for,return,discard}}
+\lstset{numbers=none,keywordstyle=\bfseries,commentstyle=\itshape,
+  showstringspaces=false,captionpos=t,frame=tb,rulecolor=\color{black},backgroundcolor=\color{white},
+  framerule=0.5pt,aboveskip=0pt,belowskip=0pt,xleftmargin=1pt,xrightmargin=1pt,framexleftmargin=3pt,
+  framexrightmargin=2pt,breaklines=true,breakindent=0pt,tabsize=2}
+\captionsetup[lstlisting]{skip=2pt,font={footnotesize}}
+\newenvironment{codebox}{\par\vspace{5pt}\noindent\begin{minipage}{\columnwidth}\hrule height 0.8pt\vspace{2pt}}{\end{minipage}\par\vspace{5pt}\noindent\ignorespaces}
 
 \newcommand{\code}[1]{\texttt{#1}}
 \newcommand{\Sig}{\symbf{\Sigma}}
@@ -161,7 +171,7 @@ Group & Main content & Section \\
 \midrule
 T1 & layers, matrix $\mathbf{M}$, character skeleton & \ref{chap:t1} \\
 T2 & view/projection matrices, EWA, blending, cameras & \ref{chap:t2} \\
-T3 & skin texture, texture buffers, gaussian kernel & \ref{chap:t3} \\
+T3 & character skin texture & \ref{chap:t3} \\
 T4 & SH colour, Phong, shadow map & \ref{chap:t4} \\
 T5 & day--night, collision, character animation & \ref{chap:t5} \\
 T6 & selection brush, delete/undo, ImGui, HUD & \ref{chap:t6} \\
@@ -169,16 +179,54 @@ T6 & selection brush, delete/undo, ImGui, HUD & \ref{chap:t6} \\
 \end{tabular}
 \end{table}
 
+\subsection{Program structure}
+The source is split by role: \code{core} holds only data and math, so it does not depend on OpenGL; \code{render} holds all OpenGL calls and shaders; \code{ui} builds the interface; and \code{app.py} ties the parts together. Figure~\ref{fig:tree} lists representative files only.
+
+\begin{figure}[H]
+\centering
+\begin{Verbatim}[fontsize=\fontsize{5.6}{6.6}\selectfont,frame=single]
+SplatOpenGL/
+|-- main.py              # entry point: python main.py [scene.ply]
+|-- requirements.txt     # numpy, PyOpenGL, glfw, imgui-bundle
+|-- report/              # LaTeX report
+`-- splat_editor/
+    |-- app.py           # main loop, ties everything together
+    |-- core/            # data and math, no OpenGL
+    |   |-- splats.py    # gaussian arrays
+    |   |-- layer.py     # one PLY file + transform + selection
+    |   |-- scene.py     # the set of layers
+    |   |-- math3d.py    # matrices V, P, Euler angles, quaternions
+    |   |-- lighting.py  # sun, lamps, day--night
+    |   |-- physics.py   # voxel collision, jumping
+    |   |-- avatar_pose.py  # character joint angles
+    |   |-- lod.py       # level-of-detail selection
+    |   `-- history.py   # undo
+    |-- io/              # file reading / writing
+    |   |-- ply.py       # read / write PLY
+    |   `-- codec.py     # PLY columns <-> Splats
+    |-- editor/          # editing
+    |   |-- editor.py    # open, save, delete, select
+    |   `-- brush.py     # brush selection
+    |-- render/          # OpenGL
+    |   |-- splat_renderer.py  # draws gaussians (2 passes)
+    |   |-- sorter.py    # depth sort (background thread)
+    |   |-- camera.py    # orbit / fly camera
+    |   |-- avatar_renderer.py # draws the character
+    |   |-- shader.py    # compiles GLSL
+    |   |-- shaders/     # splat_prep.vert, splat.vert/.frag, ...
+    |   `-- textures/    # skinzom.png
+    `-- ui/              # ImGui interface
+        |-- window.py    # GLFW window
+        |-- input.py     # keyboard, mouse
+        `-- sections.py  # control panels
+\end{Verbatim}
+\caption{Directory tree of the program (main files only).}
+\label{fig:tree}
+\end{figure}
+
 \subsection{Input data}
 \label{sec:input}
-The input is a \code{.ply} file made by 3DGS training (Fig.~\ref{fig:train}). Training starts from the COLMAP point cloud and puts one gaussian at each point. Then it repeats three steps. It renders the gaussians. It compares the image with the real photo. It updates the parameters of every gaussian. It also removes useless gaussians and splits gaussians that are too large.
-
-\begin{figure*}[!t]
-\centering
-\includegraphics[width=0.9\textwidth]{figures/1 (6).png}
-\caption{How 3DGS training makes the input file \cite{kerbl2023gaussian}. The gaussians start at the structure-from-motion points. They are projected, rendered and compared with the ground-truth photo. The result of this loop is the \code{.ply} file.}
-\label{fig:train}
-\end{figure*}
+The input is a \code{.ply} file made by 3DGS training. Training starts from the COLMAP point cloud and puts one gaussian at each point. Then it repeats three steps. It renders the gaussians. It compares the image with the real photo. It updates the parameters of every gaussian. It also removes useless gaussians and splits gaussians that are too large.
 
 The file has two parts: a text header and a binary body. The header lists the properties. The body has one record per gaussian. Every value is a 32-bit float. Table~\ref{tab:ply} lists the properties. With SH of degree 3, one record has 62 values, or 248 bytes. Fig.~\ref{fig:csv} shows the first rows of a file, exported as CSV.
 
@@ -238,6 +286,18 @@ Each gaussian has a position $\symbf{\mu}$, a colour $\mathbf{c}$, an opacity $\
 \end{itemize}
 On save, the program does the reverse.
 
+\begin{codebox}
+\begin{lstlisting}[language=Python,caption={\code{io/codec.py}, \code{SplatCodec.decode}: decoding the raw PLY values},label={lst:decode}]
+SH_C0 = 0.28209479177387814
+colors = 0.5 + SH_C0 * np.stack([col('f_dc_0'), col('f_dc_1'), col('f_dc_2')], axis=1)
+alphas = 1.0 / (1.0 + np.exp(-col('opacity')))
+scales = np.exp(np.stack([col('scale_0'), col('scale_1'), col('scale_2')], axis=1))
+q = np.stack([col('rot_0'), col('rot_1'), col('rot_2'), col('rot_3')], axis=1)
+length = np.linalg.norm(q, axis=1, keepdims=True)
+q = q / np.maximum(length, 1e-12)
+\end{lstlisting}
+\end{codebox}
+
 \begin{figure}[H]
 \centering
 \includegraphics[width=\columnwidth]{figures/1 (4).png}
@@ -251,6 +311,20 @@ The shape of a gaussian is stored in its covariance matrix $\Sig$. It is built f
 \label{eq:cov3d}
 \end{equation}
 Fig.~\ref{fig:rs} gives the two matrices. Fig.~\ref{fig:ellipsoid} draws the result for the first gaussian of Fig.~\ref{fig:csv}. The three sizes $s_0,s_1,s_2$ are the semi-axes of the ellipsoid. The quaternion turns these axes in space. Section~\ref{sec:ewa} projects this ellipsoid to the screen.
+
+\begin{codebox}
+\begin{lstlisting}[language=GLSL,caption={\code{render/shaders/splat\_prep.vert}: building $\Sigma=\mathbf{R}\mathbf{S}\mathbf{S}^{\top}\mathbf{R}^{\top}$},label={lst:cov3d}]
+vec3 scale = vec3(unpackHalf(t1.y), halfToFloat(t1.z & 65535u));
+vec4 q = normalize((vec4(uvec4(t1.w, t1.w >> 8u, t1.w >> 16u, t1.w >> 24u)
+                         & 255u) - 128.0) / 127.0);
+float w = q.x, x = q.y, y = q.z, z = q.w;
+mat3 R = mat3(1.0 - 2.0 * (y * y + z * z), 2.0 * (x * y + w * z), 2.0 * (x * z - w * y),
+              2.0 * (x * y - w * z), 1.0 - 2.0 * (x * x + z * z), 2.0 * (y * z + w * x),
+              2.0 * (x * z + w * y), 2.0 * (y * z - w * x), 1.0 - 2.0 * (x * x + y * y));
+mat3 M = R * mat3(scale.x, 0.0, 0.0, 0.0, scale.y, 0.0, 0.0, 0.0, scale.z);
+mat3 sigma = M * transpose(M);
+\end{lstlisting}
+\end{codebox}
 
 \begin{figure}[H]
 \centering
@@ -267,16 +341,16 @@ Fig.~\ref{fig:rs} gives the two matrices. Fig.~\ref{fig:ellipsoid} draws the res
 \end{figure}
 
 
-\twocolumn[{%
+\begin{figure*}[t]
 \centering
 \begin{minipage}{0.495\textwidth}\centering\includegraphics[width=\linewidth]{figures/t4-zombie-day.png}\\{\footnotesize (a) Day, 15:59.}\end{minipage}\hfill
 \begin{minipage}{0.495\textwidth}\centering\includegraphics[width=\linewidth]{figures/t4-dawn.png}\\{\footnotesize (b) Dawn, 06:15.}\end{minipage}\\[5pt]
 \begin{minipage}{0.495\textwidth}\centering\includegraphics[width=\linewidth]{figures/t4-lamp-zombie.png}\\{\footnotesize (c) Ambient $0.08$ and a lamp.}\end{minipage}\hfill
 \begin{minipage}{0.495\textwidth}\centering\includegraphics[width=\linewidth]{figures/t4-dusk.png}\\{\footnotesize (d) Dusk, 17:40.}\end{minipage}
-\captionof{figure}{A scene with the sun, one point light and the character at different times of day.}
+\caption{A scene with the sun, one point light and the character at different times of day.}
 \label{fig:t4}
-\vspace{6pt}
-}]
+\end{figure*}
+
 
 %====================================================================
 \section{T1: Transformations and hierarchical models}
@@ -299,11 +373,34 @@ Each \code{.ply} file is a layer. A layer has a translation vector $\mathbf{t}$,
 \end{equation}
 Here $\mathbf{A}=\mathbf{R}_z\mathbf{R}_y\mathbf{R}_x\mathbf{F}$. $\mathbf{F}=\mathrm{diag}(-1,-1,1)$ is an optional flip for COLMAP files, whose $Y$ axis points down. The gaussian data does not change. Only $\mathbf{M}$ changes. So moving, rotating or scaling a layer is instant. On save, the program writes the transform into every gaussian. It also rotates the SH coefficients so the view-dependent colour stays correct.
 
+\begin{codebox}
+\begin{lstlisting}[language=Python,caption={\code{core/math3d.py} and \code{core/layer.py}: the layer matrix $\mathbf{M}$},label={lst:world}]
+rx = np.array([[1, 0, 0], [0, cx, -sx], [0, sx, cx]])
+ry = np.array([[cy, 0, sy], [0, 1, 0], [-sy, 0, cy]])
+rz = np.array([[cz, -sz, 0], [sz, cz, 0], [0, 0, 1]])
+return rz @ ry @ rx
+
+rot = self.transform.rotation_matrix() @ (FLIP if flip else np.identity(3))
+m = np.identity(4)
+m[:3, :3] = s * rot
+m[:3, 3] = t
+\end{lstlisting}
+\end{codebox}
+
 \subsection{Part 2: Rotation about a point}
 A layer can rotate about a point $\mathbf{c}$ with a matrix $\symbf{\Delta}$:
 \begin{equation}
 \mathbf{R}'=\symbf{\Delta}\mathbf{R},\qquad \mathbf{t}'=\symbf{\Delta}(\mathbf{t}-\mathbf{c})+\mathbf{c}.
 \end{equation}
+
+\begin{codebox}
+\begin{lstlisting}[language=Python,caption={\code{core/transform.py}, \code{Transform.rotate\_about}},label={lst:pivot}]
+def rotate_about(self, delta, pivot):
+    pivot = np.asarray(pivot, float)
+    self.rotation = matrix_to_euler(delta @ self.rotation_matrix())
+    self.position = list(delta @ (self.translation() - pivot) + pivot)
+\end{lstlisting}
+\end{codebox}
 
 \subsection{Part 3: Character skeleton}
 \label{sec:skeleton}
@@ -312,6 +409,18 @@ The character appears when you press \code{F5}. It has six boxes: head, body, tw
 \mathbf{M}_{\text{child}}=\mathbf{M}_{\text{parent}}\,\mathbf{T}(\mathbf{p})\,\mathbf{R}\,\mathbf{T}(-\mathbf{p}).
 \end{equation}
 The legs are children of the root. The arms and head are children of the body, so they lean with the body. The joint angles come from the animation (Section~\ref{chap:t5}).
+
+\begin{codebox}
+\begin{lstlisting}[language=Python,caption={\code{core/avatar\_pose.py}, \code{limb\_matrices}: joint matrices},label={lst:joint}]
+def leg(angle):
+    return (root @ _translate(0, HIP_Y, 0) @ _rot("x", angle)
+            @ _translate(0, -HIP_Y, 0))
+
+def arm(px, angles):
+    return (upper @ _translate(px, SHOULDER_Y, 0) @ _rot("z", angles[1])
+            @ _rot("x", angles[0]) @ _translate(-px, -SHOULDER_Y, 0))
+\end{lstlisting}
+\end{codebox}
 
 \begin{figure}[H]
 \centering
@@ -355,13 +464,36 @@ The five parts below follow this order.
 This step changes the coordinate system. After it, the camera is at the origin and looks along the $-z$ axis. The \code{look\_at} function builds three camera axes from the eye position $\mathbf{e}$ and the target: right $\mathbf{r}$, up $\mathbf{u}$ and forward $\mathbf{f}$. The view matrix is
 \begin{equation}
 \mathbf{V}=\begin{pmatrix}
-\mathbf{r}^{\top}&-\mathbf{r}\!\cdot\!\mathbf{e}\\
-\mathbf{u}^{\top}&-\mathbf{u}\!\cdot\!\mathbf{e}\\
--\mathbf{f}^{\top}&\mathbf{f}\!\cdot\!\mathbf{e}\\
-\mathbf{0}^{\top}&1\end{pmatrix}.
+\setlength{\fboxsep}{2pt}\fcolorbox{red}{white}{$\begin{matrix}
+r_x&r_y&r_z\\u_x&u_y&u_z\\-f_x&-f_y&-f_z\end{matrix}$}
+&\begin{matrix}-\mathbf{r}\!\cdot\!\mathbf{e}\\-\mathbf{u}\!\cdot\!\mathbf{e}\\ \mathbf{f}\!\cdot\!\mathbf{e}\end{matrix}\\[3mm]
+\begin{matrix}0&0&0\end{matrix}&1\end{pmatrix}.
 \label{eq:view}
 \end{equation}
-The centre of the gaussian is multiplied by $\mathbf{V}$. The result is the centre in camera space $(v_x,v_y,v_z)$. The shape of the gaussian is only rotated. Let $\mathbf{W}$ be the rotation part of $\mathbf{V}$, that is its top-left $3\times3$ block: $\mathbf{W}=\begin{pmatrix}\mathbf{r}&\mathbf{u}&-\mathbf{f}\end{pmatrix}^{\top}$. The ellipsoid \eqref{eq:cov3d} in camera space is $\mathbf{W}\,\Sig\,\mathbf{W}^{\top}$.
+The centre of the gaussian is multiplied by $\mathbf{V}$. The result is the centre in camera space $(v_x,v_y,v_z)$. The shape of the gaussian is only rotated. The matrix $\mathbf{W}$ is the rotation part of $\mathbf{V}$. It is the top-left $3\times3$ block, in the red box of \eqref{eq:view}. Its rows are the three camera axes:
+\begin{equation}
+\mathbf{W}=\begin{pmatrix}
+r_x&r_y&r_z\\u_x&u_y&u_z\\-f_x&-f_y&-f_z\end{pmatrix}.
+\label{eq:W}
+\end{equation}
+The ellipsoid \eqref{eq:cov3d} in camera space is $\mathbf{W}\,\Sig\,\mathbf{W}^{\top}$.
+
+\begin{codebox}
+\begin{lstlisting}[language=Python,caption={\code{core/math3d.py}, \code{look\_at}: view matrix $\mathbf{V}$},label={lst:lookat}]
+def look_at(eye, target, up):
+    forward = target - eye
+    forward /= np.linalg.norm(forward)
+    right = np.cross(forward, up)
+    right /= np.linalg.norm(right)
+    true_up = np.cross(right, forward)
+    m = np.identity(4, np.float32)
+    m[0, :3] = right
+    m[1, :3] = true_up
+    m[2, :3] = -forward
+    m[:3, 3] = -m[:3, :3] @ eye
+    return m
+\end{lstlisting}
+\end{codebox}
 
 \subsection{Part 2: Projective mapping}
 \label{sec:ewa}
@@ -375,6 +507,20 @@ This step takes camera space to the image plane.
 \label{eq:proj}
 \end{equation}
 The point is multiplied by $\mathbf{P}$ and divided by $c_w$. The result is the normalised coordinates $(n_x,n_y)$ in the range $[-1,1]$. The division by $c_w$ makes far objects look smaller. The centre of the gaussian is projected this way.
+
+\begin{codebox}
+\begin{lstlisting}[language=Python,caption={\code{core/math3d.py}, \code{perspective}: projection matrix $\mathbf{P}$},label={lst:persp}]
+def perspective(fov_y_deg, aspect, near, far):
+    zoom = 1.0 / math.tan(math.radians(fov_y_deg) / 2)
+    m = np.zeros((4, 4), np.float32)
+    m[0, 0] = zoom / aspect
+    m[1, 1] = zoom
+    m[2, 2] = (far + near) / (near - far)
+    m[2, 3] = 2 * far * near / (near - far)
+    m[3, 2] = -1
+    return m
+\end{lstlisting}
+\end{codebox}
 
 \textbf{Projecting a gaussian.} A gaussian is not a point. Its ellipsoid must become an ellipse on screen. The division by $c_w$ is not linear, so we cannot multiply $\mathbf{P}$ with the ellipsoid. EWA replaces the projection by its derivative (the Jacobian) at the centre of the gaussian:
 \begin{equation}
@@ -397,19 +543,84 @@ Here $\Sig$ is the 3D covariance \eqref{eq:cov3d}. $\mathbf{W}$ is the rotation 
 \end{equation}
 The two semi-axes of the ellipse are proportional to $\sqrt{\lambda_1}$ and $\sqrt{\lambda_2}$. The shader draws each gaussian as a quad covering at most 3 standard deviations. It drops gaussians whose centre is behind the camera or more than $1.3$ times outside the screen.
 
+\begin{codebox}
+\begin{lstlisting}[language=GLSL,caption={\code{render/shaders/splat\_prep.vert}: Jacobian $\mathbf{J}$ and $\Sigma'=\mathbf{J}\mathbf{W}\Sigma\mathbf{W}^{\top}\mathbf{J}^{\top}$},label={lst:ewa}]
+float vx = viewPos.x, vy = viewPos.y, vz = viewPos.z;
+mat3 J = mat3(uFocal / -vz, 0.0, 0.0,
+              0.0, uFocal / -vz, 0.0,
+              uFocal * vx / (vz * vz), uFocal * vy / (vz * vz), 0.0);
+mat3 T = J * mat3(uModelView) * linear;
+mat3 cov = T * sigma * transpose(T);
+float a = cov[0][0] + 0.3;
+float b = cov[0][1];
+float c = cov[1][1] + 0.3;
+\end{lstlisting}
+\end{codebox}
+
+\begin{codebox}
+\begin{lstlisting}[language=GLSL,caption={\code{render/shaders/splat\_prep.vert}: eigenvalues and the two ellipse axes},label={lst:eig}]
+float mid = 0.5 * (a + c);
+float radius = length(vec2(0.5 * (a - c), b));
+float lambda1 = mid + radius;
+float lambda2 = max(mid - radius, 0.1);
+vec2 axis1 = (abs(b) < 1e-6) ? (a >= c ? vec2(1.0, 0.0) : vec2(0.0, 1.0))
+                             : normalize(vec2(b, lambda1 - a));
+vec2 axis2 = vec2(-axis1.y, axis1.x);
+vec2 major = min(extent * sqrt(lambda1), 1024.0) * axis1 * toNdc;
+vec2 minor = min(extent * sqrt(lambda2), 1024.0) * axis2 * toNdc;
+\end{lstlisting}
+\end{codebox}
+
 \subsection{Part 3: Shading and alpha blending}
 \label{sec:blend}
-This step gives each pixel a colour. For each pixel of the quad, the fragment shader finds the distance $r$ to the centre of the ellipse, measured in standard deviations. The opacity has a bell shape:
+This step gives each pixel a colour. The fragment shader visits each pixel $\mathbf{x}$ of the quad. It evaluates the 2D Gaussian function at $\mathbf{x}$. The centre $\symbf{\mu}'$ is the projected gaussian centre. The covariance $\Sig'$ comes from \eqref{eq:ewa}:
 \begin{equation}
-a=\alpha\,e^{-r^2/2}.
+G(\mathbf{x})=\exp\!\Big(-\tfrac12(\mathbf{x}-\symbf{\mu}')^{\top}\,\Sig'^{-1}\,(\mathbf{x}-\symbf{\mu}')\Big).
 \label{eq:gauss}
 \end{equation}
-The gaussians are drawn from far to near and blended:
+The exponent is $-r^2/2$. Here $r$ is the distance to the ellipse centre, in standard deviations. The opacity of gaussian $i$ at the pixel is $a_i=\alpha_i\,G_i(\mathbf{x})$.
+
+\begin{codebox}
+\begin{lstlisting}[language=GLSL,caption={\code{render/shaders/splat.frag}: $a=\alpha\,e^{-r^2/2}$},label={lst:frag}]
+float r2 = dot(vCorner, vCorner);
+if (r2 > 9.0) discard;
+float alpha = vColor.a * exp(-0.5 * r2);
+if (alpha < 1.0 / 255.0) discard;
+fragColor = vec4(vColor.rgb * alpha, alpha);
+\end{lstlisting}
+\end{codebox}
+
+The gaussians are drawn from far to near and blended. The pixel colour is
 \begin{equation}
-\mathbf{C}_i=\mathbf{c}_i a_i+(1-a_i)\,\mathbf{C}_{i-1}.
+\mathbf{C}=\sum_{i}\mathbf{c}_i\,a_i\,T_i,\qquad
+T_i=\prod_{j<i}(1-a_j),
 \label{eq:over}
 \end{equation}
-Here $\mathbf{C}_{i-1}$ is the colour accumulated before splat $i$. The result depends on the order, so we must sort by depth. The program converts depth to 16 bits and sorts it with NumPy in a background thread. Until the sort is done, it draws with the order of the previous sort. The depth test is turned off, because a transparent gaussian must not hide the gaussians behind it.
+Here the gaussians are numbered from near to far. $T_i$ is the transmittance. It is the fraction of light left after passing through the gaussians nearer than $i$.
+
+The program draws from far to near. It gets the same result with the blend $\mathbf{C}\leftarrow\mathbf{c}\,a+(1-a)\,\mathbf{C}$ for each splat. Here $\mathbf{C}$ is the accumulated colour.
+
+The result depends on the order. So we must sort by depth. The program converts depth to 16 bits. It sorts with NumPy in a background thread. Until the sort is done, it draws with the order of the previous sort. The depth test is turned off. The reason is that a transparent gaussian must not hide the gaussians behind it.
+
+\begin{codebox}
+\begin{lstlisting}[language=Python,caption={\code{render/splat\_renderer.py}: the blend $\mathbf{C}\leftarrow\mathbf{c}a+(1-a)\mathbf{C}$},label={lst:blend}]
+GL.glDisable(GL.GL_DEPTH_TEST)
+GL.glEnable(GL.GL_BLEND)
+GL.glBlendFunc(GL.GL_ONE, GL.GL_ONE_MINUS_SRC_ALPHA)
+GL.glDrawArraysInstanced(GL.GL_TRIANGLE_STRIP, 0, 4, self.draw_count)
+\end{lstlisting}
+\end{codebox}
+
+\begin{codebox}
+\begin{lstlisting}[language=Python,caption={\code{render/sorter.py}, \code{DepthSorter.sort}: far-to-near order},label={lst:sort}]
+depth[start:start + count] = positions[start:start + count] @ row[:3] + row[3]
+visible = np.flatnonzero(depth < 0)
+far_z, near_z = float(depth.min()), float(depth.max())
+scale = 65535.0 / (near_z - far_z) if near_z > far_z else 0.0
+depth_key = ((depth - far_z) * scale).astype(np.uint16)
+return visible[np.argsort(depth_key, kind='stable')].astype(np.uint32)
+\end{lstlisting}
+\end{codebox}
 
 \subsection{Part 4: Viewport transformation}
 \label{sec:viewport}
@@ -420,6 +631,16 @@ x_{px}=x_0+\tfrac{n_x+1}{2}W,\qquad y_{px}=y_0+\tfrac{1-n_y}{2}H.
 \end{equation}
 OpenGL does this step itself when drawing. The program also uses this formula to know which pixel a gaussian is on, for example in brush selection (Section~\ref{chap:t6}).
 
+\begin{codebox}
+\begin{lstlisting}[language=Python,caption={\code{editor/brush.py}, \code{BrushTool.\_to\_screen}: clip space to pixels},label={lst:pixel}]
+def _to_screen(clip, viewport):
+    left, top, width, height = viewport
+    x = left + (clip[..., 0] / clip[..., 3] + 1) * 0.5 * width
+    y = top + (1 - clip[..., 1] / clip[..., 3]) * 0.5 * height
+    return x, y
+\end{lstlisting}
+\end{codebox}
+
 \subsection{Part 5: Three cameras}
 \textbf{Orbit camera.} The camera always looks at a point $\mathbf{t}$. Its position uses a yaw angle $\theta$, a pitch angle $\phi$ and a distance $d$:
 \begin{equation}
@@ -428,12 +649,30 @@ OpenGL does this step itself when drawing. The program also uses this formula to
 \end{equation}
 The pitch is limited to about $\pm89^{\circ}$ so the camera does not flip.
 
+\begin{codebox}
+\begin{lstlisting}[language=Python,caption={\code{render/camera.py}, \code{OrbitCamera.position}},label={lst:eye}]
+PITCH_LIMIT = 1.55
+cp = math.cos(self.pitch)
+offset = np.array([cp * math.sin(self.yaw), math.sin(self.pitch),
+                   cp * math.cos(self.yaw)])
+return self.target + self.distance * offset
+\end{lstlisting}
+\end{codebox}
+
 \textbf{Fly camera.} The velocity does not change at once. It moves gradually to the wanted velocity $\mathbf{v}^{*}$, so the camera has inertia:
 \begin{equation}
 \mathbf{v}\leftarrow\mathbf{v}+(\mathbf{v}^{*}-\mathbf{v})\min(10\Delta t,1),\qquad
 \mathbf{e}\leftarrow\mathbf{e}+\mathbf{v}\,\Delta t.
 \label{eq:fly}
 \end{equation}
+
+\begin{codebox}
+\begin{lstlisting}[language=Python,caption={\code{render/camera.py}, \code{OrbitCamera.fly}},label={lst:fly}]
+wanted = direction * self.fly_speed * (self.SPRINT_FACTOR if sprint else 1.0)
+self.velocity += (wanted - self.velocity) * min(self.FLY_ACCEL * dt, 1.0)
+self.target += self.velocity * dt
+\end{lstlisting}
+\end{codebox}
 
 \textbf{Third-person view.} In walk mode, the camera pulls back behind the character. The program casts a ray from the character's eye to the camera position in the voxel map. If the ray hits a wall, the camera pulls in at once so it does not go through the wall. When the path is clear, it moves back out gradually.
 
@@ -442,52 +681,101 @@ The pitch is limited to about $\pm89^{\circ}$ so the camera does not flip.
 \section{T3: Texture mapping}
 \label{chap:t3}
 %====================================================================
-The program uses textures in three ways. Each way is one subsection below.
-\begin{itemize}\itemsep0pt
-\item \textbf{Part 1, character skin.} Paint the box model of the character with an image.
-\item \textbf{Part 2, data as textures.} Store the gaussians in texture buffers.
-\item \textbf{Part 3, procedural kernel.} Compute the gaussian opacity in the shader, with no image.
-\end{itemize}
+The program uses a texture to paint the box model of the character with a skin image. The character has 6 boxes (head, body, two arms and two legs). The skin is a $64\times64$ image (Fig.~\ref{fig:skin}) that holds the unfolded faces of all 6 boxes in the Minecraft cross layout. Each face of a box only has to take its own cell of the image. There are three steps (Fig.~\ref{fig:skinflow}).
 
-\subsection{Part 1: Character skin}
-The skin is a $64\times64$ image in the Minecraft cross layout. My own \code{load\_png} function reads it. The \code{GL\_NEAREST} filter keeps the pixels sharp. Each box face has its own 4 vertices. The UV of a vertex is its pixel position divided by 64. Each box is drawn twice: a base layer and an overlay layer. The fragment shader discards the transparent pixels of the overlay.
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[node distance=5.5mm]
+\node[pbox] (a) {1) Load image \\ \code{load\_png}, \code{GL\_NEAREST}};
+\node[pbox,right=of a] (b) {2) Build boxes \\ vertices and UV per face};
+\node[pbox,right=of b] (c) {3) Draw \\ sample, \code{discard}};
+\draw[parr] (a)--(b); \draw[parr] (b)--(c);
+\end{tikzpicture}
+\caption{Three steps to draw the skin.}
+\label{fig:skinflow}
+\end{figure}
+
+\textbf{1) Build the box.} A box has centre $\mathbf{c}$, size $(w,h,d)$ and inflation $\delta$. Each corner of a face is
+$\mathbf{p}=\mathbf{c}+\big(s_x(\tfrac w2+\delta),\,s_y(\tfrac h2+\delta),\,s_z(\tfrac d2+\delta)\big)$, $s_x,s_y,s_z\in\{\pm1\}$.
+The box is built twice: a base layer ($\delta=0$) and an overlay layer ($\delta=0.25$ for body and limbs, $0.5$ for the hat). The overlay is slightly larger, so it does not stick to the base layer.
+
+\begin{codebox}
+\begin{lstlisting}[language=Python,caption={\code{render/avatar\_renderer.py}, \code{\_box}: corner $\mathbf{p}$ of a face},label={lst:boxcorner}]
+(cx, cy, cz), (w, h, d) = centre, size
+hx, hy, hz = w / 2 + inflate, h / 2 + inflate, d / 2 + inflate
+...
+for (sx, sy, sz), (u, v) in zip(_FACES[face], uvs):
+    vertices.append((cx + sx * hx, cy + sy * hy, cz + sz * hz, ...))
+\end{lstlisting}
+\end{codebox}
+
+\textbf{2) Pick the cell in the image.} A box has origin $(o_x,o_y)$ in the skin. Fig.~\ref{fig:skincross} shows where the six faces are. For example, the head has origin $(0,0)$ and $w=h=d=8$, so its front face (the face of the character) is in the cell $(8,8,8,8)$. The four corners of a cell $(r_x,r_y,r_w,r_h)$ get the UV
+\begin{equation}
+(u,v)=\Big(\tfrac{r_x+k\,r_w}{64},\,\tfrac{r_y+l\,r_h}{64}\Big),\quad (k,l)\in\{(0,0),(1,0),(1,1),(0,1)\}.
+\label{eq:skin-uv}
+\end{equation}
+The order of the four corners must match the order of the four vertices of the face. If they differ, the image is flipped or rotated.
+
+\begin{codebox}
+\begin{lstlisting}[language=Python,caption={\code{render/avatar\_renderer.py}: skin cell and UV of a face},label={lst:skinuv}]
+def _uv_region(face, ox, oy, w, h, d):
+    return ((ox + d, oy + d, w, h), (ox + 2 * d + w, oy + d, w, h),
+            (ox, oy + d, d, h), (ox + d + w, oy + d, d, h),
+            (ox + d, oy, w, d), (ox + d + w, oy, w, d))[face]
+
+rx, ry, rw, rh = _uv_region(face, ox, oy, w, h, d)
+uvs = ((rx, ry), (rx + rw, ry), (rx + rw, ry + rh), (rx, ry + rh))
+...  u / SKIN_SIZE, v / SKIN_SIZE
+\end{lstlisting}
+\end{codebox}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[font=\tiny]
+% hình chữ thập trên ảnh skin (gốc (o_x,o_y) ở góc trên trái)
+\begin{scope}[x=0.4cm,y=-0.4cm]
+\draw[dashed,gray!60] (0,0) rectangle (2,2);
+\node[gray] at (1,1) {$(o_x,o_y)$};
+\draw[fill=linkblue!10] (2,0) rectangle (4,2) node[midway]{$+Y$};
+\draw[fill=linkblue!10] (4,0) rectangle (6,2) node[midway]{$-Y$};
+\draw[fill=linkblue!10] (0,2) rectangle (2,4) node[midway]{$+X$};
+\draw[fill=linkblue!35] (2,2) rectangle (4,4) node[midway]{front $+Z$};
+\draw[fill=linkblue!20] (4,2) rectangle (6,4) node[midway]{$-X$};
+\draw[fill=linkblue!10] (6,2) rectangle (8,4) node[midway]{back $-Z$};
+\foreach \p/\n in {{2,2}/1,{4,2}/2,{4,4}/3,{2,4}/4}
+  \node[circle,fill=white,draw,inner sep=0.3pt] at (\p) {\n};
+\node[below] at (1,4) {$d$}; \node[below] at (3,4) {$w$};
+\node[below] at (5,4) {$d$}; \node[below] at (7,4) {$w$};
+\node[left] at (0,3) {$h$};
+\end{scope}
+\draw[parr] (3.5,-0.8) -- node[plab,above=1pt]{fold} (4.7,-0.8);
+% hộp 3D tương ứng (phép chiếu xiên)
+\begin{scope}[shift={(5.0,-1.9)},x=0.9cm,y=0.9cm]
+\draw[fill=linkblue!35] (0,0) rectangle (2,2);
+\draw[fill=linkblue!10] (0,2) -- (2,2) -- (2.6,2.45) -- (0.6,2.45) -- cycle;
+\draw[fill=linkblue!20] (2,0) -- (2.6,0.45) -- (2.6,2.45) -- (2,2) -- cycle;
+\draw[dashed,gray] (0,0) -- (0.6,0.45) -- (2.6,0.45); \draw[dashed,gray] (0.6,0.45) -- (0.6,2.45);
+\node at (1,1) {front $+Z$};
+\node at (1.3,2.22) {top $+Y$};
+\node[rotate=90] at (2.3,1.22) {$-X$};
+\foreach \p/\n in {{0,2}/1,{2,2}/2,{2,0}/3,{0,0}/4}
+  \node[circle,fill=white,draw,inner sep=0.3pt] at (\p) {\n};
+\node[below] at (1,0) {$w$}; \node[left] at (0,1) {$h$};
+\node[below right] at (2.3,0.22) {$d$};
+\end{scope}
+\end{tikzpicture}
+\caption{A 3D box and its cross layout. The $+Z$ face ($w\times h$) has the cell $(o_x{+}d,\,o_y{+}d,\,w,\,h)$ and the $+Y$ face has the cell $(o_x{+}d,\,o_y,\,w,\,d)$. The corners 1, 2, 3, 4 of each face get $(k,l)=(0,0),(1,0),(1,1),(0,1)$ in \eqref{eq:skin-uv}.}
+\label{fig:skincross}
+\end{figure}
+
+\textbf{3) Draw.} The skin is loaded by my own \code{load\_png} function and filtered with \code{GL\_NEAREST}, so the pixels stay sharp ($\lfloor 64u\rfloor,\lfloor 64v\rfloor$). The fragment shader discards pixels with $\alpha<0.5$, so the transparent parts of the overlay show the base layer. The final colour is the texel times $0.62+0.38\max(\mathbf{n}\!\cdot\!\mathbf{l},0)$. Each box is drawn with its own model matrix, so arms and legs rotate independently about their joints.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.45\columnwidth]{figures/skinzom.png}
-\caption{The $64\times64$ skin used for the character (Minecraft cross layout). Each box (head, body, arms, legs) owns one cross, and the overlay (hat, jacket, sleeves) has another.}
+\caption{The $64\times64$ skin of the character. Each box (head, body, arms, legs) has one cross for the base layer and one for the overlay (hat, jacket, sleeves).}
 \label{fig:skin}
 \end{figure}
-
-\textbf{Face geometry.} A box has origin $(o_x,o_y)$ in the skin and size $(w,h,d)$. Its centre is $\mathbf{c}$ and its overlay layer is inflated by $\delta$ ($\delta=0$ for the base, $0.25$ for body and limbs, $0.5$ for the hat). A corner of a face is $\mathbf{p}=\mathbf{c}+\big(s_x(\tfrac w2+\delta),\,s_y(\tfrac h2+\delta),\,s_z(\tfrac d2+\delta)\big)$ with $s_x,s_y,s_z\in\{-1,+1\}$. 
-
-\textbf{Pixel rectangle of each face.} Each face takes a pixel rectangle $(r_x,r_y,r_w,r_h)$ from the cross:
-\begin{equation}
-\begin{aligned}
-\text{front }(+Z)&:(o_x{+}d,\;o_y{+}d,\;w,\;h),\\
-\text{back }(-Z)&:(o_x{+}2d{+}w,\;o_y{+}d,\;w,\;h),\\
-\text{right }(+X)&:(o_x,\;o_y{+}d,\;d,\;h),\\
-\text{left }(-X)&:(o_x{+}d{+}w,\;o_y{+}d,\;d,\;h),\\
-\text{top }(+Y)&:(o_x{+}d,\;o_y,\;w,\;d),\\
-\text{bottom }(-Y)&:(o_x{+}d{+}w,\;o_y,\;w,\;d).
-\end{aligned}
-\label{eq:skin-rect}
-\end{equation}
-\textbf{UV of the corners.} The four corners of the face (top-left, top-right, bottom-right, bottom-left) get
-\begin{equation}
-\begin{gathered}
-(u,v)=\Big(\frac{r_x+k\,r_w}{64},\;\frac{r_y+l\,r_h}{64}\Big),\\
-(k,l)\in\{(0,0),(1,0),(1,1),(0,1)\}.
-\end{gathered}
-\label{eq:skin-uv}
-\end{equation}
-\textbf{Sampling.} At draw time the sampler returns the texel $\big(\lfloor 64u\rfloor,\lfloor 64v\rfloor\big)$ because of \code{GL\_NEAREST}.
-
-\subsection{Part 2: Data as textures}
-The millions of gaussians live in \emph{texture buffers}. The shader reads them with \code{texelFetch}. There are four buffers: gaussian data, selected/deleted state, SH coefficients and layer matrices. When the state or a layer matrix changes, the program rewrites only one small buffer. It does not upload the whole scene again.
-
-\subsection{Part 3: Procedural gaussian kernel}
-The opacity $a=\alpha e^{-r^2/2}$ \eqref{eq:gauss} is computed directly in the fragment shader. No image is needed. The shadow map (Section~\ref{chap:t4}) is also a texture.
 
 %====================================================================
 \section{T4: Lighting and shadows}
@@ -509,6 +797,20 @@ The colour of a gaussian changes with the view direction $\mathbf{d}$. 3DGS stor
 \label{eq:sh}
 \end{equation}
 Here $\mathbf{c}_0$ is the base colour, $\mathbf{h}_k$ are the coefficients in the file and $Y_k$ are the basis functions. The coefficients are in file space. So the shader rotates the view direction into that space: $\mathbf{d}=\operatorname{norm}\!\big(\mathbf{A}^{\top}(\mathbf{p}_w-\mathbf{e})\big)$. It does not have to rotate the coefficients every frame. Fig.~\ref{fig:sh} shows the idea for degrees 0 to 2. Each basis function is a pattern on the sphere. The weighted sum gives one colour for each view direction.
+
+\begin{codebox}
+\begin{lstlisting}[language=GLSL,caption={\code{render/shaders/splat\_prep.vert}: view-dependent SH colour},label={lst:sh}]
+vec3 c = -0.4886025119029199 * y * shCoeff(splat, 0)
+       +  0.4886025119029199 * z * shCoeff(splat, 1)
+       -  0.4886025119029199 * x * shCoeff(splat, 2);
+...
+vec3 color = vec3(rg, ba.x);
+if (uShDegree > 0)
+    color += shColor(splat, normalize(transpose(linear)
+                                      * (center - uCamPos)));
+color = clamp(color, 0.0, 1.0);
+\end{lstlisting}
+\end{codebox}
 
 \begin{figure}[H]
 \centering
@@ -550,6 +852,22 @@ Here $k_s$ is the specular strength and $m$ is the shininess. This part does not
 \end{equation}
 $S_j$ is the shadow factor of the sun, or the distance falloff of a point light. The scene has one sun and up to 8 point lights. Point lights cast no shadows.
 
+\begin{codebox}
+\begin{lstlisting}[language=GLSL,caption={\code{render/shaders/splat\_prep.vert}, \code{shade}: Phong lighting},label={lst:phong}]
+vec3 diffuse = uAmbient;
+vec3 spec = vec3(0.0);
+float ndl = dot(n, uSunDir);
+float shadow = shadowFactor(worldPos, n);
+diffuse += uSunColor * shadow
+         * clamp((ndl + 0.35) / 1.35, 0.0, 1.0);
+if (ndl > 0.0)
+    spec += uSunColor * shadow * pow(max(dot(
+        reflect(-uSunDir, n), v), 0.0), uShininess);
+...
+return albedo * diffuse + spec * uSpecular;
+\end{lstlisting}
+\end{codebox}
+
 \begin{figure}[H]
 \centering
 \includegraphics[width=\columnwidth]{figures/1 (2).png}
@@ -568,6 +886,32 @@ S=\frac19\sum_{i,j=-1}^{1}\big[\,z_s-b\le D_s(u_s+i\tau,\,v_s+j\tau)\,\big].
 \label{eq:pcf}
 \end{equation}
 Here $(u_s,v_s,z_s)$ are the coordinates of the gaussian in the map, $D_s$ is the stored depth, $\tau$ is the texel step and $b$ is the bias. The bias stops a gaussian from shadowing itself.
+
+\begin{codebox}
+\begin{lstlisting}[language=GLSL,caption={\code{render/shaders/splat\_prep.vert}, \code{shadowFactor}: $3\times3$ PCF},label={lst:pcf}]
+vec4 lp = uLightVP * vec4(worldPos + n * uShadowTexel * 2.0, 1.0);
+vec3 s = lp.xyz / lp.w * 0.5 + 0.5;
+float lit = 0.0;
+for (int i = -1; i <= 1; i++)
+    for (int j = -1; j <= 1; j++) {
+        vec2 uv = s.xy + vec2(i, j) * uShadowInv;
+        float d = textureLod(uShadowMap, uv, 0.0).r;
+        lit += (s.z - uShadowBias <= d) ? 1.0 : 0.0;
+    }
+return lit / 9.0;
+\end{lstlisting}
+\end{codebox}
+
+\begin{codebox}
+\begin{lstlisting}[language=Python,caption={\code{core/lighting.py}, \code{Lighting.shadow\_setup}: view matrix from the sun},label={lst:shadowsetup}]
+d = self.sun_direction()
+r = self.radius * 1.1
+eye = self.center + d * 2.0 * r
+view = look_at(eye, self.center, up)
+proj = orthographic(r, 0.01 * r, 4.0 * r)
+return (proj @ view).astype(np.float32), texel, bias
+\end{lstlisting}
+\end{codebox}
 
 %====================================================================
 \section{T5: Animation and simulation}
@@ -593,6 +937,23 @@ This is a state machine with 4 states: NIGHT $\to$ DAWN $\to$ DAY $\to$ DUSK. Th
 \end{equation}
 where $\phi=\phi_0+\theta-\pi/2$ and $\phi_0$ is the sun azimuth. The sun rises at 6, is highest at 12 and sets at 18. The daylight factor is $D=\operatorname{smoothstep}(-0.08,\,0.3,\,s_y)$. The ambient colour and the sky colour are mixed between a night value and a day value with $D$, and the sky gets an orange tint near the horizon.
 
+\begin{codebox}
+\begin{lstlisting}[language=Python,caption={\code{core/lighting.py}: hour, sun direction and daylight factor},label={lst:sun}]
+hours_per_second = 24.0 / max(self.day_length, 1.0)
+self.hour = (self.hour + dt * hours_per_second) % 24.0
+
+angle = (self.hour - 6.0) / 12.0 * math.pi
+elevation = math.sin(angle) * math.radians(MAX_SUN_ELEVATION)
+azimuth = (math.radians(self.sun_azimuth)
+           + (angle - math.pi / 2))
+return np.array([math.cos(elevation) * math.cos(azimuth),
+                 math.sin(elevation),
+                 math.cos(elevation) * math.sin(azimuth)])
+
+return _smooth(-0.08, 0.3, self.sun_direction()[1])
+\end{lstlisting}
+\end{codebox}
+
 \subsection{Part 2: Collision with voxels}
 A gaussian has no clear surface, so direct collision is hard. The program divides space into voxels of edge $v$. A voxel with enough gaussians is solid. Each solid voxel is stored as one 64-bit integer:
 \begin{equation}
@@ -602,6 +963,16 @@ A gaussian has no clear surface, so direct collision is hard. The program divide
 \label{eq:voxel}
 \end{equation}
 The keys are sorted. Because $c_y$ is in the low bits, the cells of one column sit next to each other. Finding the ground under the feet takes one \code{np.searchsorted} call.
+
+\begin{codebox}
+\begin{lstlisting}[language=Python,caption={\code{core/physics.py}, \code{CollisionWorld}: voxel keys and ground search},label={lst:voxel}]
+cells = np.floor((positions - self.origin) / self.voxel).astype(np.int64)
+keys = (cells[:, 0] << (2 * _BITS)) | (cells[:, 2] << _BITS) | cells[:, 1]
+self.keys = np.unique(keys)
+
+idx = np.searchsorted(self.keys, query, side='right') - 1
+\end{lstlisting}
+\end{codebox}
 
 \begin{figure}[H]
 \centering
@@ -637,6 +1008,17 @@ v_0=\sqrt{2\,g\,(0.75H)}.
 \end{equation}
 \textbf{Eye smoothing.} The eye height is smoothed while the player stands on the ground, so the rough gaussian surface does not shake the camera.
 
+\begin{codebox}
+\begin{lstlisting}[language=Python,caption={\code{core/physics.py}, \code{Physics.walk}: jump and gravity},label={lst:jump}]
+if player.on_ground and jump:
+    player.vel_y = math.sqrt(2.0 * self.gravity * self.jump_ratio * h)
+    player.on_ground = False
+if not player.on_ground:
+    player.vel_y -= self.gravity * dt
+    new_y = y + player.vel_y * dt
+\end{lstlisting}
+\end{codebox}
+
 \subsection{Part 4: Character animation}
 Only the joint angles are computed (in degrees); the renderer builds the matrices. Let $d$ be the distance walked in this frame, in units of the player height. The gait phase grows with the distance, not with time, so the legs never slide on the ground:
 \begin{equation}
@@ -648,6 +1030,21 @@ Only the joint angles are computed (in degrees); the renderer builds the matrice
 with $A=60^{\circ}$. The leg and the opposite arm move together.
 
 \textbf{Blending states.} The amplitude $a\in[0,1]$ follows the speed with the filter $x\leftarrow x+(x^{*}-x)\min(1,k\,\Delta t)$ \eqref{eq:fly}, with $k=8$. The same filter, with $k=7$, blends the other states: sit (legs $-90^{\circ}$, body lowered), crouch (body leaning $28^{\circ}$) and the gestures wave, zombie and cheer. Two poses are mixed linearly, $\theta=(1-w)\theta_a+w\,\theta_b$, so a gesture fades in and out. When standing, a small $\sin$ term moves the arms to imitate breathing.
+
+\begin{codebox}
+\begin{lstlisting}[language=Python,caption={\code{core/avatar\_pose.py}: gait phase and smoothing filter},label={lst:gait}]
+def _approach(value, target, rate, dt):
+    return value + (target - value) * min(1.0, dt * rate)
+
+walked = distance / max(height, 1e-9)
+self.amount = _approach(self.amount, target, BLEND, dt)
+self.phase += walked * STRIDE * GAIT_SCALE
+swing = math.sin(self.phase) * SWING_ANGLE * walk
+leg_l, leg_r = swing, -swing
+arm_l = [-swing + idle, 0.0]
+arm_r = [swing - idle, 0.0]
+\end{lstlisting}
+\end{codebox}
 
 \textbf{Joint matrices.} Each limb is a rotation about its joint: $\mathbf{M}=\mathbf{T}(\mathbf{j})\,\mathbf{R}(\theta)\,\mathbf{T}(-\mathbf{j})$ applied after the parent matrix, for example the arm after the torso.
 
@@ -674,12 +1071,43 @@ Press \code{B} to turn on the brush. Paint on the screen to select gaussians. Th
 \lVert\mathbf{p}-\mathbf{a}-\tau(\mathbf{b}-\mathbf{a})\rVert\le r,\quad \tau=\operatorname{clip}\tfrac{(\mathbf{p}-\mathbf{a})\cdot(\mathbf{b}-\mathbf{a})}{\lVert\mathbf{b}-\mathbf{a}\rVert^2}\in[0,1].
 \label{eq:capsule}
 \end{equation}
-That is, the distance from $\mathbf{p}$ to the segment $\mathbf{ab}$ is at most $r$. 
+That is, the distance from $\mathbf{p}$ to the segment $\mathbf{ab}$ is at most $r$.
+
+\begin{codebox}
+\begin{lstlisting}[language=Python,caption={\code{editor/brush.py}, \code{BrushTool.\_segment\_dist2}: capsule test},label={lst:capsule}]
+def _segment_dist2(p, a, b):
+    ab = b - a
+    length2 = float(ab @ ab)
+    t = (np.clip((p - a) @ ab / length2, 0, 1) if length2 > 0
+         else np.zeros(p.shape[:-1]))
+    nearest = a + t[..., None] * ab
+    diff = p - nearest
+    return (diff * diff).sum(axis=-1)
+\end{lstlisting}
+\end{codebox} 
 
 \textbf{Properties.} The brush tests only the gaussian centre and does not test depth. So it selects through the scene, like SuperSplat \cite{supersplat}. For speed, the brush rejects a whole block of 1024 gaussians when the bounding box of the block is outside the stroke.
 
 \subsection{Part 3: Soft delete and undo}
 Each gaussian has one state byte on the GPU with two bits: \emph{selected} and \emph{deleted}. The \code{Delete} command only sets the ``deleted'' bit. The shader skips these gaussians. The original data does not change. Each delete is one command in \code{History} (Command pattern \cite{gamma1994design}, at most 20 steps). \code{Ctrl+Z} restores the last command.
+
+\begin{codebox}
+\begin{lstlisting}[language=Python,caption={\code{core/layer.py} and \code{core/history.py}: soft delete and undo},label={lst:history}]
+def delete_selected(self):
+    indices = np.flatnonzero(self.selection)
+    self.deleted[indices] = True
+    self.selection[indices] = False
+    return indices
+
+def push(self, command):
+    self._stack.append(command)
+    del self._stack[:-self.max_steps]
+
+def undo(self):
+    command = self._stack.pop()
+    command.undo()
+\end{lstlisting}
+\end{codebox}
 
 \subsection{Part 4: Interface}
 The ImGui panel on the left controls layers, transforms, selection, camera mode and lighting. The HUD shows the crosshair, the clock, the position and the brush circle. Table~\ref{tab:keys} lists the main keys.
@@ -702,6 +1130,33 @@ Right drag + \code{WASD} & Look around, fly (\code{Ctrl} = fast) \\
 \bottomrule
 \end{tabular}
 \end{table}
+
+%====================================================================
+\section{Limitations and future work}
+\label{chap:future}
+%====================================================================
+\subsection{Limitations}
+\begin{itemize}\itemsep0pt
+\item \textbf{Speed depends on the CPU.} Depth is sorted with NumPy in a background thread (Section~\ref{sec:blend}). When the camera turns fast the image can flicker, and large scenes must limit the number of drawn gaussians (LOD).
+\item \textbf{Approximate geometry.} A gaussian has no real surface. The brush, collision, normals and shadows all use the gaussian centres, so the brush also selects hidden objects, collision can have holes and the lighting is rough.
+\end{itemize}
+
+\subsection{Future work}
+\begin{itemize}\itemsep0pt
+\item \textbf{Support for simulation.} Use the voxel map and the existing physics to simulate motion inside a scene captured from the real world, for example to test the path of a person, a robot or a vehicle. This needs more accurate collision and moving objects.
+\item \textbf{Use in games.} Turn a 3DGS scene into a game level: add non-player characters, items and quests, and keep the day--night cycle and the lights. The cleaned scene can be exported to a game engine such as Unity or Unreal.
+\end{itemize}
+
+%====================================================================
+\section{AI usage statement}
+\label{chap:ai}
+%====================================================================
+The course allows students to use AI tools (ChatGPT, Gemini) to learn concepts, debug and improve their code. In this project I used ChatGPT and Gemini for two things:
+\begin{itemize}\itemsep0pt
+\item \textbf{Learning concepts.} Explanations of 3D Gaussian Splatting, EWA, spherical harmonics, shadow maps and related graphics techniques.
+\item \textbf{Debugging and improving code.} Finding bugs and suggesting shorter or faster ways to write the program.
+\end{itemize}
+I read, checked and tested the content suggested by AI, and I am responsible for all the code and for this report.
 
 %====================================================================
 \section{Conclusion}
